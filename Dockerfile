@@ -11,11 +11,13 @@ WORKDIR /usr/src/app
 COPY package.json package.json
 COPY yarn.lock yarn.lock
 COPY ckEditor ckEditor
+COPY eslint-plugin-local eslint-plugin-local
 COPY scripts/postinstall.sh scripts/postinstall.sh
 # clear the cache -- it's not useful and it adds to the time docker takes to
 # save the layer diff
 RUN yarn install && yarn cache clean
 COPY . .
+RUN (cd ckEditor && yarn build) && yarn build
 EXPOSE 8080
 ENV PORT=8080
 CMD ["sh", "-c", "exec yarn next start -H 0.0.0.0 -p ${PORT}"]
