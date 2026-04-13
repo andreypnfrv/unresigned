@@ -17,7 +17,9 @@ COPY scripts/postinstall.sh scripts/postinstall.sh
 # save the layer diff
 RUN yarn install && yarn cache clean
 COPY . .
-RUN (cd ckEditor && yarn build) && yarn build
+RUN rm -rf node_modules/@types/mapbox-gl node_modules/@types/simpl-schema \
+  ckEditor/node_modules/@types/mapbox-gl ckEditor/node_modules/@types/simpl-schema \
+  && (cd ckEditor && yarn build) && yarn build
 EXPOSE 8080
 ENV PORT=8080
 CMD ["sh", "-c", "exec yarn next start -H 0.0.0.0 -p ${PORT}"]
