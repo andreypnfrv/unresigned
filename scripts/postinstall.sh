@@ -96,13 +96,12 @@ else
 fi
 
 
-echo 'Running yarn install in ckEditor/'
-(cd ckEditor && yarn install)
+echo 'ckEditor is a root workspace (no separate yarn install).'
 
 echo 'Running yarn install in fly/hocuspocusServer'
 (cd fly/hocuspocusServer && yarn install)
 
 echo
-echo 'For development, you might need to run (cd ckEditor && yarn install)'
+echo 'To rebuild ckEditor: yarn rebuild-ckeditor'
 echo 'To start a local development server, run "yarn start development"'
 

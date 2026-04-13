@@ -53,7 +53,7 @@ const fetchImports = async () => {
     const { exists } = await checkEditorBundle(ckEditorBundleVersion);
     if (!exists) {
       console.log(`ckEditor bundle version ${ckEditorBundleVersion} not yet uploaded; building now`);
-      await execAsync(`cd ckEditor && yarn && yarn build`);
+      await execAsync(`yarn workspace @lesswrong/lesswrong-editor run build`);
       await uploadEditorBundle(ckEditorBundleVersion);
     }
   } catch (e) {

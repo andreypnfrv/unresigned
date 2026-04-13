@@ -2,6 +2,9 @@
   "name": "lesswrong",
   "version": "2.1.0",
   "packageManager": "yarn@4.9.4",
+  "workspaces": [
+    "ckEditor"
+  ],
   "scripts": {
     "start": "scripts/runDevInstance.sh",
     "dev:unresigned": "ENV_NAME=localUnresignedDevDb FORUM_TYPE=Unresigned SKIP_VERCEL_CODE_PULL=true scripts/runDevInstance.sh",
@@ -28,7 +31,7 @@
     "integration-coverage": "jest --config jest.integration.config.ts --forceExit --coverage --coverageProvider=v8",
     "combine-coverage": "./scripts/combineCoverage.sh",
     "generate": "scripts/generateTypes.sh",
-    "rebuild-ckeditor": "cd ./ckEditor && yarn install && yarn run build",
+    "rebuild-ckeditor": "yarn workspace @lesswrong/lesswrong-editor run build",
     "playwright-db": "docker run --rm --name forum-magnum-test-postgres -e POSTGRES_PASSWORD=password -p 5433:5432 -v $PWD/schema/accepted_schema.sql:/docker-entrypoint-initdb.d/00_accepted_schema.sql -v $PWD/playwright/fixtures.sql:/docker-entrypoint-initdb.d/01_fixtures.sql ankane/pgvector",
     "playwright-db-crosspost": "docker run --rm --name forum-magnum-test-postgres-crosspost -e POSTGRES_PASSWORD=password -p 5434:5432 -v $PWD/schema/accepted_schema.sql:/docker-entrypoint-initdb.d/00_accepted_schema.sql -v $PWD/playwright/fixtures.sql:/docker-entrypoint-initdb.d/01_fixtures.sql ankane/pgvector",
     "playwright-test": "playwright test",
@@ -346,6 +349,7 @@
     "ts-node": "^10.9.2",
     "typescript": "^5.9.3",
     "postgres-array": "^3.0.2",
+    "style-loader": "^4.0.0",
     "react": "^19.2.0",
     "@types/react": "^19.2.0",
     "rxjs": "^7.8.0"
