@@ -22,6 +22,9 @@ COPY scripts/postinstall.sh scripts/postinstall.sh
 # save the layer diff
 RUN yarn install && yarn cache clean
 COPY . .
+# Same defaults as Railway runtime; needed for next build / SSG (build env ≠ service env).
+ENV ENV_NAME=prodUnresigned
+ENV FORUM_TYPE=Unresigned
 RUN yarn install && yarn cache clean \
   && rm -rf node_modules/@types/mapbox-gl node_modules/@types/simpl-schema \
     ckEditor/node_modules/@types/mapbox-gl ckEditor/node_modules/@types/simpl-schema \
