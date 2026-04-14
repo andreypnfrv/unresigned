@@ -128,8 +128,8 @@ export const updateDefaultValue = async <N extends CollectionNameString>(
   }
   const defaultValue = fields[fieldName].getDefaultValueString();
   if (defaultValue) {
-    await db.none(`ALTER TABLE "${table.getName()}" ALTER COLUMN "${fieldName}" SET DEFAULT $1`,
-      [defaultValue]
+    await db.none(
+      `ALTER TABLE "${table.getName()}" ALTER COLUMN "${fieldName}" SET DEFAULT ${defaultValue}`,
     );
   } else {
     await db.none(`ALTER TABLE "${table.getName()}" ALTER COLUMN "${fieldName}" DROP DEFAULT`);
