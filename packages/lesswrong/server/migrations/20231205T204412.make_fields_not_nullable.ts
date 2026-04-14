@@ -14,12 +14,6 @@
 export const acceptsSchemaHash = "d8ecd5f29746164d6bf5b3e064f241ac";
 
 const fillInNullWithDefaultCommands = `
-  UPDATE "AdvisorRequests"
-  SET
-    "interestedInMetaculus" = COALESCE("interestedInMetaculus", false)
-  WHERE
-    "interestedInMetaculus" IS NULL;
-
   -- No columns with defaults to coalesce to for table "Bans"
 
   UPDATE "Books"
@@ -118,19 +112,7 @@ const fillInNullWithDefaultCommands = `
 
   -- No columns with defaults to coalesce to for table "FeaturedResources"
 
-  UPDATE "GardenCodes"
-  SET
-    "afOnly" = COALESCE("afOnly", false),
-    "deleted" = COALESCE("deleted", false),
-    "hidden" = COALESCE("hidden", false),
-    "title" = COALESCE("title", 'Guest Day Pass'::text),
-    "type" = COALESCE("type", 'public'::text)
-  WHERE
-    "afOnly" IS NULL OR
-    "deleted" IS NULL OR
-    "hidden" IS NULL OR
-    "title" IS NULL OR
-    "type" IS NULL;
+  -- No columns with defaults to coalesce to for table "GardenCodes"
 
   -- No columns with defaults to coalesce to for table "Images"
 
@@ -638,7 +620,7 @@ const fillInNullWithDefaultCommands = `
   `
 
 const setNotnullCommands = `
-  ALTER TABLE "AdvisorRequests"
+  ALTER TABLE IF EXISTS "AdvisorRequests"
     ALTER COLUMN "interestedInMetaculus" SET NOT NULL,
     ALTER COLUMN "userId" SET NOT NULL;
 
@@ -702,7 +684,7 @@ const setNotnullCommands = `
     ALTER COLUMN "name" SET NOT NULL,
     ALTER COLUMN "upperBoundTime" SET NOT NULL;
 
-  ALTER TABLE "DigestPosts"
+  ALTER TABLE IF EXISTS "DigestPosts"
     ALTER COLUMN "digestId" SET NOT NULL,
     ALTER COLUMN "postId" SET NOT NULL;
 
@@ -722,13 +704,13 @@ const setNotnullCommands = `
     ALTER COLUMN "tokenType" SET NOT NULL,
     ALTER COLUMN "userId" SET NOT NULL;
 
-  ALTER TABLE "FeaturedResources"
+  ALTER TABLE IF EXISTS "FeaturedResources"
     ALTER COLUMN "ctaText" SET NOT NULL,
     ALTER COLUMN "ctaUrl" SET NOT NULL,
     ALTER COLUMN "expiresAt" SET NOT NULL,
     ALTER COLUMN "title" SET NOT NULL;
 
-  ALTER TABLE "GardenCodes"
+  ALTER TABLE IF EXISTS "GardenCodes"
     ALTER COLUMN "afOnly" SET NOT NULL,
     ALTER COLUMN "code" SET NOT NULL,
     ALTER COLUMN "deleted" SET NOT NULL,
@@ -1113,7 +1095,7 @@ const createNewIndexesForOnConflictConstraints = `
 `
 
 const dropNotnullCommands = `
-  ALTER TABLE "AdvisorRequests"
+  ALTER TABLE IF EXISTS "AdvisorRequests"
     ALTER COLUMN "interestedInMetaculus" DROP NOT NULL,
     ALTER COLUMN "userId" DROP NOT NULL;
 
@@ -1177,7 +1159,7 @@ const dropNotnullCommands = `
     ALTER COLUMN "name" DROP NOT NULL,
     ALTER COLUMN "upperBoundTime" DROP NOT NULL;
 
-  ALTER TABLE "DigestPosts"
+  ALTER TABLE IF EXISTS "DigestPosts"
     ALTER COLUMN "digestId" DROP NOT NULL,
     ALTER COLUMN "postId" DROP NOT NULL;
 
@@ -1197,13 +1179,13 @@ const dropNotnullCommands = `
     ALTER COLUMN "tokenType" DROP NOT NULL,
     ALTER COLUMN "userId" DROP NOT NULL;
 
-  ALTER TABLE "FeaturedResources"
+  ALTER TABLE IF EXISTS "FeaturedResources"
     ALTER COLUMN "ctaText" DROP NOT NULL,
     ALTER COLUMN "ctaUrl" DROP NOT NULL,
     ALTER COLUMN "expiresAt" DROP NOT NULL,
     ALTER COLUMN "title" DROP NOT NULL;
 
-  ALTER TABLE "GardenCodes"
+  ALTER TABLE IF EXISTS "GardenCodes"
     ALTER COLUMN "afOnly" DROP NOT NULL,
     ALTER COLUMN "code" DROP NOT NULL,
     ALTER COLUMN "deleted" DROP NOT NULL,
