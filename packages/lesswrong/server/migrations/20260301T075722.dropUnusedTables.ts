@@ -12,8 +12,8 @@ export const up = async ({db}: MigrationContext) => {
   await dropTable(db, "SurveySchedules");
   await dropTable(db, "UserJobAds");
   await dropTable(db, "UserEAGDetails");
-  await dropTable(db, "DigestPosts");
-  await dropTable(db, "Digests");
+  await db.none(`DROP TABLE IF EXISTS "DigestPosts" CASCADE`);
+  await db.none(`DROP TABLE IF EXISTS "Digests" CASCADE`);
   
   // Split into a separate PR/separate migration to avoid brief downtime during deploy
   //await dropTable(db, "ForumEvents");
