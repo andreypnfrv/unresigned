@@ -8059,7 +8059,6 @@ extend type Mutation {
 
 input CreateLWEventDataInput {
   legacyData: JSON
-  userId: String
   name: String!
   documentId: String
   important: Boolean
@@ -8272,7 +8271,6 @@ input CreateMultiDocumentDataInput {
   title: String
   tabTitle: String!
   tabSubtitle: String
-  userId: String
   parentDocumentId: String!
   collectionName: MultiDocumentCollectionName!
   fieldName: MultiDocumentFieldName!
@@ -8329,7 +8327,6 @@ input CreatePetrovDayActionDataInput {
   legacyData: JSON
   actionType: String!
   data: JSON
-  userId: String!
 }
 
 input CreatePetrovDayActionInput {
@@ -8651,7 +8648,6 @@ extend type Mutation {
 
 input CreateReportDataInput {
   legacyData: JSON
-  userId: String
   reportedUserId: String
   commentId: String
   postId: String
@@ -9070,7 +9066,6 @@ extend type Mutation {
 
 input CreateUserMostValuablePostDataInput {
   legacyData: JSON
-  userId: String!
   postId: String!
   deleted: Boolean
 }
@@ -9141,7 +9136,6 @@ extend type Mutation {
 input CreateUserTagRelDataInput {
   legacyData: JSON
   tagId: String!
-  userId: String!
   subforumShowUnreadInSidebar: Boolean
   subforumEmailNotifications: Boolean
   subforumHideIntroPost: Boolean

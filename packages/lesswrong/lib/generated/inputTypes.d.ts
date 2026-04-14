@@ -7390,7 +7390,6 @@ interface JargonTermOutput {
 
 interface CreateLWEventDataInput {
   legacyData?: any;
-  userId?: string | null;
   name: string;
   documentId?: string | null;
   important?: boolean | null;
@@ -7575,7 +7574,6 @@ interface CreateMultiDocumentDataInput {
   title?: string | null;
   tabTitle: string;
   tabSubtitle?: string | null;
-  userId?: string | null;
   parentDocumentId: string;
   collectionName: MultiDocumentCollectionName;
   fieldName: MultiDocumentFieldName;
@@ -7623,7 +7621,6 @@ interface CreatePetrovDayActionDataInput {
   legacyData?: any;
   actionType: string;
   data?: any;
-  userId: string;
 }
 
 interface CreatePetrovDayActionInput {
@@ -7927,7 +7924,6 @@ interface RSSFeedOutput {
 
 interface CreateReportDataInput {
   legacyData?: any;
-  userId?: string | null;
   reportedUserId?: string | null;
   commentId?: string | null;
   postId?: string | null;
@@ -8290,7 +8286,6 @@ interface UltraFeedEventOutput {
 
 interface CreateUserMostValuablePostDataInput {
   legacyData?: any;
-  userId: string;
   postId: string;
   deleted?: boolean | null;
 }
@@ -8351,7 +8346,6 @@ interface UserRateLimitOutput {
 interface CreateUserTagRelDataInput {
   legacyData?: any;
   tagId: string;
-  userId: string;
   subforumShowUnreadInSidebar?: boolean | null;
   subforumEmailNotifications?: boolean | null;
   subforumHideIntroPost?: boolean | null;

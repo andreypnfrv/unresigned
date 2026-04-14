@@ -1311,7 +1311,6 @@ type CreateLWEventDataInput = {
   legacyData?: InputMaybe<Scalars['JSON']['input']>;
   name: Scalars['String']['input'];
   properties?: InputMaybe<Scalars['JSON']['input']>;
-  userId?: InputMaybe<Scalars['String']['input']>;
 };
 
 type CreateLWEventInput = {
@@ -1391,7 +1390,6 @@ type CreateMultiDocumentDataInput = {
   tabSubtitle?: InputMaybe<Scalars['String']['input']>;
   tabTitle: Scalars['String']['input'];
   title?: InputMaybe<Scalars['String']['input']>;
-  userId?: InputMaybe<Scalars['String']['input']>;
 };
 
 type CreateMultiDocumentInput = {
@@ -1402,7 +1400,6 @@ type CreatePetrovDayActionDataInput = {
   actionType: Scalars['String']['input'];
   data?: InputMaybe<Scalars['JSON']['input']>;
   legacyData?: InputMaybe<Scalars['JSON']['input']>;
-  userId: Scalars['String']['input'];
 };
 
 type CreatePetrovDayActionInput = {
@@ -1561,7 +1558,6 @@ type CreateReportDataInput = {
   postId?: InputMaybe<Scalars['String']['input']>;
   reportedAsSpam?: InputMaybe<Scalars['Boolean']['input']>;
   reportedUserId?: InputMaybe<Scalars['String']['input']>;
-  userId?: InputMaybe<Scalars['String']['input']>;
 };
 
 type CreateReportInput = {
@@ -1892,7 +1888,6 @@ type CreateUserMostValuablePostDataInput = {
   deleted?: InputMaybe<Scalars['Boolean']['input']>;
   legacyData?: InputMaybe<Scalars['JSON']['input']>;
   postId: Scalars['String']['input'];
-  userId: Scalars['String']['input'];
 };
 
 type CreateUserMostValuablePostInput = {
@@ -1919,7 +1914,6 @@ type CreateUserTagRelDataInput = {
   subforumHideIntroPost?: InputMaybe<Scalars['Boolean']['input']>;
   subforumShowUnreadInSidebar?: InputMaybe<Scalars['Boolean']['input']>;
   tagId: Scalars['String']['input'];
-  userId: Scalars['String']['input'];
 };
 
 type CreateUserTagRelInput = {
