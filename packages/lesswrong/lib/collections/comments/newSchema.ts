@@ -1148,6 +1148,36 @@ const schema = {
       },
     },
   },
+  modGPTAnalysis: {
+    database: {
+      type: "TEXT",
+      nullable: true,
+    },
+    graphql: {
+      outputType: "String",
+      canRead: ["sunshineRegiment", "admins"],
+      canUpdate: ["sunshineRegiment", "admins"],
+      canCreate: [],
+      validation: {
+        optional: true,
+      },
+    },
+  },
+  modGPTRecommendation: {
+    database: {
+      type: "TEXT",
+      nullable: true,
+    },
+    graphql: {
+      outputType: "String",
+      canRead: ["sunshineRegiment", "admins"],
+      canUpdate: ["sunshineRegiment", "admins"],
+      canCreate: [],
+      validation: {
+        optional: true,
+      },
+    },
+  },
   rejectedByUser: {
     graphql: {
       outputType: "User",

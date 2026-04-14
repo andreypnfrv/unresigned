@@ -236,6 +236,8 @@ interface DbComment extends DbObject {
   rejected: boolean
   rejectedByUserId: string | null
   rejectedReason: string | null
+  modGPTAnalysis: string | null
+  modGPTRecommendation: string | null
   relevantTagIds: Array<string>
   repliesBlockedUntil: Date | null
   retracted: boolean
