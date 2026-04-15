@@ -766,7 +766,6 @@ const setNotnullCommands = `
   ALTER TABLE IF EXISTS "PageCache"
     ALTER COLUMN "abTestGroups" SET NOT NULL,
     ALTER COLUMN "bundleHash" SET NOT NULL,
-    ALTER COLUMN "expiresAt" SET NOT NULL,
     ALTER COLUMN "path" SET NOT NULL,
     ALTER COLUMN "renderResult" SET NOT NULL,
     ALTER COLUMN "renderedAt" SET NOT NULL,
@@ -1236,10 +1235,9 @@ const dropNotnullCommands = `
     ALTER COLUMN "viewed" DROP NOT NULL,
     ALTER COLUMN "waitingForBatch" DROP NOT NULL;
 
-  ALTER TABLE "PageCache"
+  ALTER TABLE IF EXISTS "PageCache"
     ALTER COLUMN "abTestGroups" DROP NOT NULL,
     ALTER COLUMN "bundleHash" DROP NOT NULL,
-    ALTER COLUMN "expiresAt" DROP NOT NULL,
     ALTER COLUMN "path" DROP NOT NULL,
     ALTER COLUMN "renderResult" DROP NOT NULL,
     ALTER COLUMN "renderedAt" DROP NOT NULL,
