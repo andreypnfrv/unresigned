@@ -3,12 +3,13 @@
 import React from 'react';
 import { Configure } from 'react-instantsearch-dom';
 import { InstantSearch } from '../../lib/utils/componentsWithChildren';
-import { getSearchClient, formatFacetFilters } from '../../lib/search/searchUtil';
+import { getSearchClient, formatFacetFilters, SearchIndexCollectionName } from '../../lib/search/searchUtil';
 import { useSearchAvailabilityLive } from './SearchAvailabilityLive';
 import { connectAutoComplete } from 'react-instantsearch/connectors';
 import Autosuggest, { OnSuggestionSelected } from 'react-autosuggest';
 import { defineStyles } from '@/components/hooks/defineStyles';
 import { useStyles } from '@/components/hooks/useStyles';
+import { useCaptureSearchStateChange, useCaptureSearchResultSelected } from './useSearchAnalytics';
 
 const styles = defineStyles("SearchAutoComplete", (theme: ThemeType) => ({
   autoComplete: {
@@ -29,18 +30,21 @@ const styles = defineStyles("SearchAutoComplete", (theme: ThemeType) => ({
   }
 }));
 
-const SearchAutoComplete = ({clickAction, placeholder, noSearchPlaceholder, renderSuggestion, hitsPerPage=7, indexName, renderInputComponent, facetFilters}: {
+const SearchAutoComplete = ({clickAction, placeholder, noSearchPlaceholder, renderSuggestion, hitsPerPage=7, indexName, resultType, renderInputComponent, facetFilters}: {
   clickAction: (_id: string, object: any) => void,
   placeholder: string,
   noSearchPlaceholder: string,
   renderSuggestion: any,
   hitsPerPage?: number,
   indexName: string,
+  resultType: SearchIndexCollectionName,
   renderInputComponent?: any,
   facetFilters?: Record<string, boolean>,
 }) => {
   const classes = useStyles(styles);
   const searchAvailable = useSearchAvailabilityLive();
+  const captureResultSelected = useCaptureSearchResultSelected();
+  const onSearchStateChange = useCaptureSearchStateChange("searchAutoComplete", resultType, indexName);
 
   if (!searchAvailable) {
     // Fallback for when search is unavailable (ie, local development installs).
@@ -54,15 +58,23 @@ const SearchAutoComplete = ({clickAction, placeholder, noSearchPlaceholder, rend
       }
     }}/>;
   }
-  
-  const onSuggestionSelected: OnSuggestionSelected<any> = (event, { suggestion }) => {
+
+  const onSuggestionSelected: OnSuggestionSelected<any> = (event, { suggestion, suggestionIndex }) => {
     event.preventDefault();
     event.stopPropagation();
+    captureResultSelected({
+      resultId: suggestion._id,
+      resultType,
+      position: suggestionIndex,
+      indexName,
+      context: "searchAutoComplete",
+    });
     clickAction(suggestion._id, suggestion)
   }
   return <InstantSearch
     indexName={indexName}
     searchClient={getSearchClient()}
+    onSearchStateChange={onSearchStateChange}
   >
     <div className={classes.autoComplete}>
       { /* @ts-ignore */ }
