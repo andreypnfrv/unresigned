@@ -13,6 +13,7 @@ import {Doc, encodeStateAsUpdate, XmlText} from 'yjs';
 import {IndexeddbPersistence} from 'y-indexeddb';
 import { type CollaborativeEditingAccessLevel, accessLevelCan } from '@/lib/collections/posts/collabEditingPermissions';
 import { isValidHocuspocusWsUrl } from '@/lib/instanceSettings';
+import { captureException } from '@/lib/sentryWrapper';
 
 /**
  * Removes "orphan" XmlText embeds from the main doc's root — live children of
@@ -301,9 +302,10 @@ export function createWebsocketProviderWithDoc(id: string, doc: Doc): Provider &
         const removed = repairOrphanXmlTextsInRoot(doc);
         if (removed.length > 0) {
           // eslint-disable-next-line no-console
-          console.warn(
-            `[Collaboration] Repaired ${removed.length} orphan XmlText(s) in post ${config.postId}: ${removed.join(', ')}`,
-          );
+          const errorMessage = `[Collaboration] Repaired ${removed.length} orphan XmlText(s) in post ${config.postId}: ${removed.join(', ')}`;
+          // eslint-disable-next-line no-console
+          console.warn(errorMessage);
+          captureException(new Error(errorMessage));
         }
       }
       config.onSynced?.(doc, isFirstSync, id);
