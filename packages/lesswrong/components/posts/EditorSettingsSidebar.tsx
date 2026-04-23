@@ -816,9 +816,12 @@ function getFeedbackQuery(postId: string, linkSharingKey: string | undefined) {
   const postUrl = postGetEditUrl(postId, true, linkSharingKey);
   const siteTitle = forumTitleSetting.get();
   const skillUrl = combineUrls(getSiteUrl(), '/api/SKILL.md');
-  return `I'm writing a post on ${siteTitle} and would appreciate your inline feedback on it.  The post is located at ${postUrl}.
+  const guidelinesUrl = combineUrls(getSiteUrl(), '/api/GUIDELINES.md');
+  return `I'm writing a post on ${siteTitle}, located at ${postUrl}.
 
-Please remember to follow the guidelines and review structure in ${siteTitle}'s SKILL.md (${skillUrl}).`;
+For this request, please remember to follow the guidelines and review structure in ${siteTitle}'s SKILL.md (${skillUrl}) and GUIDELINES.md (${guidelinesUrl}).
+
+Please read my post and provide inline feedback on it according to those guidelines, after thinking hard about it.`;
 }
 
 function AccordionSection({ title, defaultOpen = false, children, className, contentClassName }: {
