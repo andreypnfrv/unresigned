@@ -3,13 +3,12 @@ import { NextRequest, NextResponse } from "next/server";
 import { HocuspocusProvider } from "@hocuspocus/provider";
 import { Map as YMap, Array as YArray, Doc } from "yjs";
 import { randomId } from "@/lib/random";
-import { deriveAgentAuthor, isSupportedEditorType, unsupportedEditorMessage, waitForProviderFlush, waitForProviderSync } from "../editorAgentUtil";
+import { deriveAgentAuthor, unsupportedEditorMessage, waitForProviderFlush, waitForProviderSync, checkEditorTypeAndGetToken, UNAUTHORIZED_DRAFT_MESSAGE } from "../editorAgentUtil";
 
 import { createCollabComment } from "../commentOnDraft/route";
 import { replyToCommentToolSchema } from "../toolSchemas";
 import { captureException } from "@/lib/sentryWrapper";
 import { captureAgentApiEvent, captureAgentApiFailure } from "../captureAgentAnalytics";
-import { getHocuspocusToken } from "../getHocuspocusToken";
 import { isValidHocuspocusWsUrl } from "@/lib/instanceSettings";
 
 function findThreadCommentsArray(
@@ -43,20 +42,19 @@ export async function POST(req: NextRequest) {
   const { postId, key, agentName, threadId, comment } = parseResult.data;
 
   try {
-    const token = await getHocuspocusToken(context, postId, key);
-    if (!token) {
+    const checkResult = await checkEditorTypeAndGetToken({ postId, context, linkSharingKey: key });
+    if (checkResult.kind === "unsupported_editor") {
+      captureAgentApiEvent({ route: "replyToComment", postId, userId: context.currentUser?._id, agentName, status: "unsupported_editor" });
+      return NextResponse.json({ error: unsupportedEditorMessage(checkResult.editorType) }, { status: 400 });
+    }
+    if (checkResult.kind === "unauthorized") {
       captureAgentApiEvent({ route: "replyToComment", postId, userId: context.currentUser?._id, agentName, status: "unauthorized" });
       return NextResponse.json(
-        { error: "Unauthorized to comment on draft" },
+        { error: UNAUTHORIZED_DRAFT_MESSAGE },
         { status: 403 },
       );
     }
-
-    const editorCheck = await isSupportedEditorType(postId, context);
-    if (!editorCheck.supported) {
-      captureAgentApiEvent({ route: "replyToComment", postId, userId: context.currentUser?._id, agentName, status: "unsupported_editor" });
-      return NextResponse.json({ error: unsupportedEditorMessage(editorCheck.editorType) }, { status: 400 });
-    }
+    const token = checkResult.token;
 
     const wsUrl = process.env.HOCUSPOCUS_URL;
     if (!isValidHocuspocusWsUrl(wsUrl)) {
