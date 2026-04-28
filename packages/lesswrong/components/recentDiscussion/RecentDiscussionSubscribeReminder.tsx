@@ -33,9 +33,9 @@ const styles = defineStyles("RecentDiscussionSubscribeReminder", (theme: ThemeTy
     boxShadow: theme.palette.boxShadow.default,
     borderRadius: theme.borderRadius.default,
 
-    marginLeft: "auto",
-    marginRight: "auto",
-    maxWidth: 500,
+    width: "100%",
+    maxWidth: "none",
+    boxSizing: "border-box",
   },
   adminNotice: {
     textAlign: "left",
