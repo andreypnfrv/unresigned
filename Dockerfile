@@ -22,6 +22,8 @@ COPY scripts/postinstall.sh scripts/postinstall.sh
 # save the layer diff
 RUN yarn install && yarn cache clean
 COPY . .
+ARG HOCUSPOCUS_URL=""
+ENV HOCUSPOCUS_URL=${HOCUSPOCUS_URL}
 # Same defaults as Railway runtime; needed for next build / SSG (build env ≠ service env).
 ENV ENV_NAME=prodUnresigned
 ENV FORUM_TYPE=Unresigned
