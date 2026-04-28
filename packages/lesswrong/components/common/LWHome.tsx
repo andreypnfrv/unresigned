@@ -88,6 +88,9 @@ const styles = defineStyles("LWHome", (theme: ThemeType) => ({
   },
 }));
 
+/** Bump when replacing PNGs in `public/unresigned/` so browsers skip stale cached URLs */
+const UNRESIGNED_HERO_ASSET_VER = "3";
+
 const LESSONLINE_MOBILE_SPOTLIGHT_ID = 'j4q2gcjowKqfpdjsR';
 const LESSONLINE_MOBILE_SPOTLIGHT_UNTIL = new Date('2026-03-26T00:00:00Z');
 
@@ -127,7 +130,8 @@ const LWHome = () => {
   const classes = useStyles(styles);
   const theme = useTheme();
   const mobileSpotlightOverrideId = getLessOnlineMobileSpotlightOverrideId();
-  const heroArtSrc = theme.dark ? "/unresigned/hero-dark.png" : "/unresigned/hero-light.png";
+  const heroArtSrc =
+    `${theme.dark ? "/unresigned/hero-dark.png" : "/unresigned/hero-light.png"}?v=${UNRESIGNED_HERO_ASSET_VER}`;
 
   return (
       <AnalyticsContext pageContext="homePage">
