@@ -21,6 +21,7 @@ import { StructuredData } from './StructuredData';
 import { SuspenseWrapper } from './SuspenseWrapper';
 import DeferRender from './DeferRender';
 import { defineStyles, useStyles } from '../hooks/useStyles';
+import { useTheme } from '../themes/useTheme';
 
 import dynamic from 'next/dynamic';
 import { IsReturningVisitorContextProvider } from '@/components/layout/IsReturningVisitorContextProvider';
@@ -44,6 +45,36 @@ const styles = defineStyles("LWHome", (theme: ThemeType) => ({
     fontSize: "1.05rem",
     lineHeight: 1.5,
     opacity: 0.92,
+  },
+  heroMain: {
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 20,
+    ["@media (max-width: 700px)"]: {
+      flexDirection: "column-reverse",
+      alignItems: "stretch",
+    },
+  },
+  heroText: {
+    flex: 1,
+    minWidth: 0,
+  },
+  heroArt: {
+    flexShrink: 0,
+    width: "clamp(100px, 28vw, 220px)",
+    height: "auto",
+    maxHeight: 260,
+    objectFit: "contain",
+    objectPosition: "right center",
+    alignSelf: "center",
+    opacity: 0.97,
+    ["@media (max-width: 700px)"]: {
+      width: "min(200px, 70vw)",
+      maxHeight: 180,
+      marginLeft: "auto",
+      marginRight: "auto",
+    },
   },
   desktopSpotlight: {
     ['@media(max-width: 1199.95px)']: {
@@ -94,7 +125,9 @@ const getStructuredData = () => ({
 
 const LWHome = () => {
   const classes = useStyles(styles);
+  const theme = useTheme();
   const mobileSpotlightOverrideId = getLessOnlineMobileSpotlightOverrideId();
+  const heroArtSrc = theme.dark ? "/unresigned/hero-dark.png" : "/unresigned/hero-light.png";
 
   return (
       <AnalyticsContext pageContext="homePage">
@@ -102,9 +135,14 @@ const LWHome = () => {
         <UpdateLastVisitCookie />
         {isUnresignedForum() && <SingleColumnSection>
           <div className={classes.hero}>
-            <div className={classes.heroTitle}>Unresigned</div>
-            <div className={classes.heroBody}>
-              Longevity science, policy, advocacy, and community — replace placeholder text in admin when ready.
+            <div className={classes.heroMain}>
+              <div className={classes.heroText}>
+                <div className={classes.heroTitle}>Unresigned</div>
+                <div className={classes.heroBody}>
+                  Longevity science, policy, advocacy, and community — replace placeholder text in admin when ready.
+                </div>
+              </div>
+              <img className={classes.heroArt} src={heroArtSrc} alt="" decoding="async"/>
             </div>
           </div>
         </SingleColumnSection>}
