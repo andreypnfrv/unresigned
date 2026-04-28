@@ -1,14 +1,14 @@
 FROM node:24-slim AS builder
 WORKDIR /app
-COPY fly/hocuspocusServer/package.json fly/hocuspocusServer/yarn.lock ./
+COPY package.json yarn.lock ./
 RUN corepack enable && yarn install --frozen-lockfile
-COPY fly/hocuspocusServer/tsconfig.json ./
-COPY fly/hocuspocusServer/src ./src/
+COPY tsconfig.json ./
+COPY src ./src/
 RUN yarn build
 
 FROM node:24-slim
 WORKDIR /app
-COPY fly/hocuspocusServer/package.json fly/hocuspocusServer/yarn.lock ./
+COPY package.json yarn.lock ./
 RUN corepack enable && yarn install --production --frozen-lockfile
 COPY --from=builder /app/dist ./dist
 EXPOSE 8080
