@@ -3,7 +3,7 @@
 import React, { useEffect } from 'react';
 import { AnalyticsContext } from "../../lib/analyticsEvents";
 import { getReviewPhase, reviewIsActive, REVIEW_YEAR } from '../../lib/reviewUtils';
-import { cloudinaryCloudNameSetting, showReviewOnFrontPageIfActive, ultraFeedEnabledSetting, isAF, isUnresignedForum } from '@/lib/instanceSettings';
+import { showReviewOnFrontPageIfActive, ultraFeedEnabledSetting, isAF, isUnresignedForum, effectiveUnresignedHeroImgSrc } from '@/lib/instanceSettings';
 import { useCookiesWithConsent } from '../hooks/useCookiesWithConsent';
 import { LAST_VISITED_FRONTPAGE_COOKIE } from '../../lib/cookies/cookies';
 import moment from 'moment';
@@ -86,9 +86,6 @@ const styles = defineStyles("LWHome", (theme: ThemeType) => ({
   },
 }));
 
-/** Bump cache when hero Cloudinary asset is replaced (`unresigned/PNGv3`). */
-const UNRESIGNED_HERO_CLOUD_CACHE = "v4";
-
 const LESSONLINE_MOBILE_SPOTLIGHT_ID = 'j4q2gcjowKqfpdjsR';
 const LESSONLINE_MOBILE_SPOTLIGHT_UNTIL = new Date('2026-03-26T00:00:00Z');
 
@@ -126,9 +123,9 @@ const getStructuredData = () => ({
 
 const LWHome = () => {
   const classes = useStyles(styles);
+  const theme = useTheme();
   const mobileSpotlightOverrideId = getLessOnlineMobileSpotlightOverrideId();
-  const heroArtSrc =
-    `https://res.cloudinary.com/${cloudinaryCloudNameSetting.get()}/image/upload/v1768493724/unresigned/PNGv3?_cb=${UNRESIGNED_HERO_CLOUD_CACHE}`;
+  const heroArtSrc = effectiveUnresignedHeroImgSrc(theme.dark);
 
   return (
       <AnalyticsContext pageContext="homePage">

@@ -60,4 +60,9 @@ export const prodUnresigned = merge({}, sharedSettings, {
   lightconeFundraiser: {
     active: false,
   },
+  unresigned: {
+    heroArtImageUrl:
+      process.env.UNRESIGNED_HERO_ART_URL?.trim() ||
+      null,
+  },
 });

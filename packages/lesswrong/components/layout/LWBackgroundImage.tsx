@@ -15,6 +15,8 @@ import ReviewVotingCanvas from '../review/ReviewVotingCanvas';
 import { useCurrentTime } from '@/lib/utils/timeUtil';
 import { Link } from '@/lib/reactRouterWrapper';
 import { usePrerenderablePathname } from '../next/usePrerenderablePathname';
+import { useTheme } from '@/components/themes/useTheme';
+import { effectiveUnresignedHeroImgSrc } from '@/lib/instanceSettings';
 
 // Inkhaven Cohort #2 banner active period
 const INKHAVEN_2026_START = new Date('2026-01-10T00:00:00-08:00');
@@ -151,6 +153,7 @@ const styles = defineStyles("LWBackgroundImage", (theme: ThemeType) => ({
 
 export const LWBackgroundImage = () => {
   const classes = useStyles(styles);
+  const theme = useTheme();
   const pathname = usePrerenderablePathname();
   const isHomePage = isHomeRoute(pathname);
 
@@ -158,16 +161,12 @@ export const LWBackgroundImage = () => {
   const hideGlobeCookie = cookies[HIDE_SOLSTICE_GLOBE_COOKIE] === "true";
 
   const standaloneNavigation = isRouteWithLeftNavigationColumn(pathname);
-  const defaultImage = standaloneNavigation ? <div className={classes.imageColumn}> 
-    {/* Background image shown in the top-right corner of LW. The
-    * loading="lazy" prevents downloading the image if the
-    * screen-size is such that the image will be hidden by a
-    * breakpoint. */}
-    <CloudinaryImage2
+  const defaultImage = standaloneNavigation ? <div className={classes.imageColumn}>
+    <img
       loading="lazy"
+      alt=""
       className={classes.backgroundImage}
-      publicId="ohabryka_Topographic_aquarelle_book_cover_by_Thomas_W._Schaller_f9c9dbbe-4880-4f12-8ebb-b8f0b900abc1_m4k6dy_734413"
-      darkPublicId={"ohabryka_Topographic_aquarelle_book_cover_by_Thomas_W._Schaller_f9c9dbbe-4880-4f12-8ebb-b8f0b900abc1_m4k6dy_734413_copy_lnopmw"}
+      src={effectiveUnresignedHeroImgSrc(theme.dark)}
     />
   </div> : null
 

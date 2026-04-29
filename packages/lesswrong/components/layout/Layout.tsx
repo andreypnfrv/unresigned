@@ -32,6 +32,7 @@ import GlobalHotkeys from "@/components/common/GlobalHotkeys";
 import LlmChatWrapper from "@/components/languageModels/LlmChatWrapper";
 import IntercomWrapper from "@/components/layout/IntercomWrapper";
 import CookieBanner from "@/components/common/CookieBanner/CookieBanner";
+import LWBackgroundImage from "./LWBackgroundImage";
 import NavigationEventSender from '@/components/hooks/useOnNavigate';
 import { defineStyles, useStyles } from '@/components/hooks/useStyles';
 import { SuspenseWrapper } from '@/components/common/SuspenseWrapper';
@@ -221,6 +222,7 @@ const Layout = ({children}: {
                 <FlashMessages />
               </ErrorBoundary>
 
+              {isLW() && <LWBackgroundImage />}
               <div ref={searchResultsAreaRef} className={classes.searchResultsArea} />
 
               {children}

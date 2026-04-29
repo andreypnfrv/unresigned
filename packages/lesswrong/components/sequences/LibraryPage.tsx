@@ -1,6 +1,7 @@
 "use client";
 
 import React from 'react';
+import { isUnresignedForum } from '@/lib/instanceSettings';
 import { AnalyticsContext } from "../../lib/analyticsEvents";
 import SingleColumnSection from "../common/SingleColumnSection";
 import SectionTitle from "../common/SectionTitle";
@@ -36,6 +37,7 @@ const LibraryPage = () => {
       <SingleColumnSection>
         <LWCoreReading />
       </SingleColumnSection>
+      {!isUnresignedForum() && <>
       <Divider />
       <SingleColumnSection>
         <SectionTitle title="Curated Sequences" />
@@ -62,6 +64,7 @@ const LibraryPage = () => {
           />
         </div>
       </SingleColumnSection>
+      </>}
     </AnalyticsContext>
   </React.Fragment>;
 };

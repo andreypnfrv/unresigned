@@ -289,6 +289,16 @@ export const ckEditorWebsocketUrlSetting = new PublicInstanceSetting<string | nu
 export const hideUnreviewedAuthorCommentsSettings = new PublicInstanceSetting<string | null>('hideUnreviewedAuthorComments', null, "optional"); // Hide comments by unreviewed authors after date provided (prevents spam / flaming / makes moderation easier, but delays new user engagement)
 export const cloudinaryCloudNameSetting = new PublicInstanceSetting<string>('cloudinary.cloudName', 'lesswrong-2-0', "optional"); // Cloud name for cloudinary hosting
 
+export const unresignedHeroArtUrlSetting = new PublicInstanceSetting<string | null>('unresigned.heroArtImageUrl', null, "optional");
+
+const UNRESIGNED_HERO_LOCAL_VER = '5';
+
+export function effectiveUnresignedHeroImgSrc(themeDark: boolean): string {
+  const url = unresignedHeroArtUrlSetting.get()?.trim();
+  if (url) return url;
+  return `${themeDark ? '/unresigned/hero-dark.png' : '/unresigned/hero-light.png'}?v=${UNRESIGNED_HERO_LOCAL_VER}`;
+}
+
 export const nofollowKarmaThreshold = new PublicInstanceSetting<number>('nofollowKarmaThreshold', 10, "optional"); // Users with less than this much karma have their links marked as nofollow
 
 export const localeSetting = new PublicInstanceSetting<string>('locale', 'en-US', "optional");

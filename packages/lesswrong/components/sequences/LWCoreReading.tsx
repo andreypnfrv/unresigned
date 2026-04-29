@@ -1,4 +1,5 @@
 import React from 'react';
+import { isUnresignedForum } from '@/lib/instanceSettings';
 import SingleColumnSection from "../common/SingleColumnSection";
 import CollectionsItem from "./CollectionsItem";
 import { defineStyles } from '@/components/hooks/defineStyles';
@@ -104,9 +105,12 @@ const LWCoreReading = ({minimal}: {
   minimal?: boolean,
 }) => {
   const classes = useStyles(styles);
+  const collections = isUnresignedForum()
+    ? coreReadingCollections.filter((c) => c.title === "Best of Unresigned")
+    : coreReadingCollections;
 
   return <SingleColumnSection className={classes.root}>
-    {coreReadingCollections.map(collection => <CollectionsItem key={collection.id} collection={collection}/>)}
+    {collections.map(collection => <CollectionsItem key={collection.title} collection={collection}/>)}
   </SingleColumnSection>
 }
 
