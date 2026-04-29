@@ -69,18 +69,17 @@ export function getPrivateSettings() {
   if (!privateSettings) {
     const rawPrivateSettings = Object.entries(process.env).filter((setting): setting is [string, string] => {
       const [key, value] = setting;
-      return key.startsWith("private_") && value !== undefined;
+      return /^private_/i.test(key) && typeof value === 'string';
     });
-  
+
     const newPrivateSettings: Record<string, string> = {};
-  
+
     rawPrivateSettings.reduce((acc, [key, value]) => {
-      const [prefix, ...settingNameParts] = key.split("_");
-      if (prefix !== 'private') {
-  
+      const m = key.match(/^private_(.+)$/i);
+      if (!m) {
         return acc;
       }
-      set(acc, settingNameParts, value);
+      set(acc, m[1].split('_'), value);
       return acc;
     }, newPrivateSettings);
     privateSettings = newPrivateSettings;

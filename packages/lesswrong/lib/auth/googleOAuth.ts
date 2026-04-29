@@ -32,9 +32,32 @@ export function generateOAuthState(): string {
   return crypto.randomBytes(32).toString('hex');
 }
 
+function googleOAuthFromEnv(): { clientId: string | null; clientSecret: string | null } {
+  const clientId =
+    process.env.GOOGLE_CLIENT_ID?.trim() ||
+    process.env.GOOGLE_OAUTH_CLIENT_ID?.trim() ||
+    null;
+  const clientSecret =
+    process.env.GOOGLE_CLIENT_SECRET?.trim() ||
+    process.env.GOOGLE_OAUTH_CLIENT_SECRET?.trim() ||
+    null;
+  return { clientId, clientSecret };
+}
+
+export function getGoogleOAuthCredentials(): { clientId: string | null; clientSecret: string | null } {
+  let clientId = googleClientIdSetting.get()?.trim() || null;
+  let clientSecret = googleOAuthSecretSetting.get()?.trim() || null;
+  if (!clientId || !clientSecret) {
+    const env = googleOAuthFromEnv();
+    clientId = clientId || env.clientId;
+    clientSecret = clientSecret || env.clientSecret;
+  }
+  return { clientId, clientSecret };
+}
+
 export function getGoogleAuthUrl(request: NextRequest, state: string, returnTo?: string): string {
   const siteUrl = getSiteUrlFromReq(request);
-  const clientId = googleClientIdSetting.get();
+  const { clientId } = getGoogleOAuthCredentials();
   if (!clientId) throw new Error('Google OAuth not configured');
 
   const params = new URLSearchParams({
@@ -56,9 +79,8 @@ export function getGoogleAuthUrl(request: NextRequest, state: string, returnTo?:
 
 export async function exchangeCodeForTokens(request: NextRequest, code: string): Promise<GoogleTokenResponse> {
   const siteUrl = getSiteUrlFromReq(request);
-  const clientId = googleClientIdSetting.get();
-  const clientSecret = googleOAuthSecretSetting.get();
-  
+  const { clientId, clientSecret } = getGoogleOAuthCredentials();
+
   if (!clientId || !clientSecret) {
     throw new Error('Google OAuth credentials not configured');
   }
