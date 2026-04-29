@@ -23,6 +23,7 @@ import DeferRender from './DeferRender';
 import { defineStyles, useStyles } from '../hooks/useStyles';
 import dynamic from 'next/dynamic';
 import { IsReturningVisitorContextProvider } from '@/components/layout/IsReturningVisitorContextProvider';
+import { useTheme } from '@/components/themes/useTheme';
 const RecentDiscussionFeed = dynamic(() => import("../recentDiscussion/RecentDiscussionFeed"), { ssr: false });
 
 const styles = defineStyles("LWHome", (theme: ThemeType) => ({
