@@ -262,9 +262,28 @@ export const elasticUsernameSetting = new PublicInstanceSetting<string | null>("
 
 export const elasticPasswordSetting = new PublicInstanceSetting<string | null>("elasticsearch.password", null, "optional");
 
+/** Non-empty ENV overrides Postgres publicSettings — for Railway/production without SQL edits. */
+function pickElasticEnv(first: string | undefined, fallback: () => string | null): string | null {
+  if (first !== undefined && first.trim() !== "") return first.trim();
+  const v = fallback();
+  return v && typeof v === "string" && v.trim() !== "" ? v : null;
+}
+
+export function getElasticResolvedCredentials(): {
+  cloudId: string;
+  username: string;
+  password: string;
+} | null {
+  const cloudId = pickElasticEnv(process.env.ELASTICSEARCH_CLOUD_ID, () => elasticCloudIdSetting.get());
+  const username = pickElasticEnv(process.env.ELASTICSEARCH_USERNAME, () => elasticUsernameSetting.get());
+  const password = pickElasticEnv(process.env.ELASTICSEARCH_PASSWORD, () => elasticPasswordSetting.get());
+  if (!cloudId || !username || !password) return null;
+  return { cloudId, username, password };
+}
+
 export const isElasticEnabled = (): boolean => {
   if (isAnyTest || isE2E || disableElastic.get() === 'true') return false;
-  return !!(elasticCloudIdSetting.get() && elasticUsernameSetting.get() && elasticPasswordSetting.get());
+  return getElasticResolvedCredentials() !== null;
 };
 
 export const searchOriginDate = new PublicInstanceSetting<string>("elasticsearch.searchOriginDate", "2014-06-01T01:00:00Z", "optional");
@@ -292,7 +311,7 @@ export const ckEditorWebsocketUrlSetting = new PublicInstanceSetting<string | nu
 export const hideUnreviewedAuthorCommentsSettings = new PublicInstanceSetting<string | null>('hideUnreviewedAuthorComments', null, "optional"); // Hide comments by unreviewed authors after date provided (prevents spam / flaming / makes moderation easier, but delays new user engagement)
 export const cloudinaryCloudNameSetting = new PublicInstanceSetting<string>('cloudinary.cloudName', 'lesswrong-2-0', "optional"); // Cloud name for cloudinary hosting
 
-export const UNRESIGNED_HERO_ASSET_VER = "7";
+export const UNRESIGNED_HERO_ASSET_VER = "8";
 
 export function unresignedHeroImgSrc(themeDark: boolean): string {
   return `${themeDark ? "/unresigned/hero-dark.png" : "/unresigned/hero-light.png"}?v=${UNRESIGNED_HERO_ASSET_VER}`;

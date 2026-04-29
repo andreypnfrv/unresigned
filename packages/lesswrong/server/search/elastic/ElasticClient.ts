@@ -7,7 +7,7 @@ import type {
 import ElasticQuery, { QueryData } from "./ElasticQuery";
 import type { MultiQueryData } from "./ElasticMultiQuery";
 import sortBy from "lodash/sortBy";
-import { elasticCloudIdSetting, elasticPasswordSetting, elasticUsernameSetting, isElasticEnabled } from "../../../lib/instanceSettings";
+import { getElasticResolvedCredentials } from "../../../lib/instanceSettings";
 import take from "lodash/take";
 
 export type ElasticDocument = Exclude<SearchDocument, "_id">;
@@ -29,19 +29,12 @@ class ElasticClient {
   private client: Client;
 
   constructor() {
-    if (!isElasticEnabled()) {
+    const resolved = getElasticResolvedCredentials();
+    if (!resolved) {
       throw new Error("Elasticsearch is not enabled");
     }
 
-    const cloudId = elasticCloudIdSetting.get();
-    const username = elasticUsernameSetting.get();
-    const password = elasticPasswordSetting.get();
-
-    if (!cloudId || !username || !password) {
-      // eslint-disable-next-line no-console
-      console.warn("Elastic is enabled, but credentials are missing");
-      throw new Error("Elasticsearch credentials are not configured");
-    }
+    const { cloudId, username, password } = resolved;
 
     if (!globalClient) {
       globalClient = new Client({
