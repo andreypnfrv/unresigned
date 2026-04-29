@@ -3,7 +3,7 @@
 import React, { useEffect } from 'react';
 import { AnalyticsContext } from "../../lib/analyticsEvents";
 import { getReviewPhase, reviewIsActive, REVIEW_YEAR } from '../../lib/reviewUtils';
-import { showReviewOnFrontPageIfActive, ultraFeedEnabledSetting, isAF, isUnresignedForum, effectiveUnresignedHeroImgSrc } from '@/lib/instanceSettings';
+import { showReviewOnFrontPageIfActive, ultraFeedEnabledSetting, isAF, isUnresignedForum, unresignedHeroImgSrc } from '@/lib/instanceSettings';
 import { useCookiesWithConsent } from '../hooks/useCookiesWithConsent';
 import { LAST_VISITED_FRONTPAGE_COOKIE } from '../../lib/cookies/cookies';
 import moment from 'moment';
@@ -125,7 +125,7 @@ const LWHome = () => {
   const classes = useStyles(styles);
   const theme = useTheme();
   const mobileSpotlightOverrideId = getLessOnlineMobileSpotlightOverrideId();
-  const heroArtSrc = effectiveUnresignedHeroImgSrc(theme.dark);
+  const heroArtSrc = unresignedHeroImgSrc(theme.dark);
 
   return (
       <AnalyticsContext pageContext="homePage">

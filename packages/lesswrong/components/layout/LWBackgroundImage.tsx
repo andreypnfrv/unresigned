@@ -16,7 +16,7 @@ import { useCurrentTime } from '@/lib/utils/timeUtil';
 import { Link } from '@/lib/reactRouterWrapper';
 import { usePrerenderablePathname } from '../next/usePrerenderablePathname';
 import { useTheme } from '@/components/themes/useTheme';
-import { effectiveUnresignedHeroImgSrc } from '@/lib/instanceSettings';
+import { unresignedHeroImgSrc } from '@/lib/instanceSettings';
 
 // Inkhaven Cohort #2 banner active period
 const INKHAVEN_2026_START = new Date('2026-01-10T00:00:00-08:00');
@@ -166,7 +166,7 @@ export const LWBackgroundImage = () => {
       loading="lazy"
       alt=""
       className={classes.backgroundImage}
-      src={effectiveUnresignedHeroImgSrc(theme.dark)}
+      src={unresignedHeroImgSrc(theme.dark)}
     />
   </div> : null
 

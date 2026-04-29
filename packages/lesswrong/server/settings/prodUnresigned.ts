@@ -1,6 +1,27 @@
 import merge from "lodash/merge";
 import { sharedSettings } from "./sharedSettings";
 
+const cloudinaryOverrides = merge({}, sharedSettings.cloudinary, {
+  ...(process.env.CLOUDINARY_CLOUD_NAME?.trim()
+    ? { cloudName: process.env.CLOUDINARY_CLOUD_NAME.trim() }
+    : {}),
+  ...(process.env.CLOUDINARY_UPLOAD_PRESET_EDITOR?.trim()
+    ? { uploadPresetEditor: process.env.CLOUDINARY_UPLOAD_PRESET_EDITOR.trim() }
+    : {}),
+  ...(process.env.CLOUDINARY_UPLOAD_PRESET_BANNER?.trim()
+    ? { uploadPresetBanner: process.env.CLOUDINARY_UPLOAD_PRESET_BANNER.trim() }
+    : {}),
+  ...(process.env.CLOUDINARY_UPLOAD_PRESET_GRID?.trim()
+    ? { uploadPresetGridImage: process.env.CLOUDINARY_UPLOAD_PRESET_GRID.trim() }
+    : {}),
+  ...(process.env.CLOUDINARY_UPLOAD_PRESET_SOCIAL?.trim()
+    ? { uploadPresetSocialPreview: process.env.CLOUDINARY_UPLOAD_PRESET_SOCIAL.trim() }
+    : {}),
+  ...(process.env.CLOUDINARY_UPLOAD_PRESET_SPOTLIGHT?.trim()
+    ? { uploadPresetSpotlight: process.env.CLOUDINARY_UPLOAD_PRESET_SPOTLIGHT.trim() }
+    : {}),
+});
+
 function productionSiteUrl(): string {
   const raw =
     process.env.SITE_URL?.trim() ||
@@ -16,6 +37,7 @@ function productionSiteUrl(): string {
 }
 
 export const prodUnresigned = merge({}, sharedSettings, {
+  cloudinary: cloudinaryOverrides,
   forumType: "Unresigned",
   title: "Unresigned",
   tagline: "Longevity, immortalism, and the science and politics of ending aging.",
@@ -59,10 +81,5 @@ export const prodUnresigned = merge({}, sharedSettings, {
   intercomAppId: "",
   lightconeFundraiser: {
     active: false,
-  },
-  unresigned: {
-    heroArtImageUrl:
-      process.env.UNRESIGNED_HERO_ART_URL?.trim() ||
-      null,
   },
 });
