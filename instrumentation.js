@@ -34,7 +34,7 @@ export async function register() {
     process.setSourceMapsEnabled(true);
   }
 
-  if (process.env.NEXT_RUNTIME === 'edge') {
+  if (process.env.NEXT_RUNTIME === 'edge' && process.env.SENTRY_EDGE_SDK === '1') {
     await import('./sentry.edge.config');
   }
 }
