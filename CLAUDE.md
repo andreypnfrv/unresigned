@@ -515,21 +515,9 @@ See `@/components/next/ClientAppGenerator.tsx` for more details about how the va
 
 Use `useNavigate` for performing client-side navigations.  You need to preserve all parts of the path that you don't want changed, i.e. just providing a hash will delete any query parameters if they aren't also provided.  See `@/lib/routeUtil.tsx` for more details if needed.
 
----
+## Editor
 
-## Shell Commands
-
-Do not use `find -exec`. Claude Code's permission system cannot statically analyze `-exec` and will always prompt the user, even when an allow rule exists for `find`. Use pipes instead:
-```bash
-# Bad: triggers an unbypassable permission prompt
-find . -type f -name "*.ts" -exec grep -l "pattern" {} \;
-
-# Good: each pipe segment is checked independently against allow rules
-find . -type f -name "*.ts" | xargs grep -l "pattern"
-```
-The same applies to `-execdir`, `-ok`, `-okdir`, and `-delete`.
-
----
+The current default editor provided to users is our implementation of lexical.  Other supported editors are ckEditor (the previous default editor, now only supported for existing documents that were written in ckEditor), markdown, and html (admin-only).  We used to support DraftJS and no longer do, but some older documents may still be written in DraftJS (these are autoconverted to lexical when opened).  If working on editor features, assume lexical is the editor in question unless otherwise specified (or strongly suggested by the surrounding context).  We have a separate [CLAUDE.md](packages/lesswrong/components/editor/CLAUDE.md) with instructions for doing UI testing in the editor; read that if needed.
 
 ## Style / Conventions
 Never apply `as any` type casts, and try very hard to avoid any other type casts.  Consider whether you are applying a type cast because you've forgotten to run `yarn generate`.  If you absolutely must apply a type cast somewhere, always leave the following comment above it:
