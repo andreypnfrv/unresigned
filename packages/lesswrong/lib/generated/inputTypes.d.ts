@@ -120,6 +120,8 @@ interface Query {
   myHomePageDesignSummaries: Array<HomePageDesignSummary>;
   marketplaceHomePageDesigns: Array<MarketplaceHomePageDesign>;
   adminHomePageDesigns: Array<AdminHomePageDesign>;
+  typoSuggestion: SingleTypoSuggestionOutput | null;
+  typoSuggestions: MultiTypoSuggestionOutput | null;
   iframeWidgetSrcdoc: SingleIframeWidgetSrcdocOutput | null;
   iframeWidgetSrcdocs: MultiIframeWidgetSrcdocOutput | null;
   jargonTerm: SingleJargonTermOutput | null;
@@ -293,6 +295,8 @@ interface Mutation {
   updateElicitQuestion: ElicitQuestionOutput | null;
   publishHomePageDesign: HomePageDesignMutationOutput | null;
   setHomePageDesignVerified: HomePageDesign | null;
+  acceptTypoSuggestion: TypoSuggestion;
+  rejectTypoSuggestion: TypoSuggestion;
   createJargonTerm: JargonTermOutput | null;
   updateJargonTerm: JargonTermOutput | null;
   createLWEvent: LWEventOutput | null;
@@ -2733,6 +2737,54 @@ interface AdminHomePageDesign {
   commentId: string | null;
   ownerDisplayName: string;
   ownerSlug: string;
+}
+
+interface TypoSuggestion {
+  _id: string;
+  createdAt: Date;
+  documentId: string;
+  collectionName: string;
+  fieldName: string;
+  voteId: string;
+  reactor: User | null;
+  authorId: string;
+  author: User | null;
+  quote: string;
+  proposedReplacement: string | null;
+  narrowedQuote: string | null;
+  narrowedReplacement: string | null;
+  explanation: string | null;
+  llmVerdict: string;
+  status: string;
+  resolvedByUserId: string | null;
+  appliedRevisionId: string | null;
+  resolvedAt: Date | null;
+  applyWouldRequirePublishingUnrelatedChanges: boolean;
+}
+
+interface SingleTypoSuggestionInput {
+  selector?: SelectorInput | null;
+  resolverArgs?: any;
+}
+
+interface SingleTypoSuggestionOutput {
+  result: TypoSuggestion | null;
+}
+
+interface TypoSuggestionSelector {
+  default: EmptyViewInput | null;
+}
+
+interface MultiTypoSuggestionInput {
+  terms?: any;
+  resolverArgs?: any;
+  enableTotal?: boolean | null;
+  enableCache?: boolean | null;
+}
+
+interface MultiTypoSuggestionOutput {
+  results: Array<TypoSuggestion>;
+  totalCount: number | null;
 }
 
 interface IframeWidgetSrcdoc {
@@ -6734,6 +6786,7 @@ interface User {
   notificationSubforumUnread: any;
   notificationNewMention: any;
   notificationDialogueMessages: any;
+  notificationTypoSuggestions: any;
   notificationPublishedDialogueMessages: any;
   notificationAddedAsCoauthor: any;
   notificationDebateCommentsOnSubscribedPost: any;
@@ -8455,6 +8508,7 @@ interface CreateUserDataInput {
   notificationSubforumUnread?: any;
   notificationNewMention?: any;
   notificationDialogueMessages?: any;
+  notificationTypoSuggestions?: any;
   notificationPublishedDialogueMessages?: any;
   notificationAddedAsCoauthor?: any;
   notificationDebateCommentsOnSubscribedPost?: any;
@@ -8624,6 +8678,7 @@ interface UpdateUserDataInput {
   notificationSubforumUnread?: any;
   notificationNewMention?: any;
   notificationDialogueMessages?: any;
+  notificationTypoSuggestions?: any;
   notificationPublishedDialogueMessages?: any;
   notificationAddedAsCoauthor?: any;
   notificationDebateCommentsOnSubscribedPost?: any;
@@ -9057,6 +9112,12 @@ interface GraphQLTypeMap {
   HomePageDesignSummary: HomePageDesignSummary;
   MarketplaceHomePageDesign: MarketplaceHomePageDesign;
   AdminHomePageDesign: AdminHomePageDesign;
+  TypoSuggestion: TypoSuggestion;
+  SingleTypoSuggestionInput: SingleTypoSuggestionInput;
+  SingleTypoSuggestionOutput: SingleTypoSuggestionOutput;
+  TypoSuggestionSelector: TypoSuggestionSelector;
+  MultiTypoSuggestionInput: MultiTypoSuggestionInput;
+  MultiTypoSuggestionOutput: MultiTypoSuggestionOutput;
   IframeWidgetSrcdoc: IframeWidgetSrcdoc;
   SingleIframeWidgetSrcdocOutput: SingleIframeWidgetSrcdocOutput;
   IframeWidgetSrcdocSelector: IframeWidgetSrcdocSelector;
@@ -9675,6 +9736,7 @@ interface CreateInputsByCollectionName {
   TagRels: never;
   Tweets: never;
   TypingIndicators: never;
+  TypoSuggestions: never;
   UserActivities: never;
   Votes: never;
   YjsDocuments: never;
@@ -9762,6 +9824,7 @@ interface UpdateInputsByCollectionName {
   TagRels: never;
   Tweets: never;
   TypingIndicators: never;
+  TypoSuggestions: never;
   UltraFeedEvents: never;
   UserActivities: never;
   Votes: never;
