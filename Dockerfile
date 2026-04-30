@@ -26,13 +26,13 @@ ENV HOCUSPOCUS_URL=${HOCUSPOCUS_URL}
 ENV ENV_NAME=prodUnresigned \
     FORUM_TYPE=Unresigned
 
-RUN --mount=type=cache,target=/usr/src/app/.yarn/cache,id=unresigned-yarn-cache \
+RUN --mount=type=cache,id=s/6ddb487b-d357-4204-b0e7-9d7c1614828e-/usr/src/app/.yarn/cache,target=/usr/src/app/.yarn/cache \
     yarn install \
   && rm -rf node_modules/@types/mapbox-gl node_modules/@types/simpl-schema \
     ckEditor/node_modules/@types/mapbox-gl ckEditor/node_modules/@types/simpl-schema \
   && yarn workspace @lesswrong/lesswrong-editor run build
 
-RUN --mount=type=cache,target=/usr/src/app/.next/cache,id=unresigned-next-cache \
+RUN --mount=type=cache,id=s/6ddb487b-d357-4204-b0e7-9d7c1614828e-/usr/src/app/.next/cache,target=/usr/src/app/.next/cache \
     yarn build \
   && chmod +x scripts/docker-entrypoint.sh
 
