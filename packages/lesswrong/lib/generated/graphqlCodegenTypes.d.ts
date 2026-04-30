@@ -15961,7 +15961,7 @@ type TypoSuggestionHoverQueryQuery_Query = { __typename?: 'Query', typoSuggestio
 
 
 type TypoSuggestionHoverQueryQueryVariables = Exact<{
-  documentId: InputMaybe<Scalars['String']['input']>;
+  suggestionId: InputMaybe<Scalars['String']['input']>;
 }>;
 
 
