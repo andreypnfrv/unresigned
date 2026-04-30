@@ -8,6 +8,7 @@ import { CLIENT_ID_COOKIE, CLIENT_ID_NEW_COOKIE } from "@/lib/cookies/cookies";
 import { SharedScripts } from "@/components/next/SharedScripts";
 import { getDefaultMetadata } from "@/server/pageMetadata/sharedMetadata";
 import { getSettings } from "@/server/settings/settings";
+import { connection } from "next/server";
 import type { Metadata } from "next";
 import { BodyWithBackgroundColor } from "@/components/layout/PageBackgroundWrapper";
 import PageBackgroundColorSwitcher from "@/components/layout/PageBackgroundColorSwitcher";
@@ -23,6 +24,7 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+  await connection();
   const { getRequestIdForServerComponentOrGenerateMetadata } = await import("@/server/rendering/requestId");
   const requestId = await getRequestIdForServerComponentOrGenerateMetadata();
   const { public: publicInstanceSettings } = getSettings();
