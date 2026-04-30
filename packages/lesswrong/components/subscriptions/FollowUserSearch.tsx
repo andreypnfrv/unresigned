@@ -1,7 +1,7 @@
 import React from 'react';
 import { InstantSearch } from '../../lib/utils/componentsWithChildren';
 import { SearchBox, Hits, Configure } from 'react-instantsearch-dom';
-import { getSearchIndexName, getSearchClient, isSearchEnabled } from '../../lib/search/searchUtil';
+import { getSearchIndexName, getSearchClient } from '../../lib/search/searchUtil';
 import type { SearchState } from 'react-instantsearch-core';
 import { isLeftClick } from '../search/UsersSearchHit';
 import { SearchHitComponentProps } from '../search/types';
@@ -14,6 +14,7 @@ import { useQuery } from "@/lib/crud/useQuery";
 import { gql } from "@/lib/generated/gql-codegen";
 import { defineStyles } from '@/components/hooks/defineStyles';
 import { useStyles } from '@/components/hooks/useStyles';
+import { useSearchAvailabilityLive } from '@/components/search/SearchAvailabilityLive';
 
 const SubscriptionStateMultiQuery = gql(`
   query multiSubscriptionFollowUserSearchQuery($selector: SubscriptionSelector, $limit: Int, $enableTotal: Boolean) {
@@ -96,6 +97,7 @@ const FollowUserSearch = ({onUserSelected, currentUser}: {
   currentUser: UsersCurrent,
 }) => {
   const classes = useStyles(styles);
+  const searchAvailable = useSearchAvailabilityLive();
   const [searchOpen, setSearchOpen] = React.useState(false);
   const searchStateChanged = React.useCallback((searchState: SearchState) => {
     setSearchOpen((searchState.query?.length ?? 0) > 0);
@@ -141,7 +143,7 @@ const FollowUserSearch = ({onUserSelected, currentUser}: {
     }
   }, []);
 
-  if (!isSearchEnabled()) {
+  if (!searchAvailable) {
     return null;
   }
 

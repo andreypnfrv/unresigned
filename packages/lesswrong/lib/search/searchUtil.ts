@@ -72,6 +72,13 @@ export const collectionIsSearchIndexed = (collectionName: CollectionNameString):
   return (searchIndexedCollectionNames as unknown as string[]).includes(collectionName);
 }
 
+export const formatFacetFilters = (
+  facetFilters?: Record<string, boolean | string>,
+): string[][] | undefined =>
+  facetFilters
+    ? [Object.keys(facetFilters).map((key) => `${key}:${facetFilters[key]}`)]
+    : undefined;
+
 // TODO: Hide search-UI if neither Elastic nor Algolia is configured
 export const isSearchEnabled = () => isElasticEnabled()
 

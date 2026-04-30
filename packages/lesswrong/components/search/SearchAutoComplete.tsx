@@ -1,7 +1,10 @@
+"use client";
+
 import React from 'react';
 import { Configure } from 'react-instantsearch-dom';
 import { InstantSearch } from '../../lib/utils/componentsWithChildren';
-import { getSearchClient, isSearchEnabled } from '../../lib/search/searchUtil';
+import { getSearchClient, formatFacetFilters } from '../../lib/search/searchUtil';
+import { useSearchAvailabilityLive } from './SearchAvailabilityLive';
 import { connectAutoComplete } from 'react-instantsearch/connectors';
 import Autosuggest, { OnSuggestionSelected } from 'react-autosuggest';
 import { defineStyles } from '@/components/hooks/defineStyles';
@@ -26,13 +29,6 @@ const styles = defineStyles("SearchAutoComplete", (theme: ThemeType) => ({
   }
 }));
 
-export const formatFacetFilters = (
-  facetFilters?: Record<string, boolean | string>,
-): string[][] | undefined =>
-  facetFilters
-    ? [Object.keys(facetFilters).map((key) => `${key}:${facetFilters[key]}`)]
-    : undefined;
-
 const SearchAutoComplete = ({clickAction, placeholder, noSearchPlaceholder, renderSuggestion, hitsPerPage=7, indexName, renderInputComponent, facetFilters}: {
   clickAction: (_id: string, object: any) => void,
   placeholder: string,
@@ -44,8 +40,9 @@ const SearchAutoComplete = ({clickAction, placeholder, noSearchPlaceholder, rend
   facetFilters?: Record<string, boolean>,
 }) => {
   const classes = useStyles(styles);
+  const searchAvailable = useSearchAvailabilityLive();
 
-  if (!isSearchEnabled()) {
+  if (!searchAvailable) {
     // Fallback for when search is unavailable (ie, local development installs).
     // This isn't a particularly nice UI, but it's functional enough to be able
     // to test other things.

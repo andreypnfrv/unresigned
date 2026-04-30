@@ -8,7 +8,7 @@ import classNames from 'classnames';
 import CloseIcon from '@/lib/vendor/@material-ui/icons/src/Close';
 import IconButton from '@/lib/vendor/@material-ui/core/src/IconButton';
 import withErrorBoundary from '../common/withErrorBoundary';
-import { getSearchIndexName, getSearchClient, isSearchEnabled } from '../../lib/search/searchUtil';
+import { getSearchIndexName, getSearchClient } from '../../lib/search/searchUtil';
 import { isAF } from '../../lib/instanceSettings';
 import qs from 'qs'
 import { useSearchAnalytics } from '../search/useSearchAnalytics';
@@ -20,6 +20,7 @@ import SearchBarResults from "../search/SearchBarResults";
 import ForumIcon from "./ForumIcon";
 import { defineStyles } from '@/components/hooks/defineStyles';
 import { useStyles } from '@/components/hooks/useStyles';
+import { useSearchAvailabilityLive } from '@/components/search/SearchAvailabilityLive';
 
 const VirtualMenu = connectMenu(() => null);
 
@@ -104,6 +105,7 @@ const SearchBar = ({onSetIsActive, searchResultsArea}: {
 }) => {
   const classes = useStyles(styles);
   const currentUser = useCurrentUser()
+  const searchAvailable = useSearchAvailabilityLive();
   const [inputOpen,setInputOpen] = useState(false);
   const [searchOpen,setSearchOpen] = useState(false);
   const [currentQuery,setCurrentQuery] = useState("");
@@ -158,7 +160,7 @@ const SearchBar = ({onSetIsActive, searchResultsArea}: {
       captureSearch("searchBar", {query: currentQuery});
     }
   }, [currentQuery, captureSearch])
-  if (!isSearchEnabled()) {
+  if (!searchAvailable) {
     return <div>Search is disabled (ElasticSearch not configured on server)</div>
   }
 

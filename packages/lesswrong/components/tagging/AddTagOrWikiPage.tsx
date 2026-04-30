@@ -1,7 +1,7 @@
 import React, { useCallback, useRef } from 'react';
 import { InstantSearch } from '../../lib/utils/componentsWithChildren';
 import { SearchBox, Hits, Configure } from 'react-instantsearch-dom';
-import { getSearchIndexName, getSearchClient, isSearchEnabled } from '../../lib/search/searchUtil';
+import { getSearchIndexName, getSearchClient } from '../../lib/search/searchUtil';
 import { useCurrentUser } from '../common/withUser';
 import { Link } from '../../lib/reactRouterWrapper';
 import { getTagCreateUrl, tagUserHasSufficientKarma } from '../../lib/collections/tags/helpers';
@@ -11,6 +11,7 @@ import TagSearchHit from "./TagSearchHit";
 import DropdownDivider from "../dropdowns/DropdownDivider";
 import { defineStyles } from '@/components/hooks/defineStyles';
 import { useStyles } from '@/components/hooks/useStyles';
+import { useSearchAvailabilityLive } from '@/components/search/SearchAvailabilityLive';
 
 const styles = defineStyles("AddTagOrWikiPage", (theme: ThemeType) => ({
   root: {
@@ -46,6 +47,7 @@ const AddTagOrWikiPage = ({onTagSelected, isVotingContext, onlyTags, numSuggesti
 }) => {
   const classes = useStyles(styles);
   const currentUser = useCurrentUser()
+  const searchAvailable = useSearchAvailabilityLive();
   const [searchOpen, setSearchOpen] = React.useState(false);
   const searchStateChanged = React.useCallback((searchState: SearchState) => {
     setSearchOpen((searchState.query?.length ?? 0) > 0);
@@ -77,7 +79,7 @@ const AddTagOrWikiPage = ({onTagSelected, isVotingContext, onlyTags, numSuggesti
     }
   }, []);
 
-  if (!isSearchEnabled()) {
+  if (!searchAvailable) {
     return <div className={classes.root} ref={containerRef}>
       <input placeholder="Tag ID" type="text" onKeyPress={ev => {
         if (ev.charCode===13) {

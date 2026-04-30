@@ -21,6 +21,7 @@ import type { RouterLocation } from '@/lib/routeChecks/parseRoute';
 import type { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime';
 import { initClientOnce } from '@/client/initClient';
 import { TimeProvider } from '@/lib/utils/TimeProvider';
+import { SearchAvailabilityLiveProvider } from '@/components/search/SearchAvailabilityLive';
 
 if (isClient) {
   // This has a downstream call to `googleTagManagerIdSetting.get()`.
@@ -142,6 +143,7 @@ const ClientAppGenerator = ({ abTestGroupsUsed, requestId, children }: {
   children: React.ReactNode,
 }) => {
   return <TimeProvider>
+    <SearchAvailabilityLiveProvider>
     <Suspense fallback={null}>
       <ApolloWrapper requestId={requestId}>
         <CookiesProvider>
@@ -165,6 +167,7 @@ const ClientAppGenerator = ({ abTestGroupsUsed, requestId, children }: {
         </CookiesProvider>
       </ApolloWrapper>
     </Suspense>
+    </SearchAvailabilityLiveProvider>
   </TimeProvider>
 };
 

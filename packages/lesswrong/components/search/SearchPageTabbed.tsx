@@ -15,7 +15,6 @@ import {
   getSearchClient,
   SearchIndexCollectionName,
   collectionIsSearchIndexed,
-  isSearchEnabled,
   ElasticSorting,
   defaultElasticSorting,
   elasticSortingToUrlParam,
@@ -37,6 +36,7 @@ import LWTooltip from "../common/LWTooltip";
 import ForumIcon from "../common/ForumIcon";
 import LWDialog from '../common/LWDialog';
 import { defineStyles, useStyles } from '../hooks/useStyles';
+import { useSearchAvailabilityLive } from './SearchAvailabilityLive';
 import { usePathname } from 'next/navigation';
 
 const hitsPerPage = 10
@@ -249,6 +249,7 @@ const SearchPageTabbed = () => {
   const { location, query } = useSubscribedLocation()
   const captureSearch = useSearchAnalytics();
   const currentUser = useCurrentUser();
+  const searchAvailable = useSearchAvailabilityLive();
 
   // store these values for the search filter
   const pastDay = useRef(moment().subtract(24, 'hours').valueOf())
@@ -348,7 +349,7 @@ const SearchPageTabbed = () => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [query.query]);
 
-  if (!isSearchEnabled()) {
+  if (!searchAvailable) {
     return <div className={classes.root}>
       Search is disabled (ElasticSearch not configured on server)
     </div>
