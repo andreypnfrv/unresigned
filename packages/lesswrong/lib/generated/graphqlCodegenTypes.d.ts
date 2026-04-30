@@ -10104,7 +10104,6 @@ type TypoSuggestion = {
   __typename?: 'TypoSuggestion';
   _id: Scalars['String']['output'];
   appliedRevisionId?: Maybe<Scalars['String']['output']>;
-  applyWouldRequirePublishingUnrelatedChanges: Scalars['Boolean']['output'];
   author?: Maybe<User>;
   authorId: Scalars['String']['output'];
   collectionName: Scalars['String']['output'];
@@ -10112,6 +10111,7 @@ type TypoSuggestion = {
   documentId: Scalars['String']['output'];
   explanation?: Maybe<Scalars['String']['output']>;
   fieldName: Scalars['String']['output'];
+  llmCanonicalQuote?: Maybe<Scalars['String']['output']>;
   llmVerdict: Scalars['String']['output'];
   narrowedQuote?: Maybe<Scalars['String']['output']>;
   narrowedReplacement?: Maybe<Scalars['String']['output']>;
@@ -24084,7 +24084,7 @@ type TypoSuggestionsDefaultFragment_TypoSuggestion_author_User = (
   & UsersMinimumInfo
 );
 
-type TypoSuggestionsDefaultFragment = { __typename?: 'TypoSuggestion', _id: string, createdAt: string, documentId: string, collectionName: string, fieldName: string, voteId: string, authorId: string, quote: string, proposedReplacement: string | null, narrowedQuote: string | null, narrowedReplacement: string | null, explanation: string | null, llmVerdict: string, status: string, resolvedByUserId: string | null, appliedRevisionId: string | null, resolvedAt: string | null, applyWouldRequirePublishingUnrelatedChanges: boolean, reactor: TypoSuggestionsDefaultFragment_TypoSuggestion_reactor_User | null, author: TypoSuggestionsDefaultFragment_TypoSuggestion_author_User | null };
+type TypoSuggestionsDefaultFragment = { __typename?: 'TypoSuggestion', _id: string, createdAt: string, documentId: string, collectionName: string, fieldName: string, voteId: string, authorId: string, quote: string, llmCanonicalQuote: string | null, proposedReplacement: string | null, narrowedQuote: string | null, narrowedReplacement: string | null, explanation: string | null, llmVerdict: string, status: string, resolvedByUserId: string | null, appliedRevisionId: string | null, resolvedAt: string | null, reactor: TypoSuggestionsDefaultFragment_TypoSuggestion_reactor_User | null, author: TypoSuggestionsDefaultFragment_TypoSuggestion_author_User | null };
 
 type UserMostValuablePostInfo = { __typename?: 'UserMostValuablePost', _id: string, userId: string | null, postId: string | null, deleted: boolean | null };
 

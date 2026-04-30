@@ -3059,6 +3059,7 @@ type TypoSuggestion {
   authorId: String!
   author: User
   quote: String!
+  llmCanonicalQuote: String
   proposedReplacement: String
   narrowedQuote: String
   narrowedReplacement: String
@@ -3068,7 +3069,6 @@ type TypoSuggestion {
   resolvedByUserId: String
   appliedRevisionId: String
   resolvedAt: Date
-  applyWouldRequirePublishingUnrelatedChanges: Boolean!
 }
 
 input SingleTypoSuggestionInput {
