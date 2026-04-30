@@ -30,7 +30,10 @@ export function SearchAvailabilityLiveProvider({ children }: { children: ReactNo
       return;
     }
     let canceled = false;
-    void fetch("/api/elasticsearch-available", { cache: "no-store" })
+    void fetch("/api/search?elasticsearchAvailable=1", {
+      cache: "no-store",
+      headers: { Accept: "application/json" },
+    })
       .then((res) => (res.ok ? res.json() : { available: false }))
       .then((data: { available?: boolean }) => {
         if (canceled || data.available !== true) return;

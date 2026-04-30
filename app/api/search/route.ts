@@ -4,6 +4,7 @@ import { isElasticEnabled } from "@/lib/instanceSettings";
 import { getSiteUrlFromReq } from "@/server/utils/getSiteUrl";
 import uniq from "lodash/uniq";
 import type { NextRequest } from "next/server";
+import { NextResponse } from "next/server";
 
 const getSearchService = (() => {
   let searchService: ElasticService | null = null;
@@ -227,6 +228,12 @@ If \`search\` is omitted, this documentation is returned.
 }
 
 export async function GET(req: NextRequest) {
+  if (req.nextUrl.searchParams.get("elasticsearchAvailable") === "1") {
+    return NextResponse.json(
+      { available: isElasticEnabled() },
+      { headers: { "Cache-Control": "private, no-store, max-age=0" } },
+    );
+  }
   const rawSearchQuery = req.nextUrl.searchParams.get("search")
     ?? req.nextUrl.searchParams.get("query")
     ?? "";
