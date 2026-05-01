@@ -2,7 +2,7 @@ import React from 'react';
 import { userIsAdmin } from '../../lib/vulcan-users/permissions';
 import moment from '../../lib/moment-timezone';
 import { useCurrentUser } from '../common/withUser';
-import { isAF } from '../../lib/instanceSettings';
+import { forumTitleSetting, isAF } from '../../lib/instanceSettings';
 import { useVoteButtonsDisabled } from './useVoteButtonsDisabled';
 import type { VotingProps } from './votingProps';
 import OverallVoteButton from './OverallVoteButton';
@@ -166,7 +166,7 @@ const OverallVoteAxis = ({
       }
       {!af && isAF() &&
         <LWTooltip
-          title="Unresigned Karma"
+          title={`${forumTitleSetting.get()} Karma`}
           placement={tooltipPlacement}
           className={classes.lwTooltip}
         >

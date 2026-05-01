@@ -13,6 +13,7 @@ import { useCurrentUser } from '../../common/withUser';
 import { Typography } from "../../common/Typography";
 import { defineStyles } from '@/components/hooks/defineStyles';
 import { useStyles } from '@/components/hooks/useStyles';
+import { forumTitleSetting } from '@/lib/instanceSettings';
 
 const styles = defineStyles('WelcomeBox', (theme: ThemeType) => ({
   wrapper: {
@@ -66,9 +67,8 @@ const styles = defineStyles('WelcomeBox', (theme: ThemeType) => ({
   },
 }));
 
-const welcomeBoxes: ForumOptions<{title: string, contents: HashLinkProps[]} | null> = {
+const welcomeBoxes: ForumOptions<{ contents: HashLinkProps[]} | null> = {
   Unresigned: {
-    title: "New to Unresigned?",
     contents: [
       { to: "/about", children: "Getting Started" },
       { to: "/faq", children: "FAQ" },
@@ -91,7 +91,8 @@ const WelcomeBox = () => {
     return null;
   }
 
-  const { title, contents } = data;
+  const title = `New to ${forumTitleSetting.get()}?`;
+  const { contents } = data;
 
   const hideBox = () => setCookie(HIDE_WELCOME_BOX_COOKIE, "true", {
     path: "/"

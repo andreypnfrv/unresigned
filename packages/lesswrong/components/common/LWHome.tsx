@@ -3,7 +3,8 @@
 import React, { useEffect } from 'react';
 import { AnalyticsContext } from "../../lib/analyticsEvents";
 import { getReviewPhase, reviewIsActive, REVIEW_YEAR } from '../../lib/reviewUtils';
-import { showReviewOnFrontPageIfActive, ultraFeedEnabledSetting, isAF, isUnresignedForum, unresignedHeroBannerImgSrc } from '@/lib/instanceSettings';
+import { showReviewOnFrontPageIfActive, ultraFeedEnabledSetting, isAF, isUnresignedForum, unresignedHeroBannerImgSrc, forumTitleSetting, taglineSetting } from '@/lib/instanceSettings';
+import { forumSelect } from '@/lib/forumTypeUtils';
 import { useCookiesWithConsent } from '../hooks/useCookiesWithConsent';
 import { LAST_VISITED_FRONTPAGE_COOKIE } from '../../lib/cookies/cookies';
 import moment from 'moment';
@@ -187,7 +188,7 @@ const getStructuredData = () => ({
     ].join(' ')
   }),
   ...(isUnresignedForum() && {
-    "description": "Unresigned is a forum for longevity science, policy, advocacy, and community — focused on ending aging and building a serious immortalist culture.",
+    "description": `${forumTitleSetting.get()} — ${taglineSetting.get()}`,
   }),
 })
 
@@ -202,7 +203,10 @@ const LWHome = () => {
         {isUnresignedForum() && <SingleColumnSection>
           <div className={classes.hero}>
             <div className={classes.heroInner}>
-              <div className={classes.heroTitle}>Those who unresign to die salute you!</div>
+              <div className={classes.heroTitle}>{forumSelect({
+                Unresigned: "Those who unresign to die salute you!",
+                Antimortality: "Those who refuse mortality salute life!",
+              })}</div>
               <div className={classes.heroCopy}>
                 <div className={classes.heroBody}>
                   A community for extending life by resisting aging and death

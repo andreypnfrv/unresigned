@@ -1,5 +1,5 @@
 import React from 'react';
-import { isEAForum } from '../../lib/instanceSettings';
+import { isEAForum, forumTitleSetting } from '../../lib/instanceSettings';
 import classNames from 'classnames';
 import SvgIcon from '../icons/SvgIcon';
 import {isFriendlyUI} from '../../themes/forumTheme'
@@ -131,8 +131,7 @@ const styles = defineStyles("GroupLinks", (theme: ThemeType) => ({
   }
 }));
 
-const tooltips: Partial<Record<string,string>> = {
-  'LW': "This is a Unresigned group",
+const tooltipsExceptLW: Partial<Record<string,string>> = {
   'EA': "This is an Effective Altruism group",
   'SSC': "This is a Slate Star Codex group",
   // 'MIRIx': "This is a MIRIx group",
@@ -145,6 +144,10 @@ const GroupLinks = ({ document, noMargin }: {
   noMargin?: boolean,
 }) => {
   const classes = useStyles(styles);
+  const tooltips: Partial<Record<string,string>> = {
+    ...tooltipsExceptLW,
+    'LW': `This is a ${forumTitleSetting.get()} group`,
+  };
 
   // tooltip text differs between group and event
   const isEvent = 'isEvent' in document;

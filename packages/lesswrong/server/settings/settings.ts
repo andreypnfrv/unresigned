@@ -7,6 +7,7 @@ import { localUnresignedDevDb } from "./localUnresignedDevDb";
 import { localLwProdDb } from "./localLwProdDb";
 import { prodAf } from "./prodAf";
 import { prodLw } from "./prodLw";
+import { prodAntimortality } from "./prodAntimortality";
 import { prodUnresigned } from "./prodUnresigned";
 import { testSettings } from "./test";
 import { testCrosspostSettings } from "./testCrosspost";
@@ -14,7 +15,16 @@ import { z } from "zod";
 import { isAnyTest, isProduction } from "@/lib/executionEnvironment";
 import { isAF } from "@/lib/forumTypeUtils";
 
-const validEnvNames = z.enum(["test", "testCrosspost", "baserates","localLwDevDb", "localUnresignedDevDb", "prodLw", "prodUnresigned"]);
+const validEnvNames = z.enum([
+  "test",
+  "testCrosspost",
+  "baserates",
+  "localLwDevDb",
+  "localUnresignedDevDb",
+  "prodLw",
+  "prodUnresigned",
+  "prodAntimortality",
+]);
 
 function getPublicSettings() {
   if (isAnyTest) {
@@ -51,6 +61,16 @@ function getPublicSettings() {
     case "prodUnresigned":
       return {
         ...prodUnresigned,
+        elasticsearch: {
+          searchAvailable: !!(
+            process.env.ELASTICSEARCH_NODE?.trim() ||
+            process.env.ELASTICSEARCH_CLOUD_ID?.trim()
+          ),
+        },
+      };
+    case "prodAntimortality":
+      return {
+        ...prodAntimortality,
         elasticsearch: {
           searchAvailable: !!(
             process.env.ELASTICSEARCH_NODE?.trim() ||

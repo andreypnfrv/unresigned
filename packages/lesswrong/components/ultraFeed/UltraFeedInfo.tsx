@@ -2,6 +2,7 @@ import React from 'react';
 import { defineStyles, useStyles } from '../hooks/useStyles';
 import { Link } from '../../lib/reactRouterWrapper';
 import ContentStyles from '../common/ContentStyles';
+import { forumTitleSetting } from '@/lib/instanceSettings';
 
 const styles = defineStyles("UltraFeedInfo", (theme: ThemeType) => ({
   settingGroup: {
@@ -31,17 +32,18 @@ const styles = defineStyles("UltraFeedInfo", (theme: ThemeType) => ({
 
 const UltraFeedInfo = () => {
   const classes = useStyles(styles);
+  const siteName = forumTitleSetting.get();
 
   return (
     <ContentStyles contentType="ultraFeed">
       <div className={classes.settingGroup}>
         <p className={classes.paragraph}>
-          The <strong>For You</strong> feed is an attempt to present you with the content you would most like to see from across all of Unresigned. The content is personalized based on your viewing/voting/etc history and by default includes:
+          The <strong>For You</strong> feed is an attempt to present you with the content you would most like to see from across all of {siteName}. The content is personalized based on your viewing/voting/etc history and by default includes:
         </p>
         <ul>
           <li>Recent posts and comments</li>
           <li>Recent content from users you've followed/subscribed to</li>
-          <li>Recommended from Unresigned's full archive of posts</li>
+          <li>Recommended from {siteName}'s full archive of posts</li>
           <li>Feature content such as Annual Review winners</li>
           <li>Your bookmarks</li>
           <li>Quick takes</li>

@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import classNames from 'classnames';
 import LWTooltip from "../common/LWTooltip";
 import { defineStyles } from '@/components/hooks/defineStyles';
 import { useStyles } from '@/components/hooks/useStyles';
+import { forumTitleSetting } from '../../lib/instanceSettings';
 
 const readPostStyle = (theme: ThemeType) => ({
   background: theme.palette.grey[405],
@@ -34,26 +35,35 @@ const styles = defineStyles('PostInteractionStripe', (theme: ThemeType) => ({
 }));
 
 const votePrefix = `You previously gave this post `
-const voteSuffix = <div><em>(This is different from a Unresigned Review vote)</em></div>
-
 const readPostLabel = `You have read this post`
 
-const interactionLabels = {
-  'bigDownvote': <div>{votePrefix}a strong (karma) downvote{voteSuffix}</div>,
-  'smallDownvote': <div>{votePrefix}a (karma) downvote{voteSuffix}</div>,
-  'smallUpvote': <div>{votePrefix}a (karma) upvote{voteSuffix}</div>,
-  'bigUpvote': <div>{votePrefix}a strong (karma) upvote{voteSuffix}</div>,
-  'readPost': readPostLabel,
-  'neutral': readPostLabel
-}
+type KarmaInteractionKey = 'bigDownvote' | 'smallDownvote' | 'smallUpvote' | 'bigUpvote'
+type InteractionKey = KarmaInteractionKey | 'readPost' | 'neutral'
 
-const isInteractionKey = (value: string | null): value is keyof typeof interactionLabels => 
-  !!value && value in interactionLabels;
+const isInteractionKey = (value: string | null): value is InteractionKey =>
+  value === 'readPost' ||
+  value === 'neutral' ||
+  value === 'bigDownvote' ||
+  value === 'smallDownvote' ||
+  value === 'smallUpvote' ||
+  value === 'bigUpvote';
 
 export const PostInteractionStripe = ({post}: {
   post: PostsListWithVotes
 }) => {
   const classes = useStyles(styles);
+  const forumTitle = forumTitleSetting.get();
+  const interactionLabels: Record<InteractionKey, React.ReactNode> = useMemo(() => {
+    const voteSuffix = <div><em>(This is different from a {forumTitle} Review vote)</em></div>;
+    return {
+      bigDownvote: <div>{votePrefix}a strong (karma) downvote{voteSuffix}</div>,
+      smallDownvote: <div>{votePrefix}a (karma) downvote{voteSuffix}</div>,
+      smallUpvote: <div>{votePrefix}a (karma) upvote{voteSuffix}</div>,
+      bigUpvote: <div>{votePrefix}a strong (karma) upvote{voteSuffix}</div>,
+      readPost: readPostLabel,
+      neutral: readPostLabel,
+    };
+  }, [forumTitle]);
   const interaction = post.currentUserVote || (post.lastVisitedAt ? 'readPost' : null)
 
   if (!isInteractionKey(interaction)) return null

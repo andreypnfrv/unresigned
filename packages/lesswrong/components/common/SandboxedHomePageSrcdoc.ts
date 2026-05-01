@@ -1,4 +1,5 @@
 import { MARKETPLACE_POST_ID } from '@/lib/collections/homePageDesigns/constants';
+import { forumTitleSetting } from '@/lib/instanceSettings';
 import { globalExternalStylesheets } from '@/themes/globalStyles/externalStyles';
 
 const PRETEXT_MODULE_URL = 'https://unpkg.com/@chenglou/pretext@0.0.3/dist/layout.js';
@@ -14,14 +15,25 @@ const INITIAL_CURATED_POSTS_COUNT = 4;
 interface SrcdocWrapperOptions {
   origin: string;
   omitRpcBridge?: boolean;
+  sandboxSiteNameFallback?: string;
+}
+
+function escapeForSingleQuotedJsString(siteName: string): string {
+  return siteName.replace(/\\/g, "\\\\").replace(/'/g, "\\'").replace(/\n/g, "\\n").replace(/\r/g, "\\r");
+}
+
+function applySandboxSiteNameFallback(bodyContent: string, siteName: string): string {
+  return bodyContent.replace(/__HOMEPAGE_SRCDOC_SITE_FALLBACK__/g, escapeForSingleQuotedJsString(siteName));
 }
 
 export function wrapBodyInSrcdoc(bodyContent: string, options: SrcdocWrapperOptions): string {
   const { origin, omitRpcBridge } = options;
+  const fallbackName = options.sandboxSiteNameFallback ?? forumTitleSetting.get();
+  const processedBody = applySandboxSiteNameFallback(bodyContent, fallbackName);
   const externalStylesheetLinks = globalExternalStylesheets
     .map((href) => `<link rel="stylesheet" type="text/css" href="${href}">`)
     .join('\n  ');
-  const pretextModulePreloadLink = bodyContent.includes(PRETEXT_MODULE_URL)
+  const pretextModulePreloadLink = processedBody.includes(PRETEXT_MODULE_URL)
     ? PRETEXT_MODULE_PRELOAD_URLS
         .map((href) => `<link rel="modulepreload" href="${href}" crossorigin>`)
         .join('\n  ')
@@ -143,7 +155,7 @@ export function wrapBodyInSrcdoc(bodyContent: string, options: SrcdocWrapperOpti
 </head>
 <body>
   <div id="srcdoc-scroll-root">
-    ${bodyContent}
+    ${processedBody}
   </div>
   <script>
     (function() {
@@ -4319,7 +4331,7 @@ export function getDefaultHomePageBody(): string {
 
     function AnnouncementCard(props) {
       var post = props.post || null;
-      var cardLabel = post ? formatByline(post) : 'Unresigned';
+      var cardLabel = post ? formatByline(post) : '__HOMEPAGE_SRCDOC_SITE_FALLBACK__';
       var titleHref = post ? postUrl(post) : null;
       var isMobile = typeof window !== 'undefined' && window.matchMedia('(max-width: 639px)').matches;
       var cardRef = useRef(null);

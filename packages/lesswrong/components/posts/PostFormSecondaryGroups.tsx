@@ -1,7 +1,7 @@
 import { MODERATION_GUIDELINES_OPTIONS, postStatusLabels, EVENT_TYPES } from "@/lib/collections/posts/constants";
 import { EditablePost, postCanEditHideCommentKarma, PostSubmitMeta, userCanEditCoauthors, userPassesCrosspostingKarmaThreshold } from "@/lib/collections/posts/helpers";
 import { getDefaultEditorPlaceholder } from '@/lib/editor/defaultEditorPlaceholder';
-import { fmCrosspostBaseUrlSetting, fmCrosspostSiteNameSetting, isEAForum, isLWorAF } from "@/lib/instanceSettings";
+import { fmCrosspostBaseUrlSetting, fmCrosspostSiteNameSetting, isEAForum, isLWorAF, forumTitleSetting } from "@/lib/instanceSettings";
 import { allOf } from "@/lib/utils/functionUtils";
 import { getVotingSystems } from "@/lib/voting/getVotingSystem";
 import { OwnableDocument, userIsAdmin, userIsAdminOrMod, userIsMemberOf, userOwns } from "@/lib/vulcan-users/permissions";
@@ -263,7 +263,7 @@ const PostFormSecondaryGroups = ({
           </div>
           {canSeeHighlight && <div className={classes.highlightGroup}>
             <h3 className={classes.formGroupTitle}>Custom Highlight</h3>
-            <p><em>Admin Only. Changes the post hover text on Unresigned. (Doesn't appear in post previews yet)</em></p>
+            <p><em>Admin Only. Changes the post hover text on {forumTitleSetting.get()}. (Doesn't appear in post previews yet)</em></p>
             <form.Field name="customHighlight">
               {(field) => (
                 <EditorFormComponent

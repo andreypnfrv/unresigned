@@ -125,7 +125,7 @@ const RecentDiscussionSubscribeReminder = () => {
   const emailAddressInput = useRef<HTMLInputElement|null>(null);
   const [loading, setLoading] = useState(false);
   const { flash } = useMessages();
-  const subscriptionDescription = '(2-3 posts per week, selected by the Unresigned moderation team.)';
+  const subscriptionDescription = `(2-3 posts per week, selected by the ${forumTitleSetting.get()} moderation team.)`;
   const { captureEvent } = useTracking({eventProps: {pageElementContext: "subscribeReminder"}});
   
   // Show admins a random version of the widget. Makes sure we notice if it's intrusive/bad.
@@ -228,9 +228,9 @@ const RecentDiscussionSubscribeReminder = () => {
     // Show the confirmation after the user subscribes
     let confirmText;
     if (isLW()) {
-      confirmText = "You are subscribed to the best posts of Unresigned!";
+      confirmText = `You are subscribed to the best posts of ${forumTitleSetting.get()}!`;
     } else {
-      confirmText = `You are subscribed to the ${forumTitleSetting} Digest`;
+      confirmText = `You are subscribed to the ${forumTitleSetting.get()} Digest`;
     }
     return <AnalyticsWrapper branch="already-subscribed">
       <div className={classes.message}>
@@ -321,7 +321,7 @@ const RecentDiscussionSubscribeReminder = () => {
     // activated), and sends a confirmation email (if needed).
     const subscribeTextNode = isEAForum() ? eaForumSubscribePrompt : (
       <div className={classes.message}>
-        You previously unsubscribed from all emails from Unresigned.
+        You previously unsubscribed from all emails from {forumTitleSetting.get()}.
         Re-subscribe to get the best posts emailed to you! {subscriptionDescription}
       </div>
     );
@@ -344,7 +344,7 @@ const RecentDiscussionSubscribeReminder = () => {
     // verified) resends the verification email.
     const subscribeTextNode = isEAForum() ? eaForumSubscribePrompt : (
       <div className={classes.message}>
-        Subscribe to get the best of Unresigned emailed to you. {subscriptionDescription}
+        Subscribe to get the best of {forumTitleSetting.get()} emailed to you. {subscriptionDescription}
       </div>
     );
     return <AnalyticsWrapper branch="logged-in-not-subscribed">

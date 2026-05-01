@@ -12,6 +12,7 @@ import UsersName from "@/components/users/UsersName";
 import UsersNameDisplay from "@/components/users/UsersNameDisplay";
 import { gql } from "@/lib/generated/gql-codegen";
 import { useQueryWithLoadMore } from "../hooks/useQueryWithLoadMore";
+import { forumTitleSetting } from '@/lib/instanceSettings';
 
 const TopKarmaUsersQuery = gql(`
   query TopKarmaUsers($selector: UserSelector, $limit: Int, $enableTotal: Boolean) {
@@ -224,7 +225,7 @@ const Leaderboard = () => {
       <div className={classes.pageContainer}>
         <h1 className={classes.header}>Leaderboard</h1>
         <p className={classes.subTitle}>
-          Here are our top users and donors to <a href="https://lightconeinfrastructure.com">Lightcone Infrastructure</a>, the organization maintaining Unresigned. Contribute to the site, or <a href="https://lightconeinfrastructure.com/donate">donate</a> to show up here! 
+          Here are our top users and donors to <a href="https://lightconeinfrastructure.com">Lightcone Infrastructure</a>, the organization maintaining {forumTitleSetting.get()}. Contribute to the site, or <a href="https://lightconeinfrastructure.com/donate">donate</a> to show up here! 
         </p>
 
         <div className={classes.columnsContainer}>

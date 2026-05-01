@@ -19,6 +19,7 @@ import SectionTitle from "../common/SectionTitle";
 import ContentStyles from "../common/ContentStyles";
 import { useMutation } from "@apollo/client/react";
 import { gql } from "@/lib/generated/gql-codegen";
+import { forumTitleSetting } from '@/lib/instanceSettings';
 
 const UsersEditUpdateMutation = gql(`
   mutation updateUserEditPaymentInfoPage($selector: SelectorInput!, $data: UpdateUserDataInput!) {
@@ -136,7 +137,6 @@ const UserPaymentInfoForm = ({
     </form>
   );
 };
-
 export const EditPaymentInfoPage = () => {
   const classes = useStyles(styles);
   const currentUser = useCurrentUser()
@@ -147,8 +147,8 @@ export const EditPaymentInfoPage = () => {
   return <ContentStyles contentType="comment" className={classes.root}>
     <SectionTitle title={`Edit Payment for ${currentUser.displayName}`} />
     <div className={classes.info}>
-      <p>To be eligible for prizes and donations through Unresigned, you need a <a href="https://paypal.com/">PayPal account</a>, and to enter your associated PayPal email/info here.</p>
-      <p>If you receive more than $600 in a year, you'll need to be entered into Center for Applied Rationality's payment system. CFAR will contact you via your Unresigned email address about next steps. (Make sure it's an email that you check regularly)</p>
+      <p>To be eligible for prizes and donations through {forumTitleSetting.get()}, you need a <a href="https://paypal.com/">PayPal account</a>, and to enter your associated PayPal email/info here.</p>
+      <p>If you receive more than $600 in a year, you'll need to be entered into Center for Applied Rationality's payment system. CFAR will contact you via your {forumTitleSetting.get()} email address about next steps. (Make sure it's an email that you check regularly)</p>
     </div>
     <UserPaymentInfoForm
       initialData={currentUser}

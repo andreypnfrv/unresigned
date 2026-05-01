@@ -23,8 +23,8 @@ COPY . .
 ARG HOCUSPOCUS_URL=""
 ENV HOCUSPOCUS_URL=${HOCUSPOCUS_URL}
 
-ENV ENV_NAME=prodUnresigned \
-    FORUM_TYPE=Unresigned
+ENV ENV_NAME=prodAntimortality \
+    FORUM_TYPE=Antimortality
 
 RUN --mount=type=cache,id=s/6ddb487b-d357-4204-b0e7-9d7c1614828e-/usr/src/app/.yarn/cache,target=/usr/src/app/.yarn/cache \
     yarn install \

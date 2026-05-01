@@ -9,6 +9,7 @@ import { useTracking } from "../../lib/analyticsEvents";
 import { defineStyles, useStyles } from "../hooks/useStyles";
 import { Link } from "@/lib/reactRouterWrapper";
 import classNames from "classnames";
+import { forumTitleSetting } from '@/lib/instanceSettings';
 
 const FUNDRAISER_LINK = "https://www.every.org/lightcone-infrastructure/f/2026-fundraiser";
 const FUNDRAISER_GOAL = 2_000_000;
@@ -185,7 +186,7 @@ const FundraiserBanner = () => {
       <div className={classes.content}>
         <div className={classes.leftSection}>
           <span className={classes.title}>
-            Unresigned & Lighthaven are fundraising for 2026
+            {forumTitleSetting.get()} & Lighthaven are fundraising for 2026
           </span>
           <span className={classes.goalText}>
             – our goal is to raise {formattedGoal} for the next year

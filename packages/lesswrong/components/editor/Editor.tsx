@@ -6,7 +6,7 @@ import Input from '@/lib/vendor/@material-ui/core/src/Input';
 import Select from '@/lib/vendor/@material-ui/core/src/Select';
 import debounce from 'lodash/debounce';
 import { isClient } from '../../lib/executionEnvironment';
-import { isEAForum } from '../../lib/instanceSettings';
+import { forumTitleSetting, isEAForum } from '../../lib/instanceSettings';
 import type { CollaborativeEditingAccessLevel } from '../../lib/collections/posts/collabEditingPermissions';
 import { userIsAdmin } from '@/lib/vulcan-users/permissions';
 import { rootStyles as greyEditorStyles } from "../ea-forum/onboarding/EAOnboardingInput";
@@ -199,7 +199,7 @@ export const getEditorTypeToDisplayMap = (): Record<LegacyEditorTypeString,{name
   ckEditorMarkup: {name: "CkEditor"},
   markdown: {name: 'Markdown'},
   draftJS: {name: "DraftJS"},
-  lexical: {name: 'Unresigned Docs'},
+  lexical: {name: `${forumTitleSetting.get()} Docs`},
 });
 
 const defaultEditors: EditorTypeString[] = ['lexical', 'ckEditorMarkup']

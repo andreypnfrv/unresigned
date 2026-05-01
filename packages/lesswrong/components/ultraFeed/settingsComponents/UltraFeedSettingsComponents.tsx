@@ -19,6 +19,7 @@ import { ZodFormattedError } from 'zod';
 import LWTooltip from '@/components/common/LWTooltip';
 import ForumIcon from '@/components/common/ForumIcon';
 import { userIsAdminOrMod } from '@/lib/vulcan-users/permissions';
+import { forumTitleSetting } from '@/lib/instanceSettings';
 
 const styles = defineStyles('UltraFeedSettingsComponents', (theme: ThemeType) => ({
   settingGroup: {
@@ -1127,7 +1128,7 @@ export const MiscSettings: React.FC<MiscSettingsProps> = ({ formValues, onBoolea
         </label>
       </div>
       <p className={classes.groupDescription}>
-        When enabled, the feed algorithm does not log viewing behavior (votes and comments will still influence it). This does not disable standard Unresigned analytics separate from the feed.
+        When enabled, the feed algorithm does not log viewing behavior (votes and comments will still influence it). This does not disable standard {forumTitleSetting.get()} analytics separate from the feed.
       </p>
 
       {isAdmin && (

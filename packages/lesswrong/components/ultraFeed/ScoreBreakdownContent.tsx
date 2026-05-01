@@ -5,6 +5,7 @@ import { PostScoreBreakdown, ThreadScoreBreakdown, FeedItemSourceType, FeedComme
 import LWTooltip from '../common/LWTooltip';
 import { DEFAULT_RANKING_CONFIG, buildRankingConfigFromSettings } from '../../server/ultraFeed/ultraFeedRankingConfig';
 import { useUltraFeedSettings } from '../hooks/useUltraFeedSettings';
+import { forumTitleSetting } from '../../lib/instanceSettings';
 
 export const scoreBreakdownStyles = defineStyles('ScoreBreakdownContent', (theme: ThemeType) => ({
   tooltipContent: {
@@ -138,11 +139,11 @@ const sourceLabels: Record<FeedItemSourceType, string> = {
   'bookmarks': 'you bookmarked this',
   'quicktakes': 'recent Quick Take',
   'recentComments': 'recent comments',
-  'spotlights': 'Unresigned featured item',
+  'spotlights': 'featured item',
 };
 
 const sourceTooltips: Partial<Record<FeedItemSourceType, string>> = {
-  'recombee-lesswrong-ultrafeed': 'Unresigned uses Recombee, trained on your reads and votes',
+  'recombee-lesswrong-ultrafeed': 'uses Recombee, trained on your reads and votes',
   'bookmarks': 'Bookmarks are inserted periodically into your feed to remind you about them, you can turn this off in the settings',
 };
 
@@ -258,6 +259,7 @@ type SourcesSectionProps =
 
 const SourcesSection = ({ sources, metaInfo, itemType }: SourcesSectionProps) => {
   const classes = useStyles(scoreBreakdownStyles);
+  const siteName = forumTitleSetting.get();
   
   if (!sources || sources.length === 0) {
     return null;
@@ -268,12 +270,18 @@ const SourcesSection = ({ sources, metaInfo, itemType }: SourcesSectionProps) =>
       <span className={classes.sourcesTitle}>Shown to you because</span>
       {sources.map((source, index) => {
         let label = sourceLabels[source];
+        if (source === 'spotlights') {
+          label = `${siteName} ${label}`;
+        }
         // Only comment threads have isParentPostRead context
         if (source === 'recentComments' && itemType === 'commentThread' && metaInfo?.isParentPostRead) {
           label = 'Recent comments on a post you read';
         }
         
-        const tooltip = sourceTooltips[source];
+        let tooltip = sourceTooltips[source];
+        if (source === 'recombee-lesswrong-ultrafeed') {
+          tooltip = `${siteName} ${tooltip}`;
+        }
         const tagContent = <span className={classes.sourceTag}>{label}</span>;
         const isLast = index === sources.length - 1;
         

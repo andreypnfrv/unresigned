@@ -2,7 +2,7 @@ import React, { useCallback } from 'react';
 import classNames from 'classnames';
 import { useLocation } from '../../../lib/routeUtil';
 import { MenuTabRegular } from './menuTabs';
-import { forumSelect } from '../../../lib/forumTypeUtils';
+import { forumSelect, isUnresignedStyledForumType } from '../../../lib/forumTypeUtils';
 import { useCurrentUser } from '../withUser';
 import { useCookiesWithConsent } from '@/components/hooks/useCookiesWithConsent';
 import { NAV_MENU_FLAG_COOKIE_PREFIX } from '@/lib/cookies/cookies';
@@ -44,7 +44,7 @@ const styles = defineStyles('TabNavigationItem', (theme: ThemeType) => ({
       backgroundColor: 'transparent'
     },
     color: theme.palette.grey[800],
-    ...(theme.forumType === "Unresigned"
+    ...(isUnresignedStyledForumType(theme.forumType)
       ? {
         paddingTop: 7,
         paddingBottom: 8,

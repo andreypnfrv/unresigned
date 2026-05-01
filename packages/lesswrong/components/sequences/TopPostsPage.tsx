@@ -26,6 +26,7 @@ import { useStyles } from '../hooks/useStyles';
 import { SuspenseWrapper } from '../common/SuspenseWrapper';
 import PredictedTopPostsList from "../review/PredictedTopPostsList";
 import { useItemsRead } from '../hooks/useRecordPostView';
+import { forumTitleSetting } from '@/lib/instanceSettings';
 import Divider from '../common/Divider';
 
 /** In theory, we can get back posts which don't have review winner info, but given we're explicitly querying for review winners... */
@@ -699,6 +700,7 @@ function getNewExpansionState(expansionState: Record<string, ExpansionState>, to
 
 const TopPostsPage = () => {
   const classes = useStyles(styles);
+  const forumTitle = forumTitleSetting.get();
 
   const screenWidth = useWindowWidth(2000);
   /** 
@@ -783,9 +785,9 @@ const TopPostsPage = () => {
       <AnalyticsContext pageContext="topPostsPage">
         <div className={classes.widerColumn}>
           <div className={classes.description}>
-            <SectionTitle title={"The Best of Unresigned"} titleClassName={classes.title} />
+            <SectionTitle title={`The Best of ${forumTitle}`} titleClassName={classes.title} />
             <ContentStyles contentType="post">
-              When posts turn more than a year old, the Unresigned community reviews and votes on how well they have stood the test of time. These are the posts that have ranked the highest for all years since 2018 (when our annual tradition of choosing the least wrong of Unresigned began).
+              When posts turn more than a year old, the {forumTitle} community reviews and votes on how well they have stood the test of time. These are the posts that have ranked the highest for all years since 2018 (when our annual tradition of choosing standout posts from {forumTitle} began).
               <br /><br />
               For the years 2018, 2019 and 2020 we also published physical books with the results of our annual vote, which you can buy and learn more about {<Link to='/books'>here</Link>}.
             </ContentStyles>

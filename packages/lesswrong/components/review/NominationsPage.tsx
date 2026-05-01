@@ -20,6 +20,7 @@ import ExternalPostImporter from "../posts/ExternalPostImporter";
 import { allPostsParams } from '@/lib/collections/posts/helpers';
 import { defineStyles } from '@/components/hooks/defineStyles';
 import { useStyles } from '@/components/hooks/useStyles';
+import { forumTitleSetting } from '@/lib/instanceSettings';
 
 const styles = defineStyles("NominationsPage", (theme: ThemeType) => ({
   headline: {
@@ -123,7 +124,7 @@ const NominationsPage = ({reviewYear}: { reviewYear: ReviewYear }) => {
           <Tab
             className={classes.tab}
             value="submitlinkposts"
-            label={<LWTooltip title={`Posts from other sites that are relevant to Unresigned or Alignment Forum`}>Submit LinkPosts</LWTooltip>}
+            label={<LWTooltip title={`Posts from other sites that are relevant to ${forumTitleSetting.get()} or Alignment Forum`}>Submit LinkPosts</LWTooltip>}
           />
           <div className={classes.divider}/>
           <Tab 

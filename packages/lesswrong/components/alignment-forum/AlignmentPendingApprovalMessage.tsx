@@ -1,5 +1,6 @@
 import React from 'react';
-import { isAF } from '../../lib/instanceSettings';
+import { isAF, forumTitleSetting } from '../../lib/instanceSettings';
+import { combineUrls, getSiteUrl } from '@/lib/vulcan-lib/utils';
 import { Link } from "../../lib/reactRouterWrapper";
 import { useCurrentUser } from "../common/withUser";
 import { defineStyles } from '@/components/hooks/defineStyles';
@@ -22,13 +23,14 @@ const AlignmentPendingApprovalMessage = ({post}: {
   const userSubmittedPost = !!post.suggestForAlignmentUserIds && post.suggestForAlignmentUserIds.includes(currentUser._id)
   
   if (!post.af && userSubmittedPost && isAF()) {
+    const viewPostHref = combineUrls(getSiteUrl(), `posts/${post._id}/${post.slug}`);
     return (
       <div className={classes.root}>
         <p>
           This post is pending approval to the Alignment Forum and is currently only visible to you.
-          However, it is already visible (and commentable) to everyone on Unresigned.
+          However, it is already visible (and commentable) to everyone on {forumTitleSetting.get()}.
           {' '}
-          <a href={`https://lesswrong.com/posts/${post._id}/${post.slug}`}>View your post on Unresigned</a>.
+          <a href={viewPostHref}>View your post on {forumTitleSetting.get()}</a>.
         </p>
         <p>
           For more info about Alignment Forum membership and posting policies, see <Link to={'/faq'}>the FAQ</Link>.

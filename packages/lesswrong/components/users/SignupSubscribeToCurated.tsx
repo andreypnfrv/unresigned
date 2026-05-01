@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import Checkbox from '@/lib/vendor/@material-ui/core/src/Checkbox';
 import Info from '@/lib/vendor/@material-ui/icons/src/Info';
-import { isLWorAF, forumHeaderTitleSetting } from '../../lib/instanceSettings';
+import { isLWorAF, forumHeaderTitleSetting, forumTitleSetting } from '../../lib/instanceSettings';
 import InputLabel from '@/lib/vendor/@material-ui/core/src/InputLabel';
 import { TooltipSpan } from '../common/FMTooltip';
 import { defineStyles } from '@/components/hooks/defineStyles';
@@ -56,7 +56,7 @@ const SignupSubscribeToCurated = ({defaultValue, onChange}: {
       />
       Subscribe to {emailType}
       {isLWorAF() && (
-        <TooltipSpan title="Emails 2-3 times per week with the best posts, chosen by the Unresigned moderation team.">
+        <TooltipSpan title={`Emails 2-3 times per week with the best posts, chosen by the ${forumTitleSetting.get()} moderation team.`}>
           <Info className={classes.infoIcon}/>
         </TooltipSpan>
       )}

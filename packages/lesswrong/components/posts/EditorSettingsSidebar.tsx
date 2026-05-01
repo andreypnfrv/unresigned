@@ -3,7 +3,8 @@ import classNames from "classnames";
 import { EditablePost, PostSubmitMeta, userCanEditCoauthors, extractGoogleDocId, googleDocIdToUrl, postGetEditUrl } from "@/lib/collections/posts/helpers";
 import { postStatusLabels, MODERATION_GUIDELINES_OPTIONS } from "@/lib/collections/posts/constants";
 import { getDefaultEditorPlaceholder } from "@/lib/editor/defaultEditorPlaceholder";
-import { hasGoogleDocImportSetting, isEAForum, isLWorAF } from "@/lib/instanceSettings";
+import { hasGoogleDocImportSetting, isEAForum, isLWorAF, forumTitleSetting } from "@/lib/instanceSettings";
+import { combineUrls, getSiteUrl } from "@/lib/vulcan-lib/utils";
 import { getVotingSystems } from "@/lib/voting/getVotingSystem";
 import { userIsAdmin, userIsAdminOrMod, userIsMemberOf } from "@/lib/vulcan-users/permissions";
 import { userCanUseSharing } from "@/lib/betas";
@@ -806,9 +807,11 @@ const CLAUDE_BUTTON_TOOLTIP_DISABLED = "Click \"Connect Claude to LW Docs\" belo
 
 function getFeedbackQuery(postId: string, linkSharingKey: string | undefined) {
   const postUrl = postGetEditUrl(postId, true, linkSharingKey);
-  return `I'm writing a post on Unresigned and would appreciate your inline feedback on it.  The post is located at ${postUrl}.
+  const siteTitle = forumTitleSetting.get();
+  const skillUrl = combineUrls(getSiteUrl(), '/api/SKILL.md');
+  return `I'm writing a post on ${siteTitle} and would appreciate your inline feedback on it.  The post is located at ${postUrl}.
 
-Please remember to follow the guidelines and review structure in Unresigned's SKILL.md (https://www.lesswrong.com/api/SKILL.md).`;
+Please remember to follow the guidelines and review structure in ${siteTitle}'s SKILL.md (${skillUrl}).`;
 }
 
 function AccordionSection({ title, defaultOpen = false, children, className, contentClassName }: {

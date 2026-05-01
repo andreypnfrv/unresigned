@@ -12,6 +12,7 @@ import { pickBestReverseGeocodingResult } from '../../lib/geocoding';
 import Loading from "../vulcan-core/Loading";
 import { defineStyles } from '@/components/hooks/defineStyles';
 import { useStyles } from '@/components/hooks/useStyles';
+import { forumTitleSetting } from '../../lib/instanceSettings';
 
 const styles = defineStyles('RecentDiscussionMeetupsPoke', (theme: ThemeType) => ({
   root: {
@@ -166,7 +167,7 @@ const RecentDiscussionMeetupsPoke = () => {
     return null;
   
   return <div className={classes.root}>
-    <div>Did you know that there are Unresigned meetups? To get email notification
+    <div>Did you know that there are {forumTitleSetting.get()} meetups? To get email notification
     of meetups near you, enter your location:</div>
     
     <div className={classes.locationInputWrapper}>

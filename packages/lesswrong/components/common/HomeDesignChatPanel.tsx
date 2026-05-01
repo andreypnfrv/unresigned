@@ -23,6 +23,7 @@ import moment from 'moment';
 import { useCookiesWithConsent } from '../hooks/useCookiesWithConsent';
 import Loading from '../vulcan-core/Loading';
 import { HOME_DESIGN_DEFAULT_BUILT_IN_VALUE, HOME_DESIGN_DEFAULT_CLASSIC_VALUE, HOME_DESIGN_DEFAULT_PUBLIC_ID_COOKIE } from '@/lib/cookies/cookies';
+import { forumTitleSetting } from '@/lib/instanceSettings';
 import { commentGetPageUrlFromIds } from '@/lib/collections/comments/helpers';
 import { canPublishHomeDesign, MARKETPLACE_POST_ID } from '@/lib/collections/homePageDesigns/constants';
 import { useNavigate } from '@/lib/routeUtil';
@@ -718,7 +719,7 @@ const HomeDesignChatPanel = () => {
           appliedToolCallIds.current.add(part.toolCallId);
           const bodyContent = (part.input as { html: string }).html;
           const origin = window.location.origin;
-          applyDesign(wrapBodyInSrcdoc(bodyContent, { origin }));
+          applyDesign(wrapBodyInSrcdoc(bodyContent, { origin, sandboxSiteNameFallback: forumTitleSetting.get() }));
 
           // Read publicId from the tool result (set server-side)
           const toolOutput = part.output as { publicId?: string } | undefined;
@@ -806,7 +807,7 @@ const HomeDesignChatPanel = () => {
     setMessages(history ?? []);
     appliedToolCallIds.current.clear();
     setPublicId(design.publicId);
-    applyDesign(wrapBodyInSrcdoc(design.html, { origin: window.location.origin }));
+    applyDesign(wrapBodyInSrcdoc(design.html, { origin: window.location.origin, sandboxSiteNameFallback: forumTitleSetting.get() }));
     setShowHistory(false);
     setActiveTab('chat');
   }, [client, setMessages, setPublicId, applyDesign]);
@@ -832,7 +833,7 @@ const HomeDesignChatPanel = () => {
     setMessages(synthetic.messages);
     // Don't set publicId — modifications will create a new design under the user's ownership
     setPublicId(null);
-    applyDesign(wrapBodyInSrcdoc(design.html, { origin: window.location.origin }));
+    applyDesign(wrapBodyInSrcdoc(design.html, { origin: window.location.origin, sandboxSiteNameFallback: forumTitleSetting.get() }));
   }, [setMessages, setPublicId, applyDesign]);
 
   const handleRevertToBuiltInDefault = useCallback(() => {
@@ -938,7 +939,7 @@ const HomeDesignChatPanel = () => {
           <div className={classes.messages}>
             {messages.length === 0 && (
               <div className={classes.emptyState}>
-                <div className={classes.emptyTitle}>Describe your ideal Unresigned home page.</div>
+                <div className={classes.emptyTitle}>Describe your ideal {forumTitleSetting.get()} home page.</div>
                 <div className={classes.emptyCopy}>
                   Try: "Make it look like Hacker News" or "Newspaper front page layout" or "Dark mode with cards"
                 </div>
@@ -1071,7 +1072,7 @@ const HomeDesignChatPanel = () => {
               className={classes.marketplaceActionButton}
               onClick={handleRevertToBuiltInDefault}
             >
-              Go back to normal Unresigned
+              Go back to normal {forumTitleSetting.get()}
             </button>
             <button
               type="button"

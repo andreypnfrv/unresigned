@@ -10,6 +10,7 @@ import RecommendationsList from "../recommendations/RecommendationsList";
 import PostsItem from "../posts/PostsItem";
 import { defineStyles } from '@/components/hooks/defineStyles';
 import { useStyles } from '@/components/hooks/useStyles';
+import { forumTitleSetting } from '../../lib/instanceSettings';
 
 const PostsListWithVotesQuery = gql(`
   query FrontpageBestOfLWWidget($documentId: String) {
@@ -90,7 +91,7 @@ export const FrontpageBestOfLWWidget = ({reviewYear}: {
   return <div className={classes.root}>
     <Link className={classes.imageWrapper} to="/posts/zajNa9fdr8JYJpxrG/voting-results-for-the-2021-review"><img className={classes.image} src={"https://res.cloudinary.com/lesswrong-2-0/image/upload/v1644368355/enlarge_books-8_bk0yj6_eoige0_gpqvvr.webp"}/></Link>
     <SingleColumnSection>
-      <div className={classes.title}><SectionTitle title={`Best of Unresigned ${reviewYear}`}>
+      <div className={classes.title}><SectionTitle title={`Best of ${forumTitleSetting.get()} ${reviewYear}`}>
       </SectionTitle></div>
       {postVoting && <PostsItem post={postVoting} translucentBackground forceSticky />}
       <RecommendationsList algorithm={recommendationsAlgorithm} translucentBackground/>

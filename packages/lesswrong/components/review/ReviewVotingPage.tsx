@@ -24,6 +24,7 @@ import PostsTagsList from "../tagging/PostsTagsList";
 import LWTooltip from "../common/LWTooltip";
 import { defineStyles } from '@/components/hooks/defineStyles';
 import { useStyles } from '@/components/hooks/useStyles';
+import { forumTitleSetting } from '@/lib/instanceSettings';
 
 const PostsReviewVotingListMultiQuery = gql(`
   query multiPostReviewVotingPageQuery($selector: PostSelector, $limit: Int, $enableTotal: Boolean) {
@@ -360,7 +361,7 @@ const ReviewVotingPage = ({reviewYear, expandedPost, setExpandedPost}: {
     reSortPosts(sortPosts, sortReversed, tagFilter)
   }, [canInitialResort, reSortPosts, sortPosts, sortReversed, tagFilter, statusFilter])
 
-  let voteTooltip = "Showing votes from all Unresigned users" as voteTooltipType
+  let voteTooltip: voteTooltipType = `Showing votes from all ${forumTitleSetting.get()} users`
 
   const handleSetExpandedPost = (post: PostsReviewVotingList) => {
     if (expandedPost?._id === post._id) {

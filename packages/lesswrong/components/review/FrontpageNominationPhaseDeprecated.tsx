@@ -9,6 +9,7 @@ import HoverPreviewLink from "../linkPreview/HoverPreviewLink";
 import LWTooltip from "../common/LWTooltip";
 import { defineStyles } from '@/components/hooks/defineStyles';
 import { useStyles } from '@/components/hooks/useStyles';
+import { forumTitleSetting } from '@/lib/instanceSettings';
 
 const styles = defineStyles('FrontpageNominationPhase', (theme: ThemeType) => ({
   hideOnMobile: {
@@ -30,14 +31,15 @@ const FrontpageNominationPhase = ({settings}: {
 }) => {
   const classes = useStyles(styles);
   const currentUser = useCurrentUser();
+  const forumTitle = forumTitleSetting.get();
 
   const reviewTooltip = <div>
-    <div>The Unresigned community is reflecting on the best posts from 2018, in three phases</div>
+    <div>The {forumTitle} community is reflecting on the best posts from 2018, in three phases</div>
     <ul>
       <li><em>Nomination</em> (Nov 21 – Dec 1st)</li>
       <li><em>Review</em> (Dec 2nd – 31st)</li>
       <li><em>Voting</em> (Jan 1st – 7th</li>
-      <li>The Unresigned moderation team will incorporate that information, along with their judgment, into a "Best of 2018" book.</li>
+      <li>The {forumTitle} moderation team will incorporate that information, along with their judgment, into a "Best of 2018" book.</li>
     </ul>
     <div>(Currently this section shows a karma-weighted sample of posts from 2018)</div>
   </div>
@@ -60,7 +62,7 @@ const FrontpageNominationPhase = ({settings}: {
         <div>
           <SectionSubtitle >
             <Link to={"/reviews"}>
-              The Unresigned 2018 Review
+              The {forumTitle} 2018 Review
             </Link>
             {(currentUser?.karma||0) >= 1000
               ? <div className={classes.timeRemaining}>

@@ -99,7 +99,7 @@ export class PublicInstanceSetting<SettingValueType> {
   Public Instance Settings
 */
 
-export const allForumTypes = new TupleSet(["AlignmentForum","EAForum","Unresigned"] as const);
+export const allForumTypes = new TupleSet(["AlignmentForum","EAForum","Unresigned","Antimortality"] as const);
 export type ForumTypeString = UnionOf<typeof allForumTypes>;
 // export const forumTypeSetting = new PublicInstanceSetting<ForumTypeString>('forumType', 'Unresigned', 'warning') // What type of Forum is being run, {Unresigned, AlignmentForum, EAForum}
 

@@ -31,6 +31,7 @@ import Loading from '../vulcan-core/Loading';
 import { makeEditorConfig } from '../editor/editorConfigs';
 import LexicalEditor from '../editor/LexicalEditor';
 import { userIsAdmin } from '@/lib/vulcan-users/permissions';
+import { forumTitleSetting } from '@/lib/instanceSettings';
 
 const styles = defineStyles('LanguageModelChat', (theme: ThemeType) => ({
   root: {
@@ -372,13 +373,16 @@ const LLMInputTextbox = ({onSubmit}: {
   </ContentStyles>
 }
 
-const welcomeGuideHtml = [
-  `<h1>Welcome to the Unresigned LLM Chat!</h1>`,
+function welcomeGuideHtml() {
+  const siteName = forumTitleSetting.get();
+  return [
+    `<h1>Welcome to the ${siteName} LLM Chat!</h1>`,
   `<ul><li>The LLM chat interface is currently hooked up to Claude Sonnet 3.5</li>`,
   `<li>LaTeX is supported both on input and output.`,
-  `<li style="color: #bf360c;">The Unresigned team will read conversations to help us with product iteration during development.</li></ul>`,
+  `<li style="color: #bf360c;">The ${siteName} team will read conversations to help us with product iteration during development.</li></ul>`,
   `<p><strong>Posts and comments may be loaded into the context window based on your <em>first message</em> (and based on the current post you are viewing).</strong></p>`,
 ].join('');
+}
 
 type CurrentPostContext = {
   currentPostId: string;
@@ -624,7 +628,7 @@ export const ChatInterface = () => {
     </div>
     {showGuide && <ContentItemBody
       className={classNames(classes.welcomeGuideText)}
-      dangerouslySetInnerHTML={{__html: welcomeGuideHtml}}
+      dangerouslySetInnerHTML={{__html: welcomeGuideHtml()}}
     />}
   </ContentStyles>
 

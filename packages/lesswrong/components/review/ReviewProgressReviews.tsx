@@ -9,6 +9,7 @@ import { useQuery } from "@/lib/crud/useQuery";
 import { gql } from "@/lib/generated/gql-codegen";
 import { defineStyles } from '@/components/hooks/defineStyles';
 import { useStyles } from '@/components/hooks/useStyles';
+import { forumTitleSetting } from '../../lib/instanceSettings';
 
 const CommentsListWithParentMetadataMultiQuery = gql(`
   query multiCommentReviewProgressReviewsQuery($selector: CommentSelector, $limit: Int, $enableTotal: Boolean) {
@@ -79,7 +80,7 @@ export const ReviewProgressReviews = ({reviewYear}: {
 
   return <LWTooltip title={<div>
       {totalReviews < TARGET_NUM &&
-      <div>Help inform voters by writing {TARGET_NUM} reviews. Reviews with 10+ karma will appear on the Best of Unresigned page.</div>}
+      <div>Help inform voters by writing {TARGET_NUM} reviews. Reviews with 10+ karma will appear on the Best of {forumTitleSetting.get()} page.</div>}
       <p><em>{totalReviews ? `You've written ${totalReviews} review${totalReviews === 1 ? "" : "s"}${totalReviews >= TARGET_NUM ? "!" : "."} ${reviewCountMessage}` : "You haven't written any reviews yet."}</em></p>
     </div>} placement="top">
     <div className={classes.root}>

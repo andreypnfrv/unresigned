@@ -8,7 +8,7 @@ import Button from '@/lib/vendor/@material-ui/core/src/Button';
 import Select from '@/lib/vendor/@material-ui/core/src/Select';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import PersonAddIcon from '@/lib/vendor/@material-ui/icons/src/PersonAdd';
-import { moderationEmail } from '@/lib/instanceSettings';
+import { forumTitleSetting, moderationEmail } from '@/lib/instanceSettings';
 import { EditablePost, postGetEditUrl, PostSubmitMeta } from '../../lib/collections/posts/helpers';
 import { isFriendlyUI } from '../../themes/forumTheme';
 import { TypedFieldApi } from '@/components/tanstack-form-components/BaseAppForm';
@@ -136,7 +136,7 @@ export const PostSharingSettings = ({ field, post, formType, editorType, iconOnl
       flash("Edit the document first to enable sharing");
       return;
     } else if (derivedEditorType !== "ckEditorMarkup" && derivedEditorType !== "lexical") {
-      flash(`Change the editor type to Unresigned Docs to enable sharing`);
+      flash(`Change the editor type to ${forumTitleSetting.get()} Docs to enable sharing`);
       return;
     }
     

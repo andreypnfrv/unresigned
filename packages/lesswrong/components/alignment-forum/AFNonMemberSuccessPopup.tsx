@@ -7,6 +7,8 @@ import LWDialog from "../common/LWDialog";
 import ContentStyles from "../common/ContentStyles";
 import { defineStyles } from '../hooks/defineStyles';
 import { useStyles } from '../hooks/useStyles';
+import { combineUrls, getSiteUrl } from '@/lib/vulcan-lib/utils';
+import { forumTitleSetting } from '@/lib/instanceSettings';
 
 const styles = defineStyles("AFNonMemberSuccessPopup", (theme: ThemeType) => ({
   dialog: {
@@ -49,7 +51,11 @@ const AFNonMemberSuccessPopup = ({_id, postId, onClose}: {
   
   
   const submissionIsComment = !!postId 
-  
+  const mainSitePostsBase = combineUrls(getSiteUrl(), 'posts')
+  const postOnMainSiteHref = submissionIsComment
+    ? `${combineUrls(mainSitePostsBase, postId!)}#${_id}`
+    : combineUrls(mainSitePostsBase, _id)
+
   return (
     <LWDialog
       open={open}
@@ -70,8 +76,8 @@ const AFNonMemberSuccessPopup = ({_id, postId, onClose}: {
             I'll stay here
           </Button>
           <Button color="primary">
-            <a href={submissionIsComment ? `https://www.lesswrong.com/posts/${postId}#${_id}`: `https://www.lesswrong.com/posts/${_id}`}>
-              {`Take me to my ${submissionIsComment ? "comment" : "post"} on Unresigned`}
+            <a href={postOnMainSiteHref}>
+              {`Take me to my ${submissionIsComment ? "comment" : "post"} on ${forumTitleSetting.get()}`}
             </a>
           </Button>
         </div>

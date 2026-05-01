@@ -19,6 +19,8 @@ import { useGlobalKeydown } from '../common/withGlobalKeydown';
 import { focusLexicalEditor } from '../editor/focusLexicalEditor';
 import { getDraftMessageHtml } from '@/lib/collections/messages/helpers';
 import dynamic from 'next/dynamic';
+import { forumTitleSetting } from '@/lib/instanceSettings';
+import { combineUrls, getSiteUrl } from '@/lib/vulcan-lib/utils';
 
 const LexicalEditor = dynamic(() => import('@/components/editor/LexicalEditor'));
 
@@ -426,9 +428,11 @@ const RejectContentDialog = ({rejectionTemplates, onClose, rejectContent, displa
   }, [rejectionReasons, selections]);
 
   // Standard rejection intro that will be prepended to the message
+  const newUserGuideUrl = combineUrls(getSiteUrl(), 'posts/LbbrnRvc9QwjJeics/new-user-s-guide-to-lesswrong');
+  const newUserGuideSectionUrl = `${newUserGuideUrl}#How_to_ensure_your_first_post_or_comment_is_well_received`;
   const standardIntroHtml = `
     <p>Unfortunately, I rejected your [content].</p>
-    <p>Unresigned aims for particularly high quality (and somewhat oddly-specific) discussion quality. We get a lot of content from new users and sadly can't give detailed feedback on every piece we reject, but I generally recommend checking out our <a href="https://www.lesswrong.com/posts/LbbrnRvc9QwjJeics/new-user-s-guide-to-lesswrong">New User's Guide</a>, in particular the section on <a href="https://www.lesswrong.com/posts/LbbrnRvc9QwjJeics/new-user-s-guide-to-lesswrong#How_to_ensure_your_first_post_or_comment_is_well_received">how to ensure your content is approved</a>.</p>
+    <p>${forumTitleSetting.get()} aims for particularly high quality (and somewhat oddly-specific) discussion quality. We get a lot of content from new users and sadly can't give detailed feedback on every piece we reject, but I generally recommend checking out our <a href="${newUserGuideUrl}">New User's Guide</a>, in particular the section on <a href="${newUserGuideSectionUrl}">how to ensure your content is approved</a>.</p>
     <p>Your content didn't meet the bar for at least the following reason(s):</p>
   `;
 

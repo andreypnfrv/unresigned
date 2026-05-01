@@ -8,6 +8,7 @@ import SectionFooter from "../common/SectionFooter";
 import LWTooltip from "../common/LWTooltip";
 import { defineStyles } from '@/components/hooks/defineStyles';
 import { useStyles } from '@/components/hooks/useStyles';
+import { forumTitleSetting } from '../../lib/instanceSettings';
 
 const styles = defineStyles('ReviewDashboardButtons', (theme: ThemeType) => ({
   actionButton: {
@@ -45,7 +46,8 @@ export const ReviewDashboardButtons = ({reviewYear, reviewPhase, showAdvancedDas
   showQuickReview?: boolean
 }) => {
   const classes = useStyles(styles);
-  const currentUser = useCurrentUser()
+  const currentUser = useCurrentUser();
+  const forumTitle = forumTitleSetting.get()
 
   return <div>
     <Row justifyContent="space-between">
@@ -83,7 +85,7 @@ export const ReviewDashboardButtons = ({reviewYear, reviewPhase, showAdvancedDas
             <li>What high level themes seemed sigificant among {reviewYear} posts?</li>
             <li>An in-depth response to a single post.</li>
             <li>What important updates did you make in {reviewYear}? How could you have made them faster?</li>
-            <li>Any other meta-reflection on Unresigned, or how your thought processes have evolved since {reviewYear}.</li>
+            <li>Any other meta-reflection on {forumTitle}, or how your thought processes have evolved since {reviewYear}.</li>
           </ul>
         </div>}>
           <Link to={"/newLongformReview"} className={classes.actionButtonCTA}>

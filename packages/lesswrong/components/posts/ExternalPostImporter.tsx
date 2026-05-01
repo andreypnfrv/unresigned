@@ -16,6 +16,7 @@ import { makeEditorConfig } from '../editor/editorConfigs';
 import LexicalEditor from '../editor/LexicalEditor';
 import { defineStyles } from '@/components/hooks/defineStyles';
 import { useStyles } from '@/components/hooks/useStyles';
+import { forumTitleSetting } from '@/lib/instanceSettings';
 
 const PostsListUpdateMutation = gql(`
   mutation updatePostExternalPostImporter($selector: SelectorInput!, $data: UpdatePostDataInput!) {
@@ -440,7 +441,7 @@ const ExternalPostImporter = ({defaultPostedAt}: { defaultPostedAt?: Date }) => 
           />
           <Typography variant="body2">
             To nominate a linkpost for the Annual Review, you must write your own review it.<br />
-            Please explain why you think this post or paper is significant to Unresigned's intellectual progress.
+            Please explain why you think this post or paper is significant to {forumTitleSetting.get()}'s intellectual progress.
           </Typography>
           <CommentEditor
             onPublish={handlePublish}

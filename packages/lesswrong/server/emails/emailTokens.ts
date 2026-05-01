@@ -2,7 +2,7 @@ import { getSiteUrl } from '../../lib/vulcan-lib/utils';
 import { EmailTokens } from '../../server/collections/emailTokens/collection';
 import { randomSecret } from '../../lib/random';
 import Users from '../../server/collections/users/collection';
-import { siteNameWithArticleSetting } from '../../lib/instanceSettings';
+import { forumTitleSetting, siteNameWithArticleSetting } from '../../lib/instanceSettings';
 import gql from 'graphql-tag';
 import { createAnonymousContext } from "@/server/vulcan-lib/createContexts";
 import { updateEmailToken } from '../collections/emailTokens/mutations';
@@ -209,7 +209,7 @@ export const emailTokenTypesByName = {
         { _id: user._id },
         { $set: { claudeLinkedAt: new Date() } }
       );
-      return { message: `Claude access confirmed. You can now use Claude to interact with your Unresigned posts by clicking the "Claude" button in the editor's settings panel.` };
+      return { message: `Claude access confirmed. You can now use Claude to interact with your ${forumTitleSetting.get()} posts by clicking the "Claude" button in the editor's settings panel.` };
     },
     resultComponentName: "EmailTokenResult",
     path: "api/agent/confirmClaudeAccess",

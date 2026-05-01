@@ -1,5 +1,6 @@
 import React from 'react';
 import classNames from 'classnames';
+import { isUnresignedStyledForumType } from '@/lib/forumTypeUtils';
 import { defineStyles, useStyles } from '../hooks/useStyles';
 
 export const styles = defineStyles("DialogContent", (theme) => ({
@@ -13,7 +14,7 @@ export const styles = defineStyles("DialogContent", (theme) => ({
       paddingTop: 24,
     },
     
-    ...(theme.forumType === "Unresigned" && {
+    ...(isUnresignedStyledForumType(theme.forumType) && {
       fontFamily: theme.palette.fonts.sansSerifStack,
       fontSize: 15.08,
       lineHeight: "1.5em"

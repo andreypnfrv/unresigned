@@ -10,6 +10,7 @@ import { defineStyles, useStyles } from '../../hooks/useStyles';
 import { wrapBodyInSrcdoc } from '../../common/SandboxedHomePageSrcdoc';
 import { adminHomePageDesignsQuery, setHomePageDesignVerifiedMutation, updateCommentDeletedMutation } from './designReviewQueries';
 import { MARKETPLACE_POST_ID } from '@/lib/collections/homePageDesigns/constants';
+import { forumTitleSetting } from '@/lib/instanceSettings';
 import { Link } from '@/lib/reactRouterWrapper';
 import classNames from 'classnames';
 import type { AdminHomePageDesignsQuery } from '@/lib/generated/gql-codegen/graphql';
@@ -473,7 +474,11 @@ const DesignReviewInspector = () => {
                 <iframe
                   key={`${selected._id}-${rpcEnabled ? 'rpc' : 'no-rpc'}`}
                   className={classes.previewFrame}
-                  srcDoc={wrapBodyInSrcdoc(selected.html, { origin, omitRpcBridge: !rpcEnabled })}
+                  srcDoc={wrapBodyInSrcdoc(selected.html, {
+                    origin,
+                    omitRpcBridge: !rpcEnabled,
+                    sandboxSiteNameFallback: forumTitleSetting.get(),
+                  })}
                   sandbox="allow-scripts"
                 />
               ) : (

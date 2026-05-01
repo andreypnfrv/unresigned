@@ -12,16 +12,23 @@ export const forumTypeSetting: { get: () => ForumTypeString } = {
       return 'AlignmentForum';
     } else if (urlObj.hostname.includes('forum.effectivealtruism.org')) {
       return 'EAForum';
+    } else if (urlObj.hostname.includes('antimortality.org')) {
+      return 'Antimortality';
     } else {
       return process.env.FORUM_TYPE as ForumTypeString | undefined ?? 'Unresigned';
     }
   }
 };
 
-export const isLW = () => forumTypeSetting.get() === "Unresigned"
+export const isLW = () =>
+  forumTypeSetting.get() === "Unresigned" || forumTypeSetting.get() === "Antimortality"
 export const isEAForum = () => forumTypeSetting.get() === "EAForum"
 export const isAF = () => forumTypeSetting.get() === "AlignmentForum"
-export const isUnresignedForum = () => forumTypeSetting.get() === "Unresigned"
+export const isUnresignedForum = () =>
+  forumTypeSetting.get() === "Unresigned" || forumTypeSetting.get() === "Antimortality"
+
+export const isUnresignedStyledForumType = (forumType: ForumTypeString): boolean =>
+  forumType === "Unresigned" || forumType === "Antimortality"
 export const isLWorAF = () => isLW() || isAF()
 
 //Partial Type adds "undefined" erroneously to T, so we need to explicitly tell TS that it can't be undefined.
@@ -38,6 +45,9 @@ export function forumSelect<T>(forumOptions: ForumOptions<T>, forumType?: ForumT
   forumType ??= forumTypeSetting.get();
   if (forumType in forumOptions) {
     return (forumOptions as AnyBecauseTodo)[forumType] as NonUndefined<T> // The default branch ensures T always exists
+  }
+  if (forumType === "Antimortality" && "Unresigned" in forumOptions) {
+    return forumOptions["Unresigned"] as NonUndefined<T>
   }
   if ((forumType === "Unresigned" || forumType === "AlignmentForum") && "LWAF" in forumOptions) {
     return forumOptions["LWAF"] as NonUndefined<T>

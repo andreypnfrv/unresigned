@@ -29,6 +29,7 @@ import { SuspenseWrapper } from '@/components/common/SuspenseWrapper';
 import { BOOKUI_LINKPOST_WORDCOUNT_THRESHOLD } from './constants';
 import { defineStyles } from '@/components/hooks/defineStyles';
 import { useStyles } from '@/components/hooks/useStyles';
+import { forumTitleSetting } from '@/lib/instanceSettings';
 
 export const LW_POST_PAGE_PADDING = 110;
 
@@ -276,7 +277,7 @@ const LWPostsPageHeader = ({post, showEmbeddedPlayer, toggleEmbeddedPlayer, dial
       </div>}
     </AnalyticsContext>
     {showSplashPageHeader && !('sequence' in post && !!post.sequence) && <Link to={`/bestoflesswrong?year=${reviewYear}&category=all`} className={classes.bestOfUnresigned}>
-      Best of Unresigned {reviewYear}
+      Best of {forumTitleSetting.get()} {reviewYear}
     </Link>}
     <div>
       <span className={classes.topRight}>

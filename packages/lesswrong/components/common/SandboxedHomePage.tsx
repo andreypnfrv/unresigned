@@ -17,6 +17,7 @@ import { NotificationsListMultiQuery } from '../notifications/NotificationsListM
 import { SuspenseWrapper } from './SuspenseWrapper';
 import { useCookiesWithConsent } from '../hooks/useCookiesWithConsent';
 import { HOME_DESIGN_DEFAULT_BUILT_IN_VALUE, HOME_DESIGN_DEFAULT_CLASSIC_VALUE, HOME_DESIGN_DEFAULT_PUBLIC_ID_COOKIE } from '@/lib/cookies/cookies';
+import { forumTitleSetting } from '@/lib/instanceSettings';
 
 const homePageDesignByPublicIdQuery = gql(`
   query HomePageDesignByPublicId($publicId: String!) {
@@ -560,13 +561,14 @@ function SandboxedHomePageContent() {
   }, [handleRpc]);
 
   const origin = useOrigin();
+  const sandboxSiteNameFallback = forumTitleSetting.get();
   const themeHtml = themeData?.homePageDesignByPublicId?.html;
-  const themeSrcdoc = themeHtml ? wrapBodyInSrcdoc(themeHtml, { origin }) : null;
+  const themeSrcdoc = themeHtml ? wrapBodyInSrcdoc(themeHtml, { origin, sandboxSiteNameFallback }) : null;
   const preferredDesignHtml = preferredDesignData?.homePageDesignByPublicId?.html;
-  const preferredDesignSrcdoc = preferredDesignHtml ? wrapBodyInSrcdoc(preferredDesignHtml, { origin }) : null;
+  const preferredDesignSrcdoc = preferredDesignHtml ? wrapBodyInSrcdoc(preferredDesignHtml, { origin, sandboxSiteNameFallback }) : null;
   const latestDesignHtml = myDesignsData?.myHomePageDesigns?.[0]?.html;
-  const userLatestSrcdoc = latestDesignHtml ? wrapBodyInSrcdoc(latestDesignHtml, { origin }) : null;
-  const defaultSrcdoc = getSandboxedHomePageSrcdoc({ origin });
+  const userLatestSrcdoc = latestDesignHtml ? wrapBodyInSrcdoc(latestDesignHtml, { origin, sandboxSiteNameFallback }) : null;
+  const defaultSrcdoc = getSandboxedHomePageSrcdoc({ origin, sandboxSiteNameFallback });
   const srcdoc = designChat.customSrcdoc ?? (
     designChat.useDefaultDesign
       ? defaultSrcdoc

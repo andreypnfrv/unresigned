@@ -13,6 +13,7 @@ import {
   type ReviewPostWithStatus,
 } from './reviewAdminViews/types';
 import { FocusedView } from './reviewAdminViews/FocusedView';
+import { forumTitleSetting } from '@/lib/instanceSettings';
 
 const ReviewWinnerArtImagesMultiQuery = gql(`
   query multiReviewWinnerArtBestOfUnresignedAdminQuery($selector: ReviewWinnerArtSelector, $limit: Int, $enableTotal: Boolean) {
@@ -114,7 +115,7 @@ export const BestOfUnresignedAdmin = ({year}: {year: string}) => {
 
   return <div className={classes.root}>
     <div className={classes.header}>
-      <h1 className={classes.title}>Best of Unresigned Admin — {year}</h1>
+      <h1 className={classes.title}>Best of {forumTitleSetting.get()} Admin — {year}</h1>
     </div>
     <div className={classes.stats}>
       <span className={classes.statItem}>

@@ -4,6 +4,8 @@ import { useQuery } from "@/lib/crud/useQuery";
 import { gql } from "@/lib/generated/gql-codegen";
 import { defineStyles } from '@/components/hooks/defineStyles';
 import { useStyles } from '@/components/hooks/useStyles';
+import { forumTitleSetting } from '@/lib/instanceSettings';
+import { combineUrls, getSiteUrl } from '@/lib/vulcan-lib/utils';
 
 const SuggestAlignmentCommentMultiQuery = gql(`
   query multiCommentAFUnreviewedCommentCountQuery($selector: CommentSelector, $limit: Int, $enableTotal: Boolean) {
@@ -50,10 +52,11 @@ const AFUnreviewedCommentCount = ({ post }: {
  if (loading || !count) {
    return null
  } else {
+   const viewHref = combineUrls(getSiteUrl(), `posts/${post._id}`);
    return (
      <ContentStyles contentType="comment" className={classes.root}>
        {`There are ${count} comments pending acceptance to the Alignment Forum.`}
-       <a href={`https://www.lesswrong.com/posts/${post._id}`} className={classes.viewLink}>View them on Unresigned.</a>
+       <a href={viewHref} className={classes.viewLink}>View them on {forumTitleSetting.get()}.</a>
      </ContentStyles>
    );
  }

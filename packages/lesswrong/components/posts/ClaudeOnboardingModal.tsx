@@ -11,6 +11,8 @@ import ForumIcon from "../common/ForumIcon";
 import { gql } from "@/lib/generated/gql-codegen";
 import { useTracking } from "@/lib/analyticsEvents";
 import { useRefetchCurrentUser } from "../common/withUser";
+import { forumTitleSetting } from '@/lib/instanceSettings';
+import { getSiteUrl } from '@/lib/vulcan-lib/utils';
 
 const styles = defineStyles("ClaudeOnboardingModal", (theme: ThemeType) => ({
   content: {
@@ -116,8 +118,8 @@ const getClaudeAccessLinkMutation = gql(`
   }
 `);
 
-function getClaudeConfirmMessage(confirmUrl: string) {
-  return `Please confirm that you can access the Unresigned API by running:\n\ncurl -X POST ${confirmUrl}`;
+function getClaudeConfirmMessage(confirmUrl: string, siteTitle: string) {
+  return `Please confirm that you can access the ${siteTitle} API by running:\n\ncurl -X POST ${confirmUrl}`;
 }
 
 const ClaudeOnboardingModal = ({
@@ -133,6 +135,8 @@ const ClaudeOnboardingModal = ({
   const [confirmUrl, setConfirmUrl] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [getLink] = useMutation(getClaudeAccessLinkMutation);
+  const siteTitle = forumTitleSetting.get();
+  const siteHost = new URL(getSiteUrl()).hostname;
 
   const handleClose = () => {
     onClose();
@@ -154,7 +158,7 @@ const ClaudeOnboardingModal = ({
   }, []);
 
   const claudeConfirmLink = confirmUrl
-    ? `https://www.claude.ai/new?q=${encodeURIComponent(getClaudeConfirmMessage(confirmUrl))}`
+    ? `https://www.claude.ai/new?q=${encodeURIComponent(getClaudeConfirmMessage(confirmUrl, siteTitle))}`
     : null;
 
   return (
@@ -162,7 +166,7 @@ const ClaudeOnboardingModal = ({
       <div className={classes.content}>
         <div className={classes.title}>
           <ClaudeSparkIcon className={classes.claudeIcon} />
-          Connect Claude to Unresigned
+          Connect Claude to {siteTitle}
         </div>
 
         <div className={classes.instructions}>
@@ -178,7 +182,7 @@ const ClaudeOnboardingModal = ({
                 Claude settings
               </a>
               , ensure "Allow network egress" is toggled on, and add{" "}
-              <code>www.lesswrong.com</code> to "Additional allowed
+              <code>{siteHost}</code> to "Additional allowed
               domains".
               <CloudinaryImage2
                 publicId="claude_onboarding_orange_wswu5o"

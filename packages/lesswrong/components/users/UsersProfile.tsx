@@ -12,7 +12,7 @@ import PencilIcon from '@/lib/vendor/@material-ui/icons/src/Create'
 import classNames from 'classnames';
 import { useCurrentUser } from '../common/withUser';
 import {AnalyticsContext} from "../../lib/analyticsEvents";
-import { hasEventsSetting, siteNameWithArticleSetting, taglineSetting, isAF, nofollowKarmaThreshold } from '@/lib/instanceSettings';
+import { hasEventsSetting, siteNameWithArticleSetting, taglineSetting, isAF, nofollowKarmaThreshold, forumTitleSetting } from '@/lib/instanceSettings';
 import { separatorBulletStyles } from '../common/SectionFooter';
 import { getSortOrderOptions } from '../../lib/collections/posts/dropdownOptions';
 import CopyToClipboard from 'react-copy-to-clipboard';
@@ -403,8 +403,8 @@ const UsersProfileFn = ({terms, slug}: {
           </SingleColumnSection> }
           {/* AF Submissions Section */}
           {ownPage && nonAFMember && <SingleColumnSection>
-            <LWTooltip inlineBlock={false} title="Your posts are pending approval to the Alignment Forum and are only visible to you on the Forum. 
-            They are visible to everyone on Unresigned.">
+            <LWTooltip inlineBlock={false} title={`Your posts are pending approval to the Alignment Forum and are only visible to you on the Forum. 
+            They are visible to everyone on ${forumTitleSetting.get()}.`}>
               <SectionTitle title="My Submissions"/>
             </LWTooltip>
             <PostsList2 hideAuthor showDraftTag={false} terms={afSubmissionTerms}/>
@@ -451,8 +451,8 @@ const UsersProfileFn = ({terms, slug}: {
           {/* Comments Sections */}
           <AnalyticsContext pageSectionContext="commentsSection">
             {ownPage && nonAFMember && <SingleColumnSection>
-              <LWTooltip inlineBlock={false } title="Your comments are pending approval to the Alignment Forum and are only visible to you on the Forum. 
-              They are visible to everyone on Unresigned.">
+              <LWTooltip inlineBlock={false } title={`Your comments are pending approval to the Alignment Forum and are only visible to you on the Forum. 
+              They are visible to everyone on ${forumTitleSetting.get()}.`}>
                 <SectionTitle title={"Comment Submissions"} />
               </LWTooltip>
               <RecentComments selector={{ afSubmissions: { authorIsUnreviewed: null, userId: user._id } }} limit={5}/>

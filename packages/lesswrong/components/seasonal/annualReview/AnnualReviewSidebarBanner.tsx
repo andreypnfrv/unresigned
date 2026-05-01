@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { AnalyticsContext } from "@/lib/analyticsEvents";
 import { defineStyles, useStyles } from '@/components/hooks/useStyles';
 import CloudinaryImage2 from "@/components/common/CloudinaryImage2";
@@ -23,6 +23,7 @@ import { allPostsParams } from '@/lib/collections/posts/helpers';
 import qs from 'qs';
 import moment from 'moment';
 import { useCurrentTime } from '@/lib/utils/timeUtil';
+import { forumTitleSetting } from '@/lib/instanceSettings';
 
 function isWithin24Hours(now: Date, date: moment.Moment) {
   const diff = date.diff(now);
@@ -179,7 +180,8 @@ function formatPhaseDateRange(startDate: moment.Moment, endDate: moment.Moment) 
   return `${startDate.format('MMM D')} - ${endDate.format('MMM D')}`;
 }
 
-const commonIntro = "Each December, the Unresigned community reviews the best blogposts of yesteryear.";
+const nominatePostsLink = `/nominatePosts/${REVIEW_YEAR}?${qs.stringify(allPostsParams(REVIEW_YEAR))}`;
+const reviewPostsLink = `/reviewVoting`;
 
 interface PhaseConfig {
   phaseName: string;
@@ -189,10 +191,8 @@ interface PhaseConfig {
   getButtonLink: () => string;
 }
 
-const nominatePostsLink = `/nominatePosts/${REVIEW_YEAR}?${qs.stringify(allPostsParams(REVIEW_YEAR))}`;
-const reviewPostsLink = `/reviewVoting`;
-
-const phaseConfigs: Partial<Record<ReviewPhase, PhaseConfig>> = {
+function buildPhaseConfigs(forumTitle: string): Partial<Record<ReviewPhase, PhaseConfig>> {
+  return {
   NOMINATIONS: {
     phaseName: "Nomination",
     phaseDescription: "In the nomination phase, we identify posts worthy of consideration in the review.",
@@ -215,7 +215,7 @@ const phaseConfigs: Partial<Record<ReviewPhase, PhaseConfig>> = {
   },
   VOTING: {
     phaseName: "Voting",
-    phaseDescription: "In the final voting phase, we do a full voting pass. The outcome determines Best of Unresigned results.",
+    phaseDescription: `In the final voting phase, we do a full voting pass. The outcome determines Best of ${forumTitle} results.`,
     buttonLabel: "Vote Now",
     getDateRange: () => ({
       start: getReviewPhaseEnd(REVIEW_YEAR),
@@ -225,7 +225,7 @@ const phaseConfigs: Partial<Record<ReviewPhase, PhaseConfig>> = {
   },
   RESULTS: {
     phaseName: "Results",
-    phaseDescription: "Voting is complete! See which posts made it into the Best of Unresigned.",
+    phaseDescription: `Voting is complete! See which posts made it into the Best of ${forumTitle}.`,
     buttonLabel: "View Results",
     getDateRange: () => ({
       start: getVotingPhaseEndDisplay(REVIEW_YEAR),
@@ -233,13 +233,17 @@ const phaseConfigs: Partial<Record<ReviewPhase, PhaseConfig>> = {
     }),
     getButtonLink: () => reviewPostsLink,
   },
-};
+  };
+}
 
 export const AnnualReviewSidebarBanner = () => {
   const classes = useStyles(styles);
   const now = useCurrentTime();
   const currentUser = useCurrentUser();
   const { openDialog } = useDialog();
+  const forumTitle = forumTitleSetting.get();
+  const phaseConfigs = useMemo(() => buildPhaseConfigs(forumTitle), [forumTitle]);
+  const commonIntro = `Each December, the ${forumTitle} community reviews the best blogposts of yesteryear.`;
   
   const activePhase = getReviewPhase(REVIEW_YEAR);
   

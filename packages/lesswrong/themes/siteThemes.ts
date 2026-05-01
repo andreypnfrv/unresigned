@@ -65,6 +65,6 @@ export const unresignedTheme: SiteThemeSpecification = {
 
 export const getSiteTheme = (forumType: ForumTypeString): SiteThemeSpecification => {
   if (forumType === 'AlignmentForum') return alignmentForumTheme;
-  if (forumType === 'Unresigned') return unresignedTheme;
+  if (forumType === 'Unresigned' || forumType === 'Antimortality') return unresignedTheme;
   else return lessWrongTheme;
 }

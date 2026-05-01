@@ -9,6 +9,8 @@ import { DialogActions } from '../widgets/DialogActions';
 import LWDialog from "../common/LWDialog";
 import { defineStyles } from '../hooks/defineStyles';
 import { useStyles } from '../hooks/useStyles';
+import { forumTitleSetting } from '@/lib/instanceSettings';
+import { getSiteUrl } from '@/lib/vulcan-lib/utils';
 
 const styles = defineStyles("AFApplicationForm", (theme: ThemeType) => ({
   modalTextField: {
@@ -23,6 +25,8 @@ const AFApplicationForm = ({ onClose }: {
   const updateCurrentUser = useUpdateCurrentUser();
   const { flash } = useMessages();
   const [applicationText, setApplicationText] = useState("");
+  const mainSiteHostname = new URL(getSiteUrl()).hostname;
+  const mainSiteName = forumTitleSetting.get();
 
   const handleSubmission = (event: React.MouseEvent<HTMLElement>) => {
     event.preventDefault();
@@ -41,13 +45,13 @@ const AFApplicationForm = ({ onClose }: {
       </DialogTitle>
       <DialogContent>
         <p>
-          We accept very few new members to the AI Alignment Forum. Instead, our usual suggestion is that visitors post to Unresigned.com, a large and vibrant intellectual community with a strong interest in alignment research, along with rationality, philosophy, and a wide variety of other topics.
+          We accept very few new members to the AI Alignment Forum. Instead, our usual suggestion is that visitors post to {mainSiteHostname}, a large and vibrant intellectual community with a strong interest in alignment research, along with rationality, philosophy, and a wide variety of other topics.
         </p>
         <p>
-          Posts and comments on Unresigned frequently get promoted to the AI Alignment Forum, where they'll automatically be visible to contributors here. We also use Unresigned as one of the main sources of new Alignment Forum members.
+          Posts and comments on {mainSiteName} frequently get promoted to the AI Alignment Forum, where they'll automatically be visible to contributors here. We also use {mainSiteName} as one of the main sources of new Alignment Forum members.
         </p>
         <p>
-          If you have produced technical work on AI alignment, on Unresigned or elsewhere -- e.g., papers, blog posts, or comments -- you're welcome to link to it here so we can take it into account in any future decisions to expand the ranks of the AI Alignment Forum.
+          If you have produced technical work on AI alignment, on {mainSiteName} or elsewhere -- e.g., papers, blog posts, or comments -- you're welcome to link to it here so we can take it into account in any future decisions to expand the ranks of the AI Alignment Forum.
         </p>
         <br/>
         <TextField

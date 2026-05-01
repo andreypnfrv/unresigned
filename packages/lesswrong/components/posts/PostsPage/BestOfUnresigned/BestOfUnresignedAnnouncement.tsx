@@ -8,6 +8,7 @@ import { postGetPageUrl } from '@/lib/collections/posts/helpers';
 import SingleColumnSection from "../../../common/SingleColumnSection";
 import { useQuery } from "@/lib/crud/useQuery";
 import { gql } from "@/lib/generated/gql-codegen";
+import { forumTitleSetting } from '@/lib/instanceSettings';
 
 const ReviewWinnerAnnouncementMultiQuery = gql(`
   query multiReviewWinnerBestOfUnresignedAnnouncementQuery($selector: ReviewWinnerSelector, $limit: Int, $enableTotal: Boolean) {
@@ -301,7 +302,7 @@ const BestOfUnresignedAnnouncement = () => {
       <SingleColumnSection>
         <div className={classes.titleContainer}>
           <Link to={`/posts/sHvByGZRCsFuxtTKr/voting-results-for-the-2023-review`} className={classes.title}>
-            Best of Unresigned {REVIEW_YEAR}
+            Best of {forumTitleSetting.get()} {REVIEW_YEAR}
           </Link>
           <Link to={`/bestoflesswrong`} className={classes.viewAllLink}> 
             View All 

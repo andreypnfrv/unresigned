@@ -11,6 +11,7 @@ import PostsItem from '../posts/PostsItem';
 import ContentStyles from '../common/ContentStyles';
 import Loading from '@/components/vulcan-core/Loading';
 import ErrorMessage from '../common/ErrorMessage';
+import { forumTitleSetting } from '../../lib/instanceSettings';
 
 const gridTemplateColumns = { gridTemplateColumns: '45px minmax(200px, 1fr)' };
 
@@ -69,7 +70,7 @@ const PredictedTop50Intro = () => {
   return (
     <ContentStyles contentType="post" className={classes.intro}>
       <p>
-        The Unresigned Review highlights the posts most worth readers' time and attention.
+        The {forumTitleSetting.get()} Review highlights the posts most worth readers' time and attention.
         But its results take a while to appear.
         To bridge that gap, each popular post now has its own prediction market where users bet on whether it will rank among the year's top 50.
       </p>
