@@ -316,6 +316,7 @@ const PostsPage = ({fullPost, postPreload, sequenceIdFromUrl, refetch, embedded}
   const { query, params } = location;
   const [recommId, setRecommId] = useState<string | undefined>();
   const [attributionId, setAttributionId] = useState<string | undefined>();
+  const isCommentPermalink = !!query.commentId;
 
   const votingSystem = getVotingSystemByName(post.votingSystem || 'default');
   const voteProps = useVote(post, 'Posts', votingSystem);
@@ -499,6 +500,7 @@ const PostsPage = ({fullPost, postPreload, sequenceIdFromUrl, refetch, embedded}
     },
     itemsPerPage: 200,
     fetchPolicy: 'cache-and-network' as const,
+    ssr: !isCommentPermalink,
   });
 
   const { loading, data: rawData, networkStatus, loadMoreProps: { loadMore } } = lazyResults;
