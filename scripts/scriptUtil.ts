@@ -5,8 +5,7 @@
 
 import { existsSync } from "node:fs";
 
-// @ts-ignore This is a javascript file without a .d.ts
-import { getDatabaseConfig } from "./startup/buildUtil";
+import { getDatabaseConfig } from "./startup/buildUtil.ts";
 
 export const initGlobals = (isProd: boolean, globalOverrides?: Record<string, unknown>) => {
   Object.assign(global, {
