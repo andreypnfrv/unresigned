@@ -1,6 +1,6 @@
 import { EditablePost, PostSubmitMeta, userCanEditCoauthors, canUserEditPostMetadata, detectLinkpost } from "@/lib/collections/posts/helpers";
 import { getDefaultEditorPlaceholder } from '@/lib/editor/defaultEditorPlaceholder';
-import { isLWorAF, isEAForum } from "@/lib/instanceSettings";
+import { commentCreditsRequiredPerPublishedPostSetting, isLWorAF, isEAForum, isAntimortality } from "@/lib/instanceSettings";
 import { useForm } from "@tanstack/react-form";
 import classNames from "classnames";
 import React, { useMemo, useEffect, useState, useRef, useCallback } from "react";
@@ -27,6 +27,7 @@ import ForumIcon from "../common/ForumIcon";
 import { useMutation } from "@apollo/client/react";
 import EditorSettingsSidebar from "./EditorSettingsSidebar";
 import MobileEditorBottomBar from "./MobileEditorBottomBar";
+import PostPublicationCreditsBanner from "./PostPublicationCreditsBanner";
 import { localGroupTypeFormOptions } from "@/lib/collections/localgroups/groupTypes";
 import { EVENT_TYPES } from "@/lib/collections/posts/constants";
 import { isClient } from "@/lib/executionEnvironment";
@@ -43,6 +44,24 @@ import { LW_POST_TITLE_FONT_SIZE } from "../posts/PostsPage/PostsPageTitle";
 import CollabEditorPermissionsNotices from "../editor/CollabEditorPermissionsNotices";
 import { gql } from "@/lib/generated/gql-codegen";
 import type { EditorTypeString } from "../editor/Editor";
+import { useQuery } from "@/lib/crud/useQuery";
+
+const PublicationCreditsQuery = gql(`
+  query PostFormPublicationCredits($documentId: String) {
+    user(input: { selector: { documentId: $documentId } }) {
+      result {
+        postPublicationCommentCredits {
+          enabled
+          cost
+          balance
+          commentsNeededForNextPublish
+          qualifyingCommentsOnOthersPosts
+          publishedPostsCharged
+        }
+      }
+    }
+  }
+`);
 
 const PostsEditMutationFragmentUpdateMutation = gql(`
   mutation updatePostPostForm($selector: SelectorInput!, $data: UpdatePostDataInput!) {
@@ -597,6 +616,20 @@ const PostForm = ({
     }
   }, [sidebarPanel]);
 
+  const commentCreditsCost = commentCreditsRequiredPerPublishedPostSetting.get();
+  const { data: publicationCreditsData } = useQuery(PublicationCreditsQuery, {
+    variables: { documentId: currentUser?._id ?? "" },
+    skip: !currentUser || commentCreditsCost <= 0,
+  });
+  const publicationCreditsField = publicationCreditsData?.user?.result?.postPublicationCommentCredits;
+  const publicationCreditGate = useMemo((): { enabled: true; commentsNeededForNextPublish: number } | undefined => {
+    if (commentCreditsCost <= 0 || !publicationCreditsField?.enabled) return undefined;
+    return {
+      enabled: true,
+      commentsNeededForNextPublish: publicationCreditsField.commentsNeededForNextPublish,
+    };
+  }, [commentCreditsCost, publicationCreditsField]);
+
   const inlineCommentsContext = useMemo(() => ({
     showComments, setShowComments, commentCount, setCommentCount,
   }), [showComments, commentCount]);
@@ -623,6 +656,10 @@ const PostForm = ({
       void form.handleSubmit();
     }}>
       {displayedErrorComponent}
+
+      {canEditMetadata && !isEvent && !isDialogue && (
+        <PostPublicationCreditsBanner credits={publicationCreditsField} />
+      )}
 
       <div className={classes.topRightControls}>
         {canEditMetadata && <>
@@ -928,6 +965,27 @@ const PostForm = ({
         </LegacyFormGroupLayout>
       )}
 
+      {canEditMetadata && isAntimortality() && !isDialogue && (
+        <LegacyFormGroupLayout label="Post header" groupStyling={false} paddingStyling={false}>
+          <div className={classes.fieldWrapper}>
+            <form.Field name="eventImageId">
+              {(field) => (
+                <LWTooltip
+                  title="Shown full width above the title on the post page. About 1.91:1 works well (e.g. 1920×1005)."
+                  placement="left-start"
+                  inlineBlock={false}
+                >
+                  <ImageUpload
+                    field={field}
+                    label="Header image"
+                  />
+                </LWTooltip>
+              )}
+            </form.Field>
+          </div>
+        </LegacyFormGroupLayout>
+      )}
+
       <LegacyFormGroupLayout
         groupStyling={false}
         paddingStyling={false}
@@ -1175,6 +1233,7 @@ const PostForm = ({
           addOnSuccessCallbackCustom={addOnSuccessCallbackCustomHighlight}
           addOnSubmitCallbackModerationGuidelines={addOnSubmitCallbackModerationGuidelines}
           addOnSuccessCallbackModerationGuidelines={addOnSuccessCallbackModerationGuidelines}
+          publicationCreditGate={publicationCreditGate}
         />,
         sidebarPortalTarget
       )}
@@ -1198,6 +1257,7 @@ const PostForm = ({
         addOnSuccessCallbackCustom={addOnSuccessCallbackCustomHighlight}
         addOnSubmitCallbackModerationGuidelines={addOnSubmitCallbackModerationGuidelines}
         addOnSuccessCallbackModerationGuidelines={addOnSuccessCallbackModerationGuidelines}
+        publicationCreditGate={publicationCreditGate}
       />}
     </form>
     </InlineCommentsPanelContext.Provider>

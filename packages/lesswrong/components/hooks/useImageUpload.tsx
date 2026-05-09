@@ -94,6 +94,14 @@ declare global {
   }
 }
 
+function resolveEventImageUploadPreset(): string | null {
+  const explicit = cloudinaryUploadPresetEventImageSetting.get();
+  if (explicit) return explicit;
+  const social = cloudinaryUploadPresetSocialPreviewSetting.get();
+  if (social) return social;
+  return cloudinaryUploadPresetBannerSetting.get();
+}
+
 const getCloudinaryArgsByImageType = () => ({
   gridImageId: {
     minImageHeight: 80,
@@ -136,7 +144,7 @@ const getCloudinaryArgsByImageType = () => ({
     minImageWidth: 500,
     croppingAspectRatio: 1.91,
     croppingDefaultSelectionRatio: 1.91,
-    uploadPreset: cloudinaryUploadPresetEventImageSetting.get()
+    uploadPreset: resolveEventImageUploadPreset(),
   },
   spotlightImageId: {
     minImageHeight: 232,

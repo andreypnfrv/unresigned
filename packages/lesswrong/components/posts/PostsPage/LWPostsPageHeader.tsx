@@ -17,6 +17,7 @@ import PostsGroupDetails from "../PostsGroupDetails";
 import PostsPageEventData from "./PostsPageEventData";
 import AddToCalendarButton from "../AddToCalendar/AddToCalendarButton";
 import GroupLinks from "../../localGroups/GroupLinks";
+import FooterTagList from "../../tagging/FooterTagList";
 import LWPostsPageHeaderTopRight from "./LWPostsPageHeaderTopRight";
 import PostsAudioPlayerWrapper from "./PostsAudioPlayerWrapper";
 import PostsVote from "../../votes/PostsVote";
@@ -62,6 +63,18 @@ const styles = defineStyles('LWPostsPageHeader', (theme: ThemeType) => ({
     flexWrap: 'wrap',
     color: theme.palette.text.dim3,
     marginTop: 12
+  },
+  authorLineTags: {
+    display: 'flex',
+    flexWrap: 'wrap',
+    alignItems: 'center',
+    rowGap: 4,
+    opacity: 0.85,
+    minWidth: 0,
+    [theme.breakpoints.down('xs')]: {
+      flexBasis: '100%',
+      marginTop: 6,
+    },
   },
   authorInfo: {
     maxWidth: "calc(100% - 60px)",
@@ -109,6 +122,10 @@ const styles = defineStyles('LWPostsPageHeader', (theme: ThemeType) => ({
   sequenceNav: {
     marginBottom: 8,
     marginTop: -22
+  },
+  sequenceNavBelowHero: {
+    marginTop: 16,
+    marginBottom: 12,
   },
   eventData: {
     marginTop: 48
@@ -224,7 +241,23 @@ const styles = defineStyles('LWPostsPageHeader', (theme: ThemeType) => ({
         paddingTop: 0,
       },
     },
-  }
+  },
+  rootBelowPostHeaderImage: {
+    paddingTop: 34,
+    marginBottom: 56,
+    [theme.breakpoints.down('sm')]: {
+      paddingTop: 28,
+    },
+    [theme.breakpoints.down('xs')]: {
+      paddingTop: 28,
+      marginBottom: 38,
+    },
+  },
+  rootBelowPostHeaderImageWithAudio: {
+    [theme.breakpoints.down('sm')]: {
+      paddingTop: 24,
+    },
+  },
 }));
 
 /// LWPostsPageHeader: The metadata block at the top of a post page, with
@@ -269,7 +302,16 @@ const LWPostsPageHeader = ({post, showEmbeddedPlayer, toggleEmbeddedPlayer, dial
 
   const reviewYear = 'reviewWinner' in post && post.reviewWinner?.reviewYear;
 
-  return <div className={classNames(classes.root, {[classes.eventHeader]: post.isEvent, [classes.rootWithAudioPlayer]: !!showEmbeddedPlayer}, {[classes.rootWithSplashPageHeader]: showSplashPageHeader})}>
+  const compactHeaderBelowImage = !!post.eventImageId && !showSplashPageHeader;
+
+  return <div className={classNames(
+    classes.root,
+    {[classes.eventHeader]: post.isEvent},
+    {[classes.rootWithAudioPlayer]: !!showEmbeddedPlayer && !compactHeaderBelowImage},
+    {[classes.rootWithSplashPageHeader]: showSplashPageHeader},
+    {[classes.rootBelowPostHeaderImage]: compactHeaderBelowImage},
+    {[classes.rootBelowPostHeaderImageWithAudio]: compactHeaderBelowImage && !!showEmbeddedPlayer},
+  )}>
     {post.group && <PostsGroupDetails post={post} documentId={post.group._id} />}
     <AnalyticsContext pageSectionContext="topSequenceNavigation">
       {('sequence' in post) && !!post.sequence && <div className={classes.sequenceNav}>
@@ -298,6 +340,23 @@ const LWPostsPageHeader = ({post, showEmbeddedPlayer, toggleEmbeddedPlayer, dial
           {!post.isEvent && <div className={classes.date}>
             <PostsPageDate post={post} hasMajorRevision={hasMajorRevision} />
           </div>}
+          {!post.shortform && (
+            <AnalyticsContext pageSectionContext="tagHeader">
+              <div className={classes.authorLineTags}>
+                <FooterTagList
+                  post={post}
+                  hideScore
+                  useAltAddTagButton
+                  noBackground
+                  neverCoreStyling
+                  tagRight
+                  annualReviewMarketInfo={annualReviewMarketInfo}
+                  align="left"
+                  overrideMargins
+                />
+              </div>
+            </AnalyticsContext>
+          )}
           {rssFeedSource && rssFeedSource.user &&
             <LWTooltip title={`Crossposted from ${feedLinkDomain}`} className={classes.feedName}>
               <a href={feedLink}>{rssFeedSource.nickname}</a>

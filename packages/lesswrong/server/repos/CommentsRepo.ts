@@ -22,6 +22,32 @@ class CommentsRepo extends AbstractRepo<"Comments"> {
     super(Comments);
   }
 
+  /** Comments that count toward “publication credits”: on published posts by others, excluding co-authored posts. */
+  async countQualifyingPublicationCreditComments(userId: string): Promise<number> {
+    const row = await this.getRawDb().oneOrNone<{ count: string }>(
+      `
+      -- CommentsRepo.countQualifyingPublicationCreditComments
+      SELECT COUNT(*)::text AS count
+      FROM "Comments" c
+      INNER JOIN "Posts" p ON p."_id" = c."postId"
+      WHERE c."userId" = $1
+        AND c."postId" IS NOT NULL
+        AND c."spam" IS NOT TRUE
+        AND c."deleted" IS NOT TRUE
+        AND c."deletedPublic" IS NOT TRUE
+        AND c."retracted" IS NOT TRUE
+        AND c."moderatorHat" IS NOT TRUE
+        AND c."needsReview" IS NOT TRUE
+        AND p."draft" IS NOT TRUE
+        AND p."deletedDraft" IS NOT TRUE
+        AND p."userId" <> c."userId"
+        AND NOT (p."coauthorUserIds" @> ARRAY[c."userId"]::TEXT[])
+    `,
+      [userId],
+    );
+    return row ? parseInt(row.count, 10) : 0;
+  }
+
   async getPromotedCommentsOnPosts(postIds: string[]): Promise<(DbComment|null)[]> {
     const rawComments = await this.manyOrNone(`
       -- CommentsRepo.getPromotedCommentsOnPosts

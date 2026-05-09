@@ -178,6 +178,15 @@ input RecommendationSettingsInput {
   recommendationspage: RecommendationAlgorithmSettingsInput!
 }
 
+type PostPublicationCommentCredits {
+  enabled: Boolean!
+  cost: Int!
+  qualifyingCommentsOnOthersPosts: Int!
+  publishedPostsCharged: Int!
+  balance: Int!
+  commentsNeededForNextPublish: Int!
+}
+
 type MailgunValidationResult {
   email: String
   status: String
@@ -2012,6 +2021,8 @@ type Comment {
   rejected: Boolean!
   rejectedReason: String
   rejectedByUserId: String
+  modGPTAnalysis: String
+  modGPTRecommendation: String
   rejectedByUser: User
   af: Boolean!
   suggestForAlignmentUserIds: [String!]!
@@ -7241,6 +7252,7 @@ type User {
   bookmarkedPostsMetadata: [PostMetadataOutput!]
   bookmarksCount: Int
   hasAnyBookmarks: Boolean
+  postPublicationCommentCredits: PostPublicationCommentCredits!
   bookmarkedPosts: [Post!]
   hiddenPostsMetadata: [PostMetadataOutput!]
   hiddenPosts: [Post!]
@@ -7865,6 +7877,8 @@ input UpdateCommentDataInput {
   rejected: Boolean
   rejectedReason: String
   rejectedByUserId: String
+  modGPTAnalysis: String
+  modGPTRecommendation: String
   af: Boolean
   suggestForAlignmentUserIds: [String!]
   reviewForAlignmentUserId: String

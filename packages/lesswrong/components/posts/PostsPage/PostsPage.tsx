@@ -133,38 +133,73 @@ export const styles = defineStyles("PostsPage", (theme: ThemeType) => ({
     fontSize: 14,
     lineHeight: "1.6em",
   },
-  // these marginTops are necessary to make sure the image is flush with the header,
-  // since the page layout has different paddingTop values for different widths
-  headerImageContainer: {
-    paddingBottom: 15,
+  headerHeroBleed: {
+    position: 'relative',
+    marginBottom: 0,
+    paddingBottom: 16,
+    width: '100%',
+    marginLeft: 0,
+    marginRight: 0,
+    filter: `drop-shadow(0 3px 10px ${theme.palette.boxShadowColor(0.14)})`,
     [theme.breakpoints.up('md')]: {
-      marginTop: -theme.spacing.mainLayoutPaddingTop,
+      marginTop: 36 - theme.spacing.mainLayoutPaddingTop,
+      width: '120%',
+      marginLeft: '-10%',
+      marginRight: '-10%',
     },
     [theme.breakpoints.down('sm')]: {
-      marginTop: -12,
-      marginLeft: -8,
-      marginRight: -8,
-    },
-    [theme.breakpoints.down('xs')]: {
-      marginTop: -10,
-    }
-  },
-  // if there is a comment above the image,
-  // then we DON'T want to account for those paddingTop values
-  headerImageContainerWithComment: {
-    [theme.breakpoints.up('md')]: {
-      marginTop: 10,
-    },
-    [theme.breakpoints.down('sm')]: {
-      marginTop: 10,
+      marginTop: 8,
+      width: '112%',
+      marginLeft: '-6%',
+      marginRight: '-6%',
     },
     [theme.breakpoints.down('xs')]: {
       marginTop: 10,
-    }
+      width: '100%',
+      marginLeft: 0,
+      marginRight: 0,
+    },
+    '&$headerHeroBleedWithComment': {
+      [theme.breakpoints.up('md')]: {
+        marginTop: 28,
+      },
+      [theme.breakpoints.down('sm')]: {
+        marginTop: 22,
+      },
+      [theme.breakpoints.down('xs')]: {
+        marginTop: 22,
+      },
+    },
   },
-  headerImage: {
-    width: '100vw',
-    maxWidth: 682,
+  headerHeroBleedWithComment: {},
+  headerHeroInner: {
+    position: 'relative',
+    width: '100%',
+    height: 'clamp(160px, 28vh, 360px)',
+    borderRadius: 10,
+    overflow: 'hidden',
+    [theme.breakpoints.down('xs')]: {
+      borderRadius: 8,
+    },
+  },
+  headerHeroMedia: {
+    position: 'absolute',
+    inset: 0,
+  },
+  headerHeroPicture: {
+    display: 'block',
+    width: '100%',
+    height: '100%',
+    '& img': {
+      width: '100%',
+      height: '100%',
+    },
+  },
+  headerHeroImg: {
+    width: '100% !important',
+    height: '100% !important',
+    objectFit: 'cover',
+    display: 'block',
   },
   embeddedPlayer: {
     marginBottom: "30px"
@@ -532,6 +567,22 @@ const PostsPage = ({fullPost, postPreload, sequenceIdFromUrl, refetch, embedded}
     </ImageProvider>
   </div>
 
+  const postHeaderHero = post.eventImageId ? <div className={classNames(classes.headerHeroBleed, {[classes.headerHeroBleedWithComment]: permalinkedCommentId})}>
+    <div className={classes.headerHeroInner}>
+      <div className={classes.headerHeroMedia}>
+        <CloudinaryImage2
+          publicId={post.eventImageId}
+          fullWidthHeader
+          height={360}
+          objectFit="cover"
+          imgProps={{ q: 'auto:good', g: 'auto' }}
+          wrapperClassName={classes.headerHeroPicture}
+          className={classes.headerHeroImg}
+        />
+      </div>
+    </div>
+  </div> : null;
+
   const header = <>
     {fullPost && !linkedCommentId && <>
       <StructuredData generate={() => getStructuredData({post: fullPost, description, commentTree, answersTree})}/>
@@ -541,13 +592,7 @@ const PostsPage = ({fullPost, postPreload, sequenceIdFromUrl, refetch, embedded}
       <div className={classNames(classes.title, {[classes.titleWithMarket] : highlightMarket(marketInfo)})}>
         <div className={classes.centralColumn}>
           {permalinkedCommentId && <CommentPermalink documentId={permalinkedCommentId} post={postPreload ?? fullPost} silentLoading={silentLoadingPermalink} />}
-          {post.eventImageId && <div className={classNames(classes.headerImageContainer, {[classes.headerImageContainerWithComment]: permalinkedCommentId})}>
-            <CloudinaryImage2
-              publicId={post.eventImageId}
-              imgProps={{ar: '191:100', w: '682', q: '100'}}
-              className={classes.headerImage}
-            />
-          </div>}
+          {postHeaderHero}
           <LWPostsPageHeader
             post={post}
             showEmbeddedPlayer={showEmbeddedPlayer}

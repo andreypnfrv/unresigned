@@ -23,6 +23,7 @@ export const forumTypeSetting: { get: () => ForumTypeString } = {
 export const isLW = () =>
   forumTypeSetting.get() === "Unresigned" || forumTypeSetting.get() === "Antimortality"
 export const isEAForum = () => forumTypeSetting.get() === "EAForum"
+export const isAntimortality = () => forumTypeSetting.get() === "Antimortality"
 export const isAF = () => forumTypeSetting.get() === "AlignmentForum"
 export const isUnresignedForum = () =>
   forumTypeSetting.get() === "Unresigned" || forumTypeSetting.get() === "Antimortality"

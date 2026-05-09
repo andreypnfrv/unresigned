@@ -2,7 +2,7 @@ import { isServer, isDevelopment, isAnyTest, isE2E, isProduction } from './execu
 import { TupleSet, UnionOf } from './utils/typeGuardUtils';
 import {initializeSetting} from './settingsCache'
 import { getInstanceSettings } from './getInstanceSettings';
-import { forumTypeSetting, isAF, isEAForum, isLW, isLWorAF, isUnresignedForum } from '@/lib/forumTypeUtils';
+import { forumTypeSetting, isAF, isAntimortality, isEAForum, isLW, isLWorAF, isUnresignedForum } from '@/lib/forumTypeUtils';
 import type { FilterTag } from './filterSettings';
 
 const getNestedProperty = function (obj: AnyBecauseTodo, desc: AnyBecauseTodo) {
@@ -104,7 +104,7 @@ export type ForumTypeString = UnionOf<typeof allForumTypes>;
 // export const forumTypeSetting = new PublicInstanceSetting<ForumTypeString>('forumType', 'Unresigned', 'warning') // What type of Forum is being run, {Unresigned, AlignmentForum, EAForum}
 
 // eslint-disable-next-line no-barrel-files/no-barrel-files
-export { forumTypeSetting, isLW, isEAForum, isAF, isLWorAF, isUnresignedForum };
+export { forumTypeSetting, isLW, isEAForum, isAntimortality, isAF, isLWorAF, isUnresignedForum };
 
 export const forumTitleSetting = new PublicInstanceSetting<string>('title', 'Unresigned', 'warning') // Default title for URLs
 
@@ -179,6 +179,12 @@ export const highlightReviewWinnerThresholdSetting = new PublicInstanceSetting<n
 
 export const myMidjourneyAPIKeySetting = new PublicInstanceSetting<string | null>('myMidjourney.apiKey', null, "optional");
 export const maxAllowedApiSkip = new PublicInstanceSetting<number | null>("maxAllowedApiSkip", 2000, "optional")
+
+export const commentCreditsRequiredPerPublishedPostSetting = new PublicInstanceSetting<number>(
+  "commentCreditsRequiredPerPublishedPost",
+  0,
+  "optional",
+);
 
 export const recombeeDatabaseIdSetting = new PublicInstanceSetting<string | null>('recombee.databaseId', null, "optional");
 export const recombeePublicApiTokenSetting = new PublicInstanceSetting<string | null>('recombee.publicApiToken', null, "optional");

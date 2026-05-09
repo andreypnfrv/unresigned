@@ -1289,6 +1289,7 @@ interface EditorSettingsSidebarProps {
   addOnSuccessCallbackCustom: AddOnSuccessCallback<PostsEditMutationFragment>;
   addOnSubmitCallbackModerationGuidelines: AddOnSubmitCallback<PostsEditMutationFragment>;
   addOnSuccessCallbackModerationGuidelines: AddOnSuccessCallback<PostsEditMutationFragment>;
+  publicationCreditGate?: { enabled: true; commentsNeededForNextPublish: number };
 }
 
 const EditorSettingsSidebar = ({
@@ -1303,6 +1304,7 @@ const EditorSettingsSidebar = ({
   addOnSuccessCallbackCustom,
   addOnSubmitCallbackModerationGuidelines,
   addOnSuccessCallbackModerationGuidelines,
+  publicationCreditGate,
 }: EditorSettingsSidebarProps) => {
   const classes = useStyles(styles);
   const { openDialog } = useDialog();
@@ -1359,6 +1361,16 @@ const EditorSettingsSidebar = ({
               const draftLabel = (isSubmitting && draft) ? "Saving…" : (!draft ? "Move to Drafts" : "Save Draft");
               const submitLabel = (isSubmitting && !draft) ? "Publishing…" : (draft ? "Publish" : "Publish Changes");
               const disabled = !canSubmit || isSubmitting || isSaving;
+              const publishBlockedByCredits =
+                !!publicationCreditGate?.enabled &&
+                !isAdminOrMod &&
+                !isEvent &&
+                !isDialogue &&
+                draft &&
+                publicationCreditGate.commentsNeededForNextPublish > 0;
+              const publishDisabledReason = publishBlockedByCredits
+                ? `Leave ${publicationCreditGate.commentsNeededForNextPublish} more comment(s) on others’ posts first (not on posts you co-author).`
+                : undefined;
 
               return isDialogue
                 ? <DialogueSubmit
@@ -1376,6 +1388,8 @@ const EditorSettingsSidebar = ({
                         saveDraftLabel={draftLabel}
                         feedbackLabel="Get Feedback"
                         claudeButton={publishClaudeButton}
+                        publishExtraDisabled={publishBlockedByCredits}
+                        publishDisabledReason={publishDisabledReason}
                       />
                     </div>
                     {postId && <ClaudeConnectionStatus currentUser={currentUser} postId={postId} />}

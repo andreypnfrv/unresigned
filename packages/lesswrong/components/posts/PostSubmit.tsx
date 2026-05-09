@@ -53,6 +53,9 @@ export type PostSubmitProps = {
   feedbackLabel?: string,
   claudeButton?: React.ReactNode,
   cancelCallback?: (document: EditablePost) => void,
+  /** Disables only the primary Publish button (draft save stays usable). */
+  publishExtraDisabled?: boolean,
+  publishDisabledReason?: string,
 }
 
 export const PostSubmit = ({
@@ -64,6 +67,8 @@ export const PostSubmit = ({
   feedbackLabel = "Request Feedback",
   claudeButton,
   cancelCallback,
+  publishExtraDisabled = false,
+  publishDisabledReason,
 }: PostSubmitProps) => {
   const classes = useStyles(styles);
   const currentUser = useCurrentUser();
@@ -87,6 +92,7 @@ export const PostSubmit = ({
   const requireConfirmation = isLW() && !!document.debate;
 
   const onSubmitClick = requireConfirmation ? submitWithConfirmation : submitWithoutConfirmation;
+  const publishDisabled = disabled || publishExtraDisabled;
   const requestFeedbackKarmaLevel = requestFeedbackKarmaLevelSetting.get()
   const showFeedbackButton = requestFeedbackKarmaLevel !== null && currentUser.karma >= requestFeedbackKarmaLevel;
   // EA Forum title is Effective Altruism Forum, which is unecessarily long
@@ -109,14 +115,29 @@ export const PostSubmit = ({
         </div>
       }
       <div className={classes.submitButtons}>
-        <Button
-          type="submit"
-          onClick={onSubmitClick}
-          disabled={disabled}
-          className={classNames("primary-form-submit-button", classes.formButton, classes.submitButton)}
-        >
-          {submitLabel}
-        </Button>
+        {publishExtraDisabled && publishDisabledReason ? (
+          <LWTooltip title={publishDisabledReason}>
+            <span>
+              <Button
+                type="submit"
+                onClick={onSubmitClick}
+                disabled={publishDisabled}
+                className={classNames("primary-form-submit-button", classes.formButton, classes.submitButton)}
+              >
+                {submitLabel}
+              </Button>
+            </span>
+          </LWTooltip>
+        ) : (
+          <Button
+            type="submit"
+            onClick={onSubmitClick}
+            disabled={publishDisabled}
+            className={classNames("primary-form-submit-button", classes.formButton, classes.submitButton)}
+          >
+            {submitLabel}
+          </Button>
+        )}
         {(showFeedbackButton || claudeButton) && (
           <div className={classes.feedbackRow}>
             {showFeedbackButton && (

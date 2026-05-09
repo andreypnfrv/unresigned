@@ -8,6 +8,7 @@ import type { TypedReactFormApi } from "../tanstack-form-components/BaseAppForm"
 import type { AddOnSubmitCallback, AddOnSuccessCallback } from "../editor/EditorFormComponent";
 import { InlineCommentsPanelContext, EditorUserModeContext } from "../common/sharedContexts";
 import { getAvailableEditorModes, editorModeLabels } from "../editor/lexicalPlugins/suggestions/EditorUserMode";
+import { userIsAdminOrMod } from "@/lib/vulcan-users/permissions";
 
 type SidebarMode = "publish" | "settings" | "sharing";
 
@@ -301,6 +302,7 @@ interface MobileEditorBottomBarProps {
   addOnSuccessCallbackCustom: AddOnSuccessCallback<PostsEditMutationFragment>;
   addOnSubmitCallbackModerationGuidelines: AddOnSubmitCallback<PostsEditMutationFragment>;
   addOnSuccessCallbackModerationGuidelines: AddOnSuccessCallback<PostsEditMutationFragment>;
+  publicationCreditGate?: { enabled: true; commentsNeededForNextPublish: number };
 }
 
 const MobileEditorBottomBar = ({
@@ -316,6 +318,7 @@ const MobileEditorBottomBar = ({
   addOnSuccessCallbackCustom,
   addOnSubmitCallbackModerationGuidelines,
   addOnSuccessCallbackModerationGuidelines,
+  publicationCreditGate,
 }: MobileEditorBottomBarProps) => {
   const classes = useStyles(styles);
   const [sheetOpen, setSheetOpen] = useState(false);
@@ -372,6 +375,17 @@ const MobileEditorBottomBar = ({
       })}>
         {({ canSubmit, isSubmitting, draft }) => {
           const disabled = !canSubmit || isSubmitting || isSaving;
+          const isEventPost = !!initialData.isEvent;
+          const isDialoguePost = !!initialData.collabEditorDialogue;
+          const isAdminOrMod = userIsAdminOrMod(currentUser);
+          const publishBlockedByCredits =
+            !!publicationCreditGate?.enabled &&
+            !isAdminOrMod &&
+            !isEventPost &&
+            !isDialoguePost &&
+            draft &&
+            publicationCreditGate.commentsNeededForNextPublish > 0;
+          const publishDisabled = disabled || publishBlockedByCredits;
           return (
             <div className={classes.bottomBar}>
               <button
@@ -453,7 +467,12 @@ const MobileEditorBottomBar = ({
                 <button
                   type="submit"
                   className={classes.publishButton}
-                  disabled={disabled}
+                  disabled={publishDisabled}
+                  title={
+                    publishBlockedByCredits
+                      ? `Leave ${publicationCreditGate.commentsNeededForNextPublish} more comment(s) on others’ posts first (not on posts you co-author).`
+                      : undefined
+                  }
                   onClick={() => form.setFieldValue("draft", false)}
                 >
                   {draft ? "Publish" : "Publish Changes"}
@@ -509,6 +528,7 @@ const MobileEditorBottomBar = ({
             addOnSuccessCallbackCustom={addOnSuccessCallbackCustom}
             addOnSubmitCallbackModerationGuidelines={addOnSubmitCallbackModerationGuidelines}
             addOnSuccessCallbackModerationGuidelines={addOnSuccessCallbackModerationGuidelines}
+            publicationCreditGate={publicationCreditGate}
           />
         </div>
       </div>

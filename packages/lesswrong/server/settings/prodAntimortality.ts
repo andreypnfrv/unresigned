@@ -17,6 +17,9 @@ const cloudinaryOverrides = merge({}, sharedSettings.cloudinary, {
   ...(process.env.CLOUDINARY_UPLOAD_PRESET_SOCIAL?.trim()
     ? { uploadPresetSocialPreview: process.env.CLOUDINARY_UPLOAD_PRESET_SOCIAL.trim() }
     : {}),
+  ...(process.env.CLOUDINARY_UPLOAD_PRESET_EVENT?.trim()
+    ? { uploadPresetEventImage: process.env.CLOUDINARY_UPLOAD_PRESET_EVENT.trim() }
+    : {}),
   ...(process.env.CLOUDINARY_UPLOAD_PRESET_SPOTLIGHT?.trim()
     ? { uploadPresetSpotlight: process.env.CLOUDINARY_UPLOAD_PRESET_SPOTLIGHT.trim() }
     : {}),
@@ -89,6 +92,7 @@ export const prodAntimortality = {
       siteName: null,
       baseUrl: null,
     },
+    commentCreditsRequiredPerPublishedPost: 2,
   }),
   defaultVisibilityTags: [] as typeof sharedSettings.defaultVisibilityTags,
 };

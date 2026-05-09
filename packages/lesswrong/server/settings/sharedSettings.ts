@@ -83,6 +83,7 @@ export const sharedSettings = {
     uploadPresetBanner: "navcjwf7",
     uploadPresetGridImage: "tz0mgw2s",
     uploadPresetSocialPreview: "nn5tppry",
+    uploadPresetEventImage: "nn5tppry",
     uploadPresetEditor: "lexical_client_upload",
   },
   googleMaps: {

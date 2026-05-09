@@ -68,6 +68,15 @@ export const graphqlTypeDefs = gql`
     recommendationspage: RecommendationAlgorithmSettingsInput!
   }
 
+  type PostPublicationCommentCredits {
+    enabled: Boolean!
+    cost: Int!
+    qualifyingCommentsOnOthersPosts: Int!
+    publishedPostsCharged: Int!
+    balance: Int!
+    commentsNeededForNextPublish: Int!
+  }
+
   type MailgunValidationResult {
     email: String
     status: String

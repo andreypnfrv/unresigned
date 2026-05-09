@@ -2249,6 +2249,8 @@ export type Comment = {
   legacyId: Maybe<Scalars['String']['output']>;
   legacyParentId: Maybe<Scalars['String']['output']>;
   legacyPoll: Scalars['Boolean']['output'];
+  modGPTAnalysis: Maybe<Scalars['String']['output']>;
+  modGPTRecommendation: Maybe<Scalars['String']['output']>;
   moderatorHat: Scalars['Boolean']['output'];
   moveToAlignmentUser: Maybe<User>;
   moveToAlignmentUserId: Maybe<Scalars['String']['output']>;
@@ -7098,6 +7100,16 @@ export type PostMetadataOutput = {
 export type PostOutput = {
   __typename?: 'PostOutput';
   data: Maybe<Post>;
+};
+
+export type PostPublicationCommentCredits = {
+  __typename?: 'PostPublicationCommentCredits';
+  balance: Scalars['Int']['output'];
+  commentsNeededForNextPublish: Scalars['Int']['output'];
+  cost: Scalars['Int']['output'];
+  enabled: Scalars['Boolean']['output'];
+  publishedPostsCharged: Scalars['Int']['output'];
+  qualifyingCommentsOnOthersPosts: Scalars['Int']['output'];
 };
 
 export type PostRecommendation = {
@@ -11956,6 +11968,8 @@ export type UpdateCommentDataInput = {
   legacyId?: InputMaybe<Scalars['String']['input']>;
   legacyParentId?: InputMaybe<Scalars['String']['input']>;
   legacyPoll?: InputMaybe<Scalars['Boolean']['input']>;
+  modGPTAnalysis?: InputMaybe<Scalars['String']['input']>;
+  modGPTRecommendation?: InputMaybe<Scalars['String']['input']>;
   moderatorHat?: InputMaybe<Scalars['Boolean']['input']>;
   moveToAlignmentUserId?: InputMaybe<Scalars['String']['input']>;
   needsReview?: InputMaybe<Scalars['Boolean']['input']>;
@@ -12884,6 +12898,7 @@ export type User = {
   pinnedPostIds: Array<Scalars['String']['output']>;
   postCount: Scalars['Float']['output'];
   postGlossariesPinned: Maybe<Scalars['Boolean']['output']>;
+  postPublicationCommentCredits: PostPublicationCommentCredits;
   postingDisabled: Maybe<Scalars['Boolean']['output']>;
   posts: Maybe<Array<Post>>;
   previousDisplayName: Maybe<Scalars['String']['output']>;
@@ -16056,6 +16071,13 @@ export type multiPostPingbacksListQueryQuery = { __typename?: 'Query', posts: { 
       { __typename?: 'Post' }
       & PostsList
     )> } | null };
+
+export type PostFormPublicationCreditsQueryVariables = Exact<{
+  documentId?: InputMaybe<Scalars['String']['input']>;
+}>;
+
+
+export type PostFormPublicationCreditsQuery = { __typename?: 'Query', user: { __typename?: 'SingleUserOutput', result: { __typename?: 'User', postPublicationCommentCredits: { __typename?: 'PostPublicationCommentCredits', enabled: boolean, cost: number, balance: number, commentsNeededForNextPublish: number, qualifyingCommentsOnOthersPosts: number, publishedPostsCharged: number } } | null } | null };
 
 export type updatePostPostFormMutationVariables = Exact<{
   selector: SelectorInput;
@@ -21821,6 +21843,7 @@ export const FeedPostsHighlightDocument = _o1(_1,[_o11(_959,_960,_o3(_3,"FeedPos
 export const multiPostLWPostsByVoteQueryDocument = _o1(_1,[_o11(_959,_960,_o3(_3,"multiPostLWPostsByVoteQuery"),_1083,_1413),_22,_121,_54,_130,_140,_151,_177,_185,_191,_196,_200]) as unknown as DocumentNode<multiPostLWPostsByVoteQueryQuery, multiPostLWPostsByVoteQueryQueryVariables>;
 export const createPostNewDialogueDialogDocument = _o1(_1,[_o11(_959,_1096,_o3(_3,"createPostNewDialogueDialog"),_1476,_1478),_22,_121,_54,_130,_140,_151,_177,_185,_483,_191,_196,_200,_490,_219,_263,_577]) as unknown as DocumentNode<createPostNewDialogueDialogMutation, createPostNewDialogueDialogMutationVariables>;
 export const multiPostPingbacksListQueryDocument = _o1(_1,[_o11(_959,_960,_o3(_3,"multiPostPingbacksListQuery"),_1083,_1442),_22,_121,_54,_130,_140,_151,_177,_185,_191]) as unknown as DocumentNode<multiPostPingbacksListQueryQuery, multiPostPingbacksListQueryQueryVariables>;
+export const PostFormPublicationCreditsDocument = _o1(_1,[_o11(_959,_960,_o3(_3,"PostFormPublicationCredits"),_1144,_o5(_7,[_o7(_8,_59,_976,_o5(_7,[_o6(_8,_977,_o5(_7,[_o6(_8,_o3(_3,"postPublicationCommentCredits"),_o5(_7,[_o4(_8,_o3(_3,"enabled")),_o4(_8,_o3(_3,"cost")),_o4(_8,_o3(_3,"balance")),_o4(_8,_o3(_3,"commentsNeededForNextPublish")),_o4(_8,_o3(_3,"qualifyingCommentsOnOthersPosts")),_o4(_8,_o3(_3,"publishedPostsCharged"))]))]))]))]))]) as unknown as DocumentNode<PostFormPublicationCreditsQuery, PostFormPublicationCreditsQueryVariables>;
 export const updatePostPostFormDocument = _o1(_1,[_o11(_959,_1096,_o3(_3,"updatePostPostForm"),_1109,_o5(_7,[_o7(_8,_1110,_1105,_1480)])),_22,_121,_54,_130,_140,_151,_177,_185,_483,_191,_196,_200,_490,_219,_263,_577,_583]) as unknown as DocumentNode<updatePostPostFormMutation, updatePostPostFormMutationVariables>;
 export const createPostPostFormDocument = _o1(_1,[_o11(_959,_1096,_o3(_3,"createPostPostForm"),_1476,_o5(_7,[_o7(_8,_1477,_1108,_1480)])),_22,_121,_54,_130,_140,_151,_177,_185,_483,_191,_196,_200,_490,_219,_263,_577,_583]) as unknown as DocumentNode<createPostPostFormMutation, createPostPostFormMutationVariables>;
 export const multiUserMostValuablePostPostMostValuableCheckboxQueryDocument = _o1(_1,[_o11(_959,_960,_o3(_3,"multiUserMostValuablePostPostMostValuableCheckboxQuery"),[_o12(_961,_1025,_o4(_5,_o3(_3,"UserMostValuablePostSelector"))),_1020,_1078],_o5(_7,[_o7(_8,_o3(_3,"userMostValuablePosts"),_1080,_o5(_7,[_o6(_8,_994,_1481),_776]))])),_825]) as unknown as DocumentNode<multiUserMostValuablePostPostMostValuableCheckboxQueryQuery, multiUserMostValuablePostPostMostValuableCheckboxQueryQueryVariables>;

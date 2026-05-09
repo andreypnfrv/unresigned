@@ -218,6 +218,8 @@ interface DbComment extends DbObject {
   legacyId: string | null
   legacyParentId: string | null
   legacyPoll: boolean
+  modGPTAnalysis: string | null
+  modGPTRecommendation: string | null
   moderatorHat: boolean
   moveToAlignmentUserId: string | null
   needsReview: boolean | null
@@ -236,8 +238,6 @@ interface DbComment extends DbObject {
   rejected: boolean
   rejectedByUserId: string | null
   rejectedReason: string | null
-  modGPTAnalysis: string | null
-  modGPTRecommendation: string | null
   relevantTagIds: Array<string>
   repliesBlockedUntil: Date | null
   retracted: boolean

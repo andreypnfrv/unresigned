@@ -503,6 +503,15 @@ interface RecommendationSettingsInput {
   recommendationspage: RecommendationAlgorithmSettingsInput;
 }
 
+interface PostPublicationCommentCredits {
+  enabled: boolean;
+  cost: number;
+  qualifyingCommentsOnOthersPosts: number;
+  publishedPostsCharged: number;
+  balance: number;
+  commentsNeededForNextPublish: number;
+}
+
 interface MailgunValidationResult {
   email: string | null;
   status: string | null;
@@ -1769,6 +1778,8 @@ interface Comment {
   rejected: boolean;
   rejectedReason: string | null;
   rejectedByUserId: string | null;
+  modGPTAnalysis: string | null;
+  modGPTRecommendation: string | null;
   rejectedByUser: User | null;
   af: boolean;
   suggestForAlignmentUserIds: Array<string>;
@@ -6686,6 +6697,7 @@ interface User {
   bookmarkedPostsMetadata: Array<PostMetadataOutput> | null;
   bookmarksCount: number | null;
   hasAnyBookmarks: boolean | null;
+  postPublicationCommentCredits: PostPublicationCommentCredits;
   bookmarkedPosts: Array<Post> | null;
   hiddenPostsMetadata: Array<PostMetadataOutput> | null;
   hiddenPosts: Array<Post> | null;
@@ -7226,6 +7238,8 @@ interface UpdateCommentDataInput {
   rejected?: boolean | null;
   rejectedReason?: string | null;
   rejectedByUserId?: string | null;
+  modGPTAnalysis?: string | null;
+  modGPTRecommendation?: string | null;
   af?: boolean | null;
   suggestForAlignmentUserIds?: Array<string> | null;
   reviewForAlignmentUserId?: string | null;
@@ -8749,6 +8763,7 @@ interface GraphQLTypeMap {
   PostMetadataOutput: PostMetadataOutput;
   RecommendationAlgorithmSettingsInput: RecommendationAlgorithmSettingsInput;
   RecommendationSettingsInput: RecommendationSettingsInput;
+  PostPublicationCommentCredits: PostPublicationCommentCredits;
   MailgunValidationResult: MailgunValidationResult;
   RecommendResumeSequence: RecommendResumeSequence;
   CommentCountTag: CommentCountTag;

@@ -36,6 +36,7 @@ import { getWithLoader, loadByIds } from "@/lib/loaders";
 import { VOTING_DISABLED } from "../moderatorActions/constants";
 import { isActionActive } from "../moderatorActions/helpers";
 import { validateFrontpageFilterSettings } from "@/server/users/validateFrontpageFilterSettings";
+import { getPostPublicationCommentCreditsForUser } from "@/server/posts/postPublicationCommentCredits";
 
 ///////////////////////////////////////
 // Order for the Schema is as follows. Change as you see fit:
@@ -1416,6 +1417,15 @@ const schema = {
       canRead: [userOwns, "sunshineRegiment", "admins"],
       resolver: async (user: DbUser, args: unknown, context: ResolverContext) => {
         return user.bookmarksCount > 0;
+      },
+    },
+  },
+  postPublicationCommentCredits: {
+    graphql: {
+      outputType: "PostPublicationCommentCredits!",
+      canRead: [userOwns, "sunshineRegiment", "admins"],
+      resolver: async (user: DbUser, args: unknown, context: ResolverContext) => {
+        return getPostPublicationCommentCreditsForUser(context, user._id);
       },
     },
   },

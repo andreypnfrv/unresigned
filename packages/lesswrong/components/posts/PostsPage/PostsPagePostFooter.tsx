@@ -12,7 +12,6 @@ import SharePostButton from "../SharePostButton";
 import PostActionsButton from "../../dropdowns/posts/PostActionsButton";
 import BottomNavigation from "../../sequences/BottomNavigation";
 import PingbacksList from "../PingbacksList";
-import FooterTagList from "../../tagging/FooterTagList";
 import { SuspenseWrapper } from '@/components/common/SuspenseWrapper';
 import { postBottomSecondaryVotingComponents } from '@/lib/voting/votingSystemComponents';
 import type { VotingSystemName } from '@/lib/voting/votingSystemNames';
@@ -90,15 +89,6 @@ const PostsPagePostFooter = ({post, sequenceId}: {
   const PostBottomSecondaryVotingComponent = postBottomSecondaryVotingComponents[votingSystemName]?.() ?? null;
 
   return <>
-    {isLWorAF() && !post.shortform && !post.isEvent &&
-      <SuspenseWrapper name="FooterTagList">
-        <AnalyticsContext pageSectionContext="tagFooter">
-          <div className={classes.footerTagList}>
-            <FooterTagList post={post}/>
-          </div>
-        </AnalyticsContext>
-      </SuspenseWrapper>
-    }
     {!post.shortform && isLW() &&
       <>
         <div className={classes.footerSection}>

@@ -23,14 +23,21 @@ import { makeGqlCreateMutation, makeGqlUpdateMutation } from "@/server/vulcan-li
 import { getLegacyCreateCallbackProps, getLegacyUpdateCallbackProps, insertAndReturnCreateAfterProps, runFieldOnCreateCallbacks, runFieldOnUpdateCallbacks, updateAndReturnDocument, assignUserIdToData, dataToModifier, modifierToData } from '@/server/vulcan-lib/mutators';
 import gql from "graphql-tag";
 import cloneDeep from "lodash/cloneDeep";
-
+import { assertUserMayPublishPostWithCommentCredits } from "@/server/posts/postPublicationCommentCredits";
 
 async function newCheck(user: DbUser | null, document: CreatePostDataInput | null, context: ResolverContext) {
   if (!user || !document) return false;
 
   await postsNewRateLimit(document, user, context);
 
-  return userCanPost(user)
+  if (!userCanPost(user)) return false;
+
+  await assertUserMayPublishPostWithCommentCredits(context, user, {
+    draft: document.draft,
+    isEvent: document.isEvent,
+  });
+
+  return true;
 };
 
 async function editCheck(user: DbUser|null, document: DbPost|null, context: ResolverContext, previewDocument: DbPost) {
@@ -42,6 +49,13 @@ async function editCheck(user: DbUser|null, document: DbPost|null, context: Reso
   // This prevents them from publishing previously-made draft posts, etc.
   if (!userCanPost(user)) {
     return false;
+  }
+
+  if (document.draft === true && previewDocument.draft === false) {
+    await assertUserMayPublishPostWithCommentCredits(context, user, {
+      draft: previewDocument.draft,
+      isEvent: previewDocument.isEvent,
+    });
   }
 
   // For rejected posts owned by the user, allow redrafting.

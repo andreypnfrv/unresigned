@@ -60,7 +60,6 @@ const AddTagButton = ({onTagSelected, menuPlacement="bottom-start", isVotingCont
           >
             <Paper>
               <AddTagOrWikiPage
-                onlyTags={true}
                 onTagSelected={({tagId, tagName}: {tagId: string, tagName: string}) => {
                   setIsOpen(false);
                   onTagSelected({tagId, tagName});

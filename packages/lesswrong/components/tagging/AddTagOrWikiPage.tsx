@@ -38,10 +38,9 @@ const styles = defineStyles("AddTagOrWikiPage", (theme: ThemeType) => ({
   },
 }));
 
-const AddTagOrWikiPage = ({onTagSelected, isVotingContext, onlyTags, numSuggestions=6, showAllTagsAndCreateTags=true}: {
+const AddTagOrWikiPage = ({onTagSelected, isVotingContext, numSuggestions=6, showAllTagsAndCreateTags=true}: {
   onTagSelected: (props: {tagId: string, tagName: string, tagSlug: string}) => void,
   isVotingContext?: boolean,
-  onlyTags: boolean,
   numSuggestions?: number,
   showAllTagsAndCreateTags?: boolean,
 }) => {
@@ -105,10 +104,7 @@ const AddTagOrWikiPage = ({onTagSelected, isVotingContext, onlyTags, numSuggesti
         * null is the only option that actually suppresses the extra X button.
        // @ts-ignore */}
       <SearchBox inputRef={inputRef} reset={null} focusShortcuts={[]}/>
-      <Configure
-        facetFilters={onlyTags ? [["wikiOnly:false"]] : []}
-        hitsPerPage={searchOpen ? 12 : numSuggestions}
-      />
+      <Configure hitsPerPage={searchOpen ? 12 : numSuggestions} />
       <Hits hitComponent={({hit}: {hit: any}) =>
         <TagSearchHit
           hit={hit}

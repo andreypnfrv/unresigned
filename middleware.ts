@@ -54,54 +54,83 @@ export async function middleware(request: NextRequest) {
     }
   }
 
+  const proxyStatusCodeFallback = (): NextResponse => {
+    if (addedClientId) {
+      addClientIdToRequest(request, addedClientId);
+    }
+    const nextResponse = NextResponse.next();
+    if (requestPathHasMarkdownVersion) {
+      addVaryHeader(nextResponse, "accept");
+    }
+    if (addedClientId) {
+      return addClientIdToResponseHeaders(nextResponse, addedClientId);
+    }
+    return nextResponse;
+  };
+
   if (shouldProxyForStatusCode(request)) {
     const forwardedHeaders = new Headers(request.headers);
     forwardedHeaders.set(ForwardingHeaderName, "true");
     
     const forwardUrl = request.nextUrl.href;
     const fixedForwardedUrl = fixForwardUrl(forwardUrl);
-    const forwardedFetchResponse = await fetch(
-      fixedForwardedUrl,
-      {
-        headers: addedClientId ? addClientIdToRequestHeaders(forwardedHeaders, addedClientId) : forwardedHeaders,
-        method: request.method,
-        redirect: 'manual',
-        referrer: request.referrer,
-        mode: request.mode,
-        body: request.body,
+    let forwardedFetchResponse: Response;
+    try {
+      forwardedFetchResponse = await fetch(
+        fixedForwardedUrl,
+        {
+          headers: addedClientId ? addClientIdToRequestHeaders(forwardedHeaders, addedClientId) : forwardedHeaders,
+          method: request.method,
+          redirect: 'manual',
+          referrer: request.referrer,
+          mode: request.mode,
+          body: request.body,
+        }
+      );
+    } catch (fetchError: unknown) {
+      if (process.env.NODE_ENV === 'development') {
+        console.warn("[middleware] forward fetch aborted or failed:", fetchError);
       }
-    );
-    
-    const originalBody = forwardedFetchResponse.body;
-    if (!originalBody) {
-      if (requestPathHasMarkdownVersion) {
-        const nextResponse = new NextResponse(null, { headers: forwardedFetchResponse.headers, status: forwardedFetchResponse.status });
-        addVaryHeader(nextResponse, "accept");
+      return proxyStatusCodeFallback();
+    }
+
+    try {
+      const originalBody = forwardedFetchResponse.body;
+      if (!originalBody) {
+        if (requestPathHasMarkdownVersion) {
+          const nextResponse = new NextResponse(null, { headers: forwardedFetchResponse.headers, status: forwardedFetchResponse.status });
+          addVaryHeader(nextResponse, "accept");
+          return nextResponse;
+        }
+        return forwardedFetchResponse;
+      }
+      const [statusCodeFinderStream, responseStream] = originalBody.tee();
+      const statusFromStream = await findStatusCodeInStream(statusCodeFinderStream);
+
+      if (statusFromStream?.redirectTarget) {
+        const {status, redirectTarget} = statusFromStream;
+        if (urlIsAbsolute(redirectTarget)) {
+          return NextResponse.redirect(redirectTarget, status);
+        } else {
+          return NextResponse.redirect(new URL(redirectTarget, request.url), status);
+        }
+      } else {
+        const status = statusFromStream ? statusFromStream.status : forwardedFetchResponse.status;
+
+        const nextResponse = new NextResponse(responseStream, { headers: forwardedFetchResponse.headers, status });
+        if (requestPathHasMarkdownVersion) {
+          addVaryHeader(nextResponse, "accept");
+        }
+        if (addedClientId) {
+          return addClientIdToResponseHeaders(nextResponse, addedClientId);
+        }
         return nextResponse;
       }
-      return forwardedFetchResponse;
-    }
-    const [statusCodeFinderStream, responseStream] = originalBody.tee();
-    const statusFromStream = await findStatusCodeInStream(statusCodeFinderStream);
-  
-    if (statusFromStream?.redirectTarget) {
-      const {status, redirectTarget} = statusFromStream;
-      if (urlIsAbsolute(redirectTarget)) {
-        return NextResponse.redirect(redirectTarget, status);
-      } else {
-        return NextResponse.redirect(new URL(redirectTarget, request.url), status);
+    } catch (proxyBodyError: unknown) {
+      if (process.env.NODE_ENV === 'development') {
+        console.warn("[middleware] forward response stream aborted or failed:", proxyBodyError);
       }
-    } else {
-      const status = statusFromStream ? statusFromStream.status : forwardedFetchResponse.status;
-  
-      const nextResponse = new NextResponse(responseStream, { headers: forwardedFetchResponse.headers, status });
-      if (requestPathHasMarkdownVersion) {
-        addVaryHeader(nextResponse, "accept");
-      }
-      if (addedClientId) {
-        return addClientIdToResponseHeaders(nextResponse, addedClientId);
-      }
-      return nextResponse;
+      return proxyStatusCodeFallback();
     }
   } else {
     if (addedClientId) {

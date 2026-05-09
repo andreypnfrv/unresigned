@@ -289,6 +289,8 @@ CREATE TABLE "Comments" (
   "rejected" BOOL NOT NULL DEFAULT FALSE,
   "rejectedReason" TEXT,
   "rejectedByUserId" VARCHAR(27),
+  "modGPTAnalysis" TEXT,
+  "modGPTRecommendation" TEXT,
   "af" BOOL NOT NULL DEFAULT FALSE,
   "suggestForAlignmentUserIds" TEXT[] NOT NULL DEFAULT '{}',
   "reviewForAlignmentUserId" TEXT,

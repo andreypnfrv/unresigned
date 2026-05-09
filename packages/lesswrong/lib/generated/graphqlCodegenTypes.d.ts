@@ -468,6 +468,8 @@ type Comment = {
   legacyId?: Maybe<Scalars['String']['output']>;
   legacyParentId?: Maybe<Scalars['String']['output']>;
   legacyPoll: Scalars['Boolean']['output'];
+  modGPTAnalysis?: Maybe<Scalars['String']['output']>;
+  modGPTRecommendation?: Maybe<Scalars['String']['output']>;
   moderatorHat: Scalars['Boolean']['output'];
   moveToAlignmentUser?: Maybe<User>;
   moveToAlignmentUserId?: Maybe<Scalars['String']['output']>;
@@ -5317,6 +5319,16 @@ type PostMetadataOutput = {
 type PostOutput = {
   __typename?: 'PostOutput';
   data?: Maybe<Post>;
+};
+
+type PostPublicationCommentCredits = {
+  __typename?: 'PostPublicationCommentCredits';
+  balance: Scalars['Int']['output'];
+  commentsNeededForNextPublish: Scalars['Int']['output'];
+  cost: Scalars['Int']['output'];
+  enabled: Scalars['Boolean']['output'];
+  publishedPostsCharged: Scalars['Int']['output'];
+  qualifyingCommentsOnOthersPosts: Scalars['Int']['output'];
 };
 
 type PostRecommendation = {
@@ -10175,6 +10187,8 @@ type UpdateCommentDataInput = {
   legacyId?: InputMaybe<Scalars['String']['input']>;
   legacyParentId?: InputMaybe<Scalars['String']['input']>;
   legacyPoll?: InputMaybe<Scalars['Boolean']['input']>;
+  modGPTAnalysis?: InputMaybe<Scalars['String']['input']>;
+  modGPTRecommendation?: InputMaybe<Scalars['String']['input']>;
   moderatorHat?: InputMaybe<Scalars['Boolean']['input']>;
   moveToAlignmentUserId?: InputMaybe<Scalars['String']['input']>;
   needsReview?: InputMaybe<Scalars['Boolean']['input']>;
@@ -11103,6 +11117,7 @@ type User = {
   pinnedPostIds: Array<Scalars['String']['output']>;
   postCount: Scalars['Float']['output'];
   postGlossariesPinned?: Maybe<Scalars['Boolean']['output']>;
+  postPublicationCommentCredits: PostPublicationCommentCredits;
   postingDisabled?: Maybe<Scalars['Boolean']['output']>;
   posts?: Maybe<Array<Post>>;
   previousDisplayName?: Maybe<Scalars['String']['output']>;
@@ -16131,6 +16146,22 @@ type multiPostPingbacksListQueryQueryVariables = Exact<{
 
 
 type multiPostPingbacksListQueryQuery = multiPostPingbacksListQueryQuery_Query;
+
+type PostFormPublicationCreditsQuery_user_SingleUserOutput_result_User_postPublicationCommentCredits_PostPublicationCommentCredits = { __typename?: 'PostPublicationCommentCredits', enabled: boolean, cost: number, balance: number, commentsNeededForNextPublish: number, qualifyingCommentsOnOthersPosts: number, publishedPostsCharged: number };
+
+type PostFormPublicationCreditsQuery_user_SingleUserOutput_result_User = { __typename?: 'User', postPublicationCommentCredits: PostFormPublicationCreditsQuery_user_SingleUserOutput_result_User_postPublicationCommentCredits_PostPublicationCommentCredits };
+
+type PostFormPublicationCreditsQuery_user_SingleUserOutput = { __typename?: 'SingleUserOutput', result: PostFormPublicationCreditsQuery_user_SingleUserOutput_result_User | null };
+
+type PostFormPublicationCreditsQuery_Query = { __typename?: 'Query', user: PostFormPublicationCreditsQuery_user_SingleUserOutput | null };
+
+
+type PostFormPublicationCreditsQueryVariables = Exact<{
+  documentId: InputMaybe<Scalars['String']['input']>;
+}>;
+
+
+type PostFormPublicationCreditsQuery = PostFormPublicationCreditsQuery_Query;
 
 type updatePostPostFormMutation_updatePost_PostOutput_data_Post = (
   { __typename?: 'Post' }
