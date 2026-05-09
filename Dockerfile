@@ -36,15 +36,10 @@ RUN --mount=type=cache,id=s/6ddb487b-d357-4204-b0e7-9d7c1614828e-/usr/src/app/.y
   && rm -rf node_modules/@types/mapbox-gl node_modules/@types/simpl-schema \
     ckEditor/node_modules/@types/mapbox-gl ckEditor/node_modules/@types/simpl-schema
 
-COPY ckEditor ./ckEditor
-
-COPY packages/lesswrong/components/editor/conditionalVisibilityBlock ./packages/lesswrong/components/editor/conditionalVisibilityBlock
-COPY packages/lesswrong/components/editor/claims/claimsConfigType.ts ./packages/lesswrong/components/editor/claims/claimsConfigType.ts
+COPY . .
 
 RUN --mount=type=cache,id=s/6ddb487b-d357-4204-b0e7-9d7c1614828e-/usr/src/app/.yarn/cache,target=/usr/src/app/.yarn/cache \
     yarn workspace @lesswrong/lesswrong-editor run build
-
-COPY . .
 
 RUN --mount=type=cache,id=s/6ddb487b-d357-4204-b0e7-9d7c1614828e-/usr/src/app/.next/cache,target=/usr/src/app/.next/cache \
     yarn build \
