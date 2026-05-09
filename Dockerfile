@@ -18,7 +18,12 @@ RUN curl -sSLo /usr/local/bin/transcrypt https://raw.githubusercontent.com/elast
 
 WORKDIR /usr/src/app
 
-COPY . .
+# Only lockfiles and files yarn needs for install — invalidates rarely vs full COPY . .
+COPY package.json yarn.lock .yarnrc.yml ./
+COPY ckEditor/package.json ./ckEditor/package.json
+COPY scripts/postinstall.sh ./scripts/postinstall.sh
+COPY eslint-plugin-local ./eslint-plugin-local
+COPY .yarn/install-state.gz ./.yarn/install-state.gz
 
 ARG HOCUSPOCUS_URL=""
 ENV HOCUSPOCUS_URL=${HOCUSPOCUS_URL}
@@ -29,8 +34,14 @@ ENV ENV_NAME=prodAntimortality \
 RUN --mount=type=cache,id=s/6ddb487b-d357-4204-b0e7-9d7c1614828e-/usr/src/app/.yarn/cache,target=/usr/src/app/.yarn/cache \
     yarn install \
   && rm -rf node_modules/@types/mapbox-gl node_modules/@types/simpl-schema \
-    ckEditor/node_modules/@types/mapbox-gl ckEditor/node_modules/@types/simpl-schema \
-  && yarn workspace @lesswrong/lesswrong-editor run build
+    ckEditor/node_modules/@types/mapbox-gl ckEditor/node_modules/@types/simpl-schema
+
+COPY ckEditor ./ckEditor
+
+RUN --mount=type=cache,id=s/6ddb487b-d357-4204-b0e7-9d7c1614828e-/usr/src/app/.yarn/cache,target=/usr/src/app/.yarn/cache \
+    yarn workspace @lesswrong/lesswrong-editor run build
+
+COPY . .
 
 RUN --mount=type=cache,id=s/6ddb487b-d357-4204-b0e7-9d7c1614828e-/usr/src/app/.next/cache,target=/usr/src/app/.next/cache \
     yarn build \
