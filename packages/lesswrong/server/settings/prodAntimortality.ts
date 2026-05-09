@@ -23,6 +23,12 @@ const cloudinaryOverrides = merge({}, sharedSettings.cloudinary, {
   ...(process.env.CLOUDINARY_UPLOAD_PRESET_SPOTLIGHT?.trim()
     ? { uploadPresetSpotlight: process.env.CLOUDINARY_UPLOAD_PRESET_SPOTLIGHT.trim() }
     : {}),
+  ...(process.env.CLOUDINARY_UPLOAD_PRESET_PROFILE?.trim()
+    ? { uploadPresetProfile: process.env.CLOUDINARY_UPLOAD_PRESET_PROFILE.trim() }
+    : {}),
+  ...(process.env.CLOUDINARY_UPLOAD_PRESET_DIGEST?.trim()
+    ? { uploadPresetDigest: process.env.CLOUDINARY_UPLOAD_PRESET_DIGEST.trim() }
+    : {}),
 });
 
 function productionSiteUrl(): string {

@@ -130,7 +130,7 @@ const getCloudinaryArgsByImageType = () => ({
     minImageWidth: 170,
     croppingAspectRatio: 1,
     croppingDefaultSelectionRatio: 1,
-    uploadPreset: cloudinaryUploadPresetProfileSetting.get(),
+    uploadPreset: cloudinaryUploadPresetProfileSetting.get() ?? cloudinaryUploadPresetBannerSetting.get(),
   },
   socialPreviewImageId: {
     minImageHeight: 270,
@@ -162,7 +162,7 @@ const getCloudinaryArgsByImageType = () => ({
     minImageHeight: 300,
     minImageWidth: 200,
     cropping: false,
-    uploadPreset: cloudinaryUploadPresetDigestSetting.get()
+    uploadPreset: cloudinaryUploadPresetDigestSetting.get() ?? cloudinaryUploadPresetBannerSetting.get(),
   },
 } as const);
 
