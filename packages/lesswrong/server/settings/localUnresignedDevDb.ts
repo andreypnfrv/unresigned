@@ -1,6 +1,36 @@
 import { sharedSettings } from "./sharedSettings";
 import merge from "lodash/merge";
 
+const cloudinaryOverrides = merge({}, sharedSettings.cloudinary, {
+  ...(process.env.CLOUDINARY_CLOUD_NAME?.trim()
+    ? { cloudName: process.env.CLOUDINARY_CLOUD_NAME.trim() }
+    : {}),
+  ...(process.env.CLOUDINARY_UPLOAD_PRESET_EDITOR?.trim()
+    ? { uploadPresetEditor: process.env.CLOUDINARY_UPLOAD_PRESET_EDITOR.trim() }
+    : {}),
+  ...(process.env.CLOUDINARY_UPLOAD_PRESET_BANNER?.trim()
+    ? { uploadPresetBanner: process.env.CLOUDINARY_UPLOAD_PRESET_BANNER.trim() }
+    : {}),
+  ...(process.env.CLOUDINARY_UPLOAD_PRESET_GRID?.trim()
+    ? { uploadPresetGridImage: process.env.CLOUDINARY_UPLOAD_PRESET_GRID.trim() }
+    : {}),
+  ...(process.env.CLOUDINARY_UPLOAD_PRESET_SOCIAL?.trim()
+    ? { uploadPresetSocialPreview: process.env.CLOUDINARY_UPLOAD_PRESET_SOCIAL.trim() }
+    : {}),
+  ...(process.env.CLOUDINARY_UPLOAD_PRESET_EVENT?.trim()
+    ? { uploadPresetEventImage: process.env.CLOUDINARY_UPLOAD_PRESET_EVENT.trim() }
+    : {}),
+  ...(process.env.CLOUDINARY_UPLOAD_PRESET_SPOTLIGHT?.trim()
+    ? { uploadPresetSpotlight: process.env.CLOUDINARY_UPLOAD_PRESET_SPOTLIGHT.trim() }
+    : {}),
+  ...(process.env.CLOUDINARY_UPLOAD_PRESET_PROFILE?.trim()
+    ? { uploadPresetProfile: process.env.CLOUDINARY_UPLOAD_PRESET_PROFILE.trim() }
+    : {}),
+  ...(process.env.CLOUDINARY_UPLOAD_PRESET_DIGEST?.trim()
+    ? { uploadPresetDigest: process.env.CLOUDINARY_UPLOAD_PRESET_DIGEST.trim() }
+    : {}),
+});
+
 export const localUnresignedDevDb = {
   ...merge({}, sharedSettings, {
     forumType: "Unresigned",
@@ -70,6 +100,7 @@ export const localUnresignedDevDb = {
         process.env.ELASTICSEARCH_CLOUD_ID?.trim()
       ),
     },
+    cloudinary: cloudinaryOverrides,
   }),
   defaultVisibilityTags: [] as typeof sharedSettings.defaultVisibilityTags,
 };

@@ -1,6 +1,6 @@
 import { EditablePost, PostSubmitMeta, userCanEditCoauthors, canUserEditPostMetadata, detectLinkpost } from "@/lib/collections/posts/helpers";
 import { getDefaultEditorPlaceholder } from '@/lib/editor/defaultEditorPlaceholder';
-import { commentCreditsRequiredPerPublishedPostSetting, isLWorAF, isEAForum, isAntimortality } from "@/lib/instanceSettings";
+import { commentCreditsRequiredPerPublishedPostSetting, forumHeaderTitleSetting, isLWorAF, isEAForum, isAntimortality } from "@/lib/instanceSettings";
 import { useForm } from "@tanstack/react-form";
 import classNames from "classnames";
 import React, { useMemo, useEffect, useState, useRef, useCallback } from "react";
@@ -965,7 +965,7 @@ const PostForm = ({
         </LegacyFormGroupLayout>
       )}
 
-      {canEditMetadata && isAntimortality() && !isDialogue && (
+      {canEditMetadata && (isAntimortality() || forumHeaderTitleSetting.get() === "Unresigned") && !isDialogue && (
         <LegacyFormGroupLayout label="Post header" groupStyling={false} paddingStyling={false}>
           <div className={classes.fieldWrapper}>
             <form.Field name="eventImageId">
