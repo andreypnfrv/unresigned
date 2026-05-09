@@ -215,7 +215,7 @@ export const getMenuTabs = (): ForumOptions<Array<MenuTab>> => ({
     {
       id: 'intro',
       title: 'Intro',
-      link: '/tag/intro',
+      link: '/w/intros',
       icon: conceptsIcon,
       tooltip: 'Wiki intro and orientation.',
       showOnMobileStandalone: true,
