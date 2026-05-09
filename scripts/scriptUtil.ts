@@ -3,9 +3,21 @@
  * code with the webserver, but which is not in fact a webserver.
  */
 
+import path from "path";
+import { createRequire } from "module";
 import { existsSync } from "node:fs";
 
-import { getDatabaseConfig } from "./startup/buildUtil.ts";
+const requireFromHere = createRequire(__filename);
+const { getDatabaseConfig } = requireFromHere(
+  path.join(__dirname, "startup", "buildUtil.ts"),
+) as {
+  getDatabaseConfig: (opts: {
+    db?: string,
+    postgresUrlFile?: string,
+    postgresUrl?: string,
+    noSshTunnel?: boolean,
+  }) => { postgresUrl: string, sshTunnelCommand: string[] | null },
+};
 
 export const initGlobals = (isProd: boolean, globalOverrides?: Record<string, unknown>) => {
   Object.assign(global, {
