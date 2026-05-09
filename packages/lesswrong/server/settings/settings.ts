@@ -13,7 +13,7 @@ import { testSettings } from "./test";
 import { testCrosspostSettings } from "./testCrosspost";
 import { z } from "zod";
 import { isAnyTest, isProduction } from "@/lib/executionEnvironment";
-import { isAF } from "@/lib/forumTypeUtils";
+import { inferForumTypeFromDeploymentUrl, isAF } from "@/lib/forumTypeUtils";
 
 const validEnvNames = z.enum([
   "test",
@@ -45,7 +45,9 @@ function getPublicSettings() {
   }
 
   let validEnvName = parsedEnvName.data;
-  if (process.env.FORUM_TYPE === "Antimortality" && validEnvName === "prodUnresigned") {
+  const resolvedForumType =
+    process.env.FORUM_TYPE?.trim() || inferForumTypeFromDeploymentUrl();
+  if (resolvedForumType === "Antimortality" && validEnvName === "prodUnresigned") {
     validEnvName = "prodAntimortality";
   }
 

@@ -1,10 +1,45 @@
 import { isServer } from "./executionEnvironment";
 import type { ForumTypeString } from "./instanceSettings"
 
+export function inferForumTypeFromDeploymentUrl(): ForumTypeString | undefined {
+  const rawUrls = [
+    process.env.SITE_URL,
+    process.env.RAILWAY_PUBLIC_DOMAIN,
+    process.env.RAILWAY_STATIC_URL,
+  ].filter((s): s is string => typeof s === "string" && s.trim().length > 0);
+
+  for (const raw of rawUrls) {
+    const withScheme = /^https?:\/\//i.test(raw) ? raw : `https://${raw.replace(/^\/+/, "")}`;
+    try {
+      const { hostname } = new URL(withScheme);
+      if (hostname.includes("alignmentforum.org")) {
+        return "AlignmentForum";
+      }
+      if (hostname.includes("forum.effectivealtruism.org")) {
+        return "EAForum";
+      }
+      if (hostname.includes("antimortality.org")) {
+        return "Antimortality";
+      }
+    } catch {
+      // ignore invalid URLs
+    }
+  }
+  return undefined;
+}
+
 export const forumTypeSetting: { get: () => ForumTypeString } = {
   get: () => {
     if (isServer) {
-      return process.env.FORUM_TYPE as ForumTypeString | undefined ?? 'Unresigned';
+      const explicit = process.env.FORUM_TYPE?.trim();
+      if (explicit) {
+        return explicit as ForumTypeString;
+      }
+      const inferred = inferForumTypeFromDeploymentUrl();
+      if (inferred) {
+        return inferred;
+      }
+      return "Unresigned";
     }
 
     const urlObj = new URL(window.location.href);
