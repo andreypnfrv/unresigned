@@ -33,15 +33,15 @@ const cloudinaryOverrides = merge({}, sharedSettings.cloudinary, {
 
 export const localUnresignedDevDb = {
   ...merge({}, sharedSettings, {
-    forumType: "Unresigned",
-    title: "Unresigned",
+    forumType: "Antimortality",
+    title: "Antimortality",
     tagline: "Longevity, immortalism, and the science and politics of ending aging.",
-    siteNameWithArticle: "Unresigned",
+    siteNameWithArticle: "Antimortality",
     faviconUrl: "/favicon.ico",
     forumSettings: {
-      headerTitle: "Unresigned",
-      shortForumTitle: "Unresigned",
-      tabTitle: "Unresigned",
+      headerTitle: "Antimortality",
+      shortForumTitle: "Antimortality",
+      tabTitle: "Antimortality",
     },
     analytics: {
       environment: "localhost",

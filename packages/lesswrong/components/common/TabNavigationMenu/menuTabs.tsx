@@ -71,7 +71,7 @@ type MenuTabDivider = {
 
 type MenuTabCustomComponent = {
   id: string
-  customComponentName: 'EventsList' | 'SubscribeWidget'
+  customComponentName: 'EventsList' | 'SubscribeWidget' | 'WikiTagSubtopicsSidebar'
 }
 
 type MenuItemIcon = React.ComponentType | React.FC<{className?: string}>;
@@ -161,11 +161,15 @@ export const getMenuTabs = (): ForumOptions<Array<MenuTab>> => ({
     {
       id: 'science',
       title: 'Science',
-      link: '/tag/science',
+      link: '/w/science',
       icon: conceptsIcon,
       tooltip: 'Research, trials, mechanisms, biomarkers.',
       showOnMobileStandalone: true,
       showOnCompressed: true,
+    },
+    {
+      id: 'wikiTagSubtopicsNav',
+      customComponentName: 'WikiTagSubtopicsSidebar',
     },
     {
       id: 'policy',

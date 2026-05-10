@@ -247,9 +247,9 @@ export const defaultComponentPalette = (dark: boolean, isAF: boolean) => ({
     grey800: grey[800],
     tocLink: grey[600],
     tocLinkHighlighted: grey[1000],
-    color: isAF ? "light-dark(#3f51b5,#7581d1)" : "light-dark(#327E09,#788e6a)",
-    primaryDim: "light-dark(#5caab7,#3a7883)",
-    visited: isAF ? "light-dark(#8c4298,#798754)" : "#798754",
+    color: isAF ? "light-dark(#3f51b5,#7581d1)" : dark ? "#7faf83" : "#5f9b65",
+    primaryDim: isAF ? "light-dark(#5caab7,#3a7883)" : dark ? "#a3d4a7" : "#426c46",
+    visited: isAF ? "light-dark(#8c4298,#798754)" : dark ? "#6b9c70" : "#426c46",
   },
   linkHover: {
     dim: greyAlpha(.3),

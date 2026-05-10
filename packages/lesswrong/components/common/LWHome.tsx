@@ -155,6 +155,9 @@ const styles = defineStyles("LWHome", (theme: ThemeType) => ({
       display: "none",
     },
   },
+  homeSectionAnchor: {
+    scrollMarginTop: "calc(var(--header-height) + 16px)",
+  },
 }));
 
 const LESSONLINE_MOBILE_SPOTLIGHT_ID = 'j4q2gcjowKqfpdjsR';

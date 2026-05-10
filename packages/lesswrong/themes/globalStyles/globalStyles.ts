@@ -78,6 +78,26 @@ const globalStyle = (theme: ThemeType) => ({
   "a:has(img):hover, a:has(img):active": {
     opacity: 1,
   },
+
+  // Post/comment/tag bodies wrap user HTML in ContentStyles with class `content`.
+  // Global `a { color: inherit }` otherwise makes links match body text; undo that here.
+  // !important beats inherited paragraph color, JSS order quirks, and keeps .visited class colors
+  // working alongside browser :visited restrictions.
+  ".content a": {
+    color: `${theme.palette.link.color ?? theme.palette.primary.main} !important`,
+    opacity: "1 !important",
+  },
+  ".content a:visited, .content a.visited": {
+    color: `${theme.palette.link.visited ?? theme.palette.primary.dark} !important`,
+    opacity: "1 !important",
+  },
+  ".content a:hover, .content a:active": {
+    opacity: "1 !important",
+    color: `${theme.palette.link.primaryDim ?? theme.palette.primary.dark} !important`,
+  },
+  ".content a i, .content a em, .content a span": {
+    color: "inherit !important",
+  },
   
   // Hide ReCaptcha box (see: https://developers.google.com/recaptcha/docs/faq)
   ".grecaptcha-badge": {

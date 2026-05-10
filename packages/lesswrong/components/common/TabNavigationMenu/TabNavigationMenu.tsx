@@ -11,7 +11,10 @@ import EventsList from './EventsList';
 import { SubscribeWidget } from '../SubscribeWidget';
 import { defineStyles } from '@/components/hooks/defineStyles';
 import { useStyles } from '@/components/hooks/useStyles';
-
+import { Link } from '../../../lib/reactRouterWrapper';
+import { useLocation } from '../../../lib/routeUtil';
+import { isLWStyleForum } from '@/lib/instanceSettings';
+import { tagGetUrl } from '@/lib/collections/tags/helpers';
 export const TAB_NAVIGATION_MENU_WIDTH = 250
 export const TAB_NAVIGATION_MENU_ICON_ONLY_WIDTH = 64
 
@@ -49,10 +52,77 @@ const styles = defineStyles("TabNavigationMenu", (theme: ThemeType) => ({
     },
 }));
 
-const TabNavigationMenu = ({ onClickSection, transparentBackground, iconOnlyNavigationEnabled }: {
+const SCIENCE_SIDEBAR_SUBTAGS = [
+  { slug: "geroscience", title: "Geroscience" },
+  { slug: "biostasis", title: "Biostasis" },
+  { slug: "replacing", title: "Replacing" },
+  { slug: "cyborgisation", title: "Cyborgisation" },
+  { slug: "uploading", title: "Uploading" },
+] as const;
+
+const wikiTagSubtopicsSidebarStyles = defineStyles("WikiTagSubtopicsSidebar", (theme: ThemeType) => ({
+  root: {
+    ...theme.typography.body2,
+    paddingBottom: 12,
+    paddingLeft: 16 + iconWidth + 16,
+    paddingRight: 16,
+    width: TAB_NAVIGATION_MENU_WIDTH - (16 + (iconWidth + 16)) - 16,
+    boxSizing: "content-box",
+  },
+  link: {
+    display: "block",
+    paddingBottom: 6,
+    color: theme.palette.grey[700],
+    ...(theme.dark && {
+      color: theme.palette.text.bannerAdOverlay,
+    }),
+    fontSize: "0.95rem",
+    textDecoration: "none",
+    whiteSpace: "nowrap",
+    overflow: "hidden",
+    textOverflow: "ellipsis",
+    "&:hover": {
+      opacity: 0.65,
+    },
+  },
+}));
+
+function WikiTagSubtopicsSidebar({
+  alwaysShowSubtopics,
+}: {
+  alwaysShowSubtopics?: boolean;
+}) {
+  const { pathname } = useLocation();
+  const classes = useStyles(wikiTagSubtopicsSidebarStyles);
+  const showScienceSections =
+    isLWStyleForum() &&
+    (alwaysShowSubtopics || pathname === "/");
+
+  if (!showScienceSections) {
+    return null;
+  }
+
+  return (
+    <nav className={classes.root} aria-label="Science wiki sections">
+      {SCIENCE_SIDEBAR_SUBTAGS.map(({ slug, title }) => (
+        <Link key={slug} to={tagGetUrl({ slug })} className={classes.link}>
+          {title}
+        </Link>
+      ))}
+    </nav>
+  );
+}
+
+const TabNavigationMenu = ({
+  onClickSection,
+  transparentBackground,
+  iconOnlyNavigationEnabled,
+  alwaysShowScienceSubtopics,
+}: {
   onClickSection?: (e?: React.BaseSyntheticEvent) => void,
   transparentBackground?: boolean,
   iconOnlyNavigationEnabled?: boolean,
+  alwaysShowScienceSubtopics?: boolean,
 }) => {
   const classes = useStyles(styles);
   const currentUserId = useCurrentUserId();
@@ -96,6 +166,13 @@ const TabNavigationMenu = ({ onClickSection, transparentBackground, iconOnlyNavi
                   />;
                 case 'SubscribeWidget':
                   return <SubscribeWidget key={tab.id} />;
+                case 'WikiTagSubtopicsSidebar':
+                  return (
+                    <WikiTagSubtopicsSidebar
+                      key={tab.id}
+                      alwaysShowSubtopics={alwaysShowScienceSubtopics}
+                    />
+                  );
               }
             }
 

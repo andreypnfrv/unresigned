@@ -1,4 +1,5 @@
 import React from 'react';
+import classNames from 'classnames';
 import { registerComponent } from '../../lib/vulcan-lib/components';
 import { getSiteUrl } from '../../lib/vulcan-lib/utils';
 import { classifyLink, useLocation } from '../../lib/routeUtil';
@@ -14,6 +15,8 @@ import { NoSideItems } from '../contents/SideItems';
 
 import { routePreviewComponentMapping, type LinkPreviewComponent } from '@/lib/routeChecks/hoverPreviewRoutes';
 import { parseRouteWithErrors } from '../../lib/routeChecks/parseRouteWithErrors';
+import { useStyles } from '../hooks/useStyles';
+import { linkStyles } from './linkStyles';
 
 export const linkIsExcludedFromPreview = (url: string): boolean => {
   // Don't try to preview special JS links
@@ -39,13 +42,15 @@ const HoverPreviewLink = ({ href, id, rel, noPrefetch, contentStyleType, classNa
   className?: string,
   children: React.ReactNode,
 }) => {
+  const linkClasses = useStyles(linkStyles);
+  const linkClassName = classNames(linkClasses.link, className);
   const URLClass = getUrlClass()
   const location = useLocation();
   href = href ? href.trim() : href;
 
   // Invalid link with no href? Don't transform it.
   if (!href) {
-    return <a href={href} id={id} rel={rel} className={className}>
+    return <a href={href} id={id} rel={rel} className={linkClassName}>
       {children}
     </a>
   }
@@ -53,16 +58,16 @@ const HoverPreviewLink = ({ href, id, rel, noPrefetch, contentStyleType, classNa
   // Within-page relative link?
   if (href.startsWith("#")) {
     if (href === "#") {
-      return <a href={href} id={id} rel={rel} className={className}>
+      return <a href={href} id={id} rel={rel} className={linkClassName}>
         {children}
       </a>
     }
     if (locationHashIsFootnote(href)){
-      return <FootnotePreview href={href} id={id} rel={rel} contentStyleType={contentStyleType}>
+      return <FootnotePreview href={href} id={id} rel={rel} contentStyleType={contentStyleType} className={linkClassName}>
         {children}
       </FootnotePreview>
     } else if (locationHashIsFootnoteBackreference(href)) {
-      return <a href={href} id={id} rel={rel} className={className}>
+      return <a href={href} id={id} rel={rel} className={linkClassName}>
         {children}
       </a>
     }
@@ -91,7 +96,7 @@ const HoverPreviewLink = ({ href, id, rel, noPrefetch, contentStyleType, classNa
             </NoSideItems>
           </AnalyticsContext>
         } else {
-          return <DefaultPreview href={href} id={id} rel={rel} className={className}>
+          return <DefaultPreview href={href} id={id} rel={rel} className={linkClassName}>
             {children}
           </DefaultPreview>
         }
@@ -103,7 +108,7 @@ const HoverPreviewLink = ({ href, id, rel, noPrefetch, contentStyleType, classNa
         </MetaculusPreview>
       }
       if (linkTargetAbsolute.host === "manifold.markets" || linkTargetAbsolute.host === "www.manifold.markets") {
-        return <ManifoldPreview href={href} id={id} className={className}>
+        return <ManifoldPreview href={href} id={id} className={linkClassName}>
           {children}
         </ManifoldPreview>
       }
@@ -114,32 +119,32 @@ const HoverPreviewLink = ({ href, id, rel, noPrefetch, contentStyleType, classNa
         </FatebookPreview>
       }
       if (linkTargetAbsolute.host === "neuronpedia.org" || linkTargetAbsolute.host === "www.neuronpedia.org") {
-        return <NeuronpediaPreview href={href} id={id} className={className}>
+        return <NeuronpediaPreview href={href} id={id} className={linkClassName}>
           {children}
         </NeuronpediaPreview>
       }
       if (linkTargetAbsolute.host === "metaforecast.org" || linkTargetAbsolute.host === "www.metaforecast.org") {
-        return <MetaforecastPreview href={href} id={id} className={className}>
+        return <MetaforecastPreview href={href} id={id} className={linkClassName}>
           {children}
         </MetaforecastPreview>
       }
       if (linkTargetAbsolute.host === "ourworldindata.org") {
-        return <OWIDPreview href={href} id={id} className={className}>
+        return <OWIDPreview href={href} id={id} className={linkClassName}>
           {children}
         </OWIDPreview>
       }
       if (linkTargetAbsolute.host === "arbital.com" || linkTargetAbsolute.host === "www.arbital.com") {
-        return <ArbitalPreview href={href} id={id} className={className}>
+        return <ArbitalPreview href={href} id={id} className={linkClassName}>
           {children}
         </ArbitalPreview>
       }
       if (linkTargetAbsolute.host === "estimaker.app" || linkTargetAbsolute.host === "www.estimaker.app") {
-        return <EstimakerPreview href={href} id={id} className={className}>
+        return <EstimakerPreview href={href} id={id} className={linkClassName}>
           {children}
         </EstimakerPreview>
       }
       if (linkTargetAbsolute.host === "viewpoints.xyz" || linkTargetAbsolute.host === "www.viewpoints.xyz") {
-        return <ViewpointsPreview href={href} id={id} className={className}>
+        return <ViewpointsPreview href={href} id={id} className={linkClassName}>
           {children}
         </ViewpointsPreview>
       }
@@ -147,12 +152,12 @@ const HoverPreviewLink = ({ href, id, rel, noPrefetch, contentStyleType, classNa
         {children}
       </CrossSiteLinkPreview>
     }
-    return <a href={href} id={id} rel={rel} className={className}>
+    return <a href={href} id={id} rel={rel} className={linkClassName}>
       {children}
     </a>
   } catch (err) {
     console.error(err, href) // eslint-disable-line
-    return <a href={href} id={id} rel={rel} className={className}>
+    return <a href={href} id={id} rel={rel} className={linkClassName}>
       {children}
     </a>
   }

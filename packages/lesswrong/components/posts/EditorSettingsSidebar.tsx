@@ -3,7 +3,7 @@ import classNames from "classnames";
 import { EditablePost, PostSubmitMeta, userCanEditCoauthors, extractGoogleDocId, googleDocIdToUrl, postGetEditUrl } from "@/lib/collections/posts/helpers";
 import { postStatusLabels, MODERATION_GUIDELINES_OPTIONS } from "@/lib/collections/posts/constants";
 import { getDefaultEditorPlaceholder } from "@/lib/editor/defaultEditorPlaceholder";
-import { hasGoogleDocImportSetting, isEAForum, isLWorAF, forumTitleSetting } from "@/lib/instanceSettings";
+import { hasGoogleDocImportSetting, isEAForum, isLWorAF, forumTitleSetting, isLWStyleForum } from "@/lib/instanceSettings";
 import { combineUrls, getSiteUrl } from "@/lib/vulcan-lib/utils";
 import { getVotingSystems } from "@/lib/voting/getVotingSystem";
 import { userIsAdmin, userIsAdminOrMod, userIsMemberOf } from "@/lib/vulcan-users/permissions";
@@ -154,6 +154,13 @@ const styles = defineStyles("EditorSettingsSidebar", (theme: ThemeType) => ({
     marginTop: 6,
     paddingTop: 8,
     borderTop: theme.palette.greyBorder("1px", 0.1),
+  },
+  pinHint: {
+    ...theme.typography.commentStyle,
+    fontSize: 12,
+    color: theme.palette.greyAlpha(0.62),
+    marginTop: 8,
+    lineHeight: 1.45,
   },
   accordionSection: {
     borderBottom: theme.palette.greyBorder("1px", 0.08),
@@ -1361,13 +1368,14 @@ const EditorSettingsSidebar = ({
               const draftLabel = (isSubmitting && draft) ? "Saving…" : (!draft ? "Move to Drafts" : "Save Draft");
               const submitLabel = (isSubmitting && !draft) ? "Publishing…" : (draft ? "Publish" : "Publish Changes");
               const disabled = !canSubmit || isSubmitting || isSaving;
-              const publishBlockedByCredits =
-                !!publicationCreditGate?.enabled &&
+              const publishBlockedByCredits = !!(
+                publicationCreditGate?.enabled &&
                 !isAdminOrMod &&
                 !isEvent &&
                 !isDialogue &&
                 draft &&
-                publicationCreditGate.commentsNeededForNextPublish > 0;
+                publicationCreditGate.commentsNeededForNextPublish > 0
+              );
               const publishDisabledReason = publishBlockedByCredits
                 ? `Leave ${publicationCreditGate.commentsNeededForNextPublish} more comment(s) on others’ posts first (not on posts you co-author).`
                 : undefined;
@@ -1398,6 +1406,11 @@ const EditorSettingsSidebar = ({
                         {(field) => <SubmitToFrontpageCheckbox field={field} />}
                       </form.Field>
                     </div>}
+                    {!isEvent && isLWStyleForum() && !canSeeAdmin && (
+                      <p className={classes.pinHint}>
+                        Pinning at the top of the front page is “Sticky” under Publish → Settings → Admin Controls (moderators only).
+                      </p>
+                    )}
                   </>
             }}
           </form.Subscribe>

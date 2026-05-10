@@ -2,6 +2,17 @@ import { defineStyles } from '../hooks/useStyles';
 
 export const linkStyles = defineStyles("LinkStyles", (theme: ThemeType) => ({
   link: {
+    color: `${theme.palette.link.color ?? theme.palette.primary.main} !important`,
+    "& i, & em, & span": {
+      color: "inherit !important",
+    },
+    "&:visited, &.visited": {
+      color: `${theme.palette.link.visited ?? theme.palette.primary.dark} !important`,
+    },
+    "&:hover, &:active": {
+      opacity: "1 !important",
+      color: `${theme.palette.link.primaryDim ?? theme.palette.primary.dark} !important`,
+    },
     '&:after': {
       content: '""',
       top: -7,

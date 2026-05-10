@@ -22,15 +22,16 @@ const styles = defineStyles('SingleColumnSection', (theme: ThemeType) => ({
   }
 }), { stylePriority: -1 })
 
-const SingleColumnSection = ({className, children}: {
+const SingleColumnSection = ({className, children, id}: {
   className?: string,
   children?: React.ReactNode,
+  id?: string,
 }) => {
   const classes = useStyles(styles);
 
   return (
     <ErrorBoundary>
-      <div className={classNames(classes.root, className)}>
+      <div id={id} className={classNames(classes.root, className)}>
         { children }
       </div>
     </ErrorBoundary>

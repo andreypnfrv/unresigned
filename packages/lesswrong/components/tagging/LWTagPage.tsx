@@ -66,6 +66,8 @@ import { gql } from "@/lib/generated/gql-codegen";
 import { withDateFields } from "@/lib/utils/dateUtils";
 import type { TagBySlugQueryOptions } from "./useTag";
 import { StatusCodeSetter } from "../next/StatusCodeSetter";
+import { mergeTagSubtopicLinks } from "./TagSubtopicsNav";
+import { isLWStyleForum } from "@/lib/instanceSettings";
 
 const TagWithFlagsFragmentMultiQuery = gql(`
   query multiTagLWTagPageQuery($selector: TagSelector, $limit: Int, $enableTotal: Boolean) {
@@ -200,6 +202,11 @@ const styles = defineStyles("LWTagPage", (theme: ThemeType) => ({
     paddingBottom: 2,
     borderTop: theme.palette.border.extraFaint,
     borderBottom: theme.palette.border.extraFaint,
+  },
+  parentSubTagsDesktopHidden: {
+    [theme.breakpoints.up("sm")]: {
+      display: "none",
+    },
   },
   relatedTag : {
     display: '-webkit-box',
@@ -742,21 +749,24 @@ const LWTagPage = ({slug}: {slug: string}) => {
     myPages: "userPages"
   }
 
-  const parentAndSubTags = (tag.parentTag || tag.subTags.length)
+  const arbitalForNav = selectedLens?.arbitalLinkedPages ?? tag.arbitalLinkedPages;
+  const { parent: mergedParent, children: mergedChildren } = mergeTagSubtopicLinks(tag, arbitalForNav);
+  const hasSubtopicHierarchy = !!(mergedParent || mergedChildren.length);
+
+  const parentAndSubTags = hasSubtopicHierarchy
     ? (
-      <div className={classNames(classes.subHeading,classes.centralColumn)}>
+      <div className={classNames(
+        classes.subHeading,
+        classes.centralColumn,
+        isLWStyleForum() && classes.parentSubTagsDesktopHidden,
+      )}>
         <div className={classes.subHeadingInner}>
-          {tag.parentTag && <div className={classes.relatedTag}>Parent Wikitag: <Link className={classes.relatedTagLink} to={tagGetUrl(tag.parentTag)}>{tag.parentTag.name}</Link></div>}
-          {/* For subtags it would be better to:
-              - put them at the bottom of the page
-              - truncate the list
-              for our first use case we only need a small number of subtags though, so I'm leaving it for now
-          */}
-          {tag.subTags.length ? <div className={classes.relatedTag}><span>Sub-{tag.subTags.length > 1 ? "Wikitags" : "Wikitag"}:&nbsp;{
-              tag.subTags.map((subTag, idx) => {
-              return <Fragment key={idx}>
+          {mergedParent && <div className={classes.relatedTag}>Parent Wikitag: <Link className={classes.relatedTagLink} to={tagGetUrl(mergedParent)}>{mergedParent.name}</Link></div>}
+          {mergedChildren.length ? <div className={classes.relatedTag}><span>Sub-{mergedChildren.length > 1 ? "Wikitags" : "Wikitag"}:&nbsp;{
+              mergedChildren.map((subTag, idx) => {
+              return <Fragment key={subTag._id}>
                 <Link className={classes.relatedTagLink} to={tagGetUrl(subTag)}>{subTag.name}</Link>
-                {idx < tag.subTags.length - 1 ? <>,&nbsp;</>: <></>}
+                {idx < mergedChildren.length - 1 ? <>,&nbsp;</>: <></>}
               </Fragment>
             })}</span>
           </div> : <></>}

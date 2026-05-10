@@ -144,11 +144,12 @@ export const footnotePreviewStyles = defineStyles("FootnotePreview", (theme: The
  */
 export const FootnoteAncestorsContext = React.createContext<string[]|null>(null);
 
-const FootnotePreview = ({href, id, rel, contentStyleType="postHighlight", children}: {
+const FootnotePreview = ({href, id, rel, contentStyleType="postHighlight", className, children}: {
   href: string,
   id?: string,
   rel?: string,
   contentStyleType?: ContentStyleType,
+  className?: string,
   children: React.ReactNode,
 }) => {
   const classes = useStyles(footnotePreviewStyles);
@@ -246,7 +247,7 @@ const FootnotePreview = ({href, id, rel, contentStyleType="postHighlight", child
         id={id}
         rel={rel}
         onClick={onClick}
-        className={classNames(eitherHovered && classes.anchorHover)}
+        className={classNames(className, eitherHovered && classes.anchorHover)}
       >
         {children}
         {footnoteHTML !== null && !disableHover && <LWPopper

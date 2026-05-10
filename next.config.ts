@@ -58,6 +58,7 @@ const nextConfig: NextConfig = {
     define: {
       ...(isE2E ? { 'process.env.E2E': 'true' } : {}),
       'process.env.FORUM_TYPE': process.env.FORUM_TYPE ?? 'Unresigned',
+      'process.env.NEXT_PUBLIC_FORUM_TYPE': process.env.NEXT_PUBLIC_FORUM_TYPE ?? process.env.FORUM_TYPE ?? 'Unresigned',
       ...(process.env.VERCEL_DEPLOYMENT_ID ? { 'process.env.VERCEL_DEPLOYMENT_ID': 'true' } : {}),
       ...(process.env.HOCUSPOCUS_URL && hocuspocusUrlOkForBundler(process.env.HOCUSPOCUS_URL)
         ? { 'process.env.NEXT_PUBLIC_HOCUSPOCUS_URL': process.env.HOCUSPOCUS_URL }

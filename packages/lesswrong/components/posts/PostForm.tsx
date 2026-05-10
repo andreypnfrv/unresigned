@@ -1,6 +1,6 @@
 import { EditablePost, PostSubmitMeta, userCanEditCoauthors, canUserEditPostMetadata, detectLinkpost } from "@/lib/collections/posts/helpers";
 import { getDefaultEditorPlaceholder } from '@/lib/editor/defaultEditorPlaceholder';
-import { commentCreditsRequiredPerPublishedPostSetting, forumHeaderTitleSetting, isLWorAF, isEAForum, isAntimortality } from "@/lib/instanceSettings";
+import { commentCreditsRequiredPerPublishedPostSetting, isLWorAF, isEAForum, isLWStyleForum } from "@/lib/instanceSettings";
 import { useForm } from "@tanstack/react-form";
 import classNames from "classnames";
 import React, { useMemo, useEffect, useState, useRef, useCallback } from "react";
@@ -380,6 +380,12 @@ const formStyles = defineStyles('PostForm', (theme: ThemeType) => ({
       opacity: 0.7,
     },
   },
+  headerImageEditorSection: {
+    width: "100%",
+    maxWidth: "100%",
+    marginBottom: 28,
+    boxSizing: "border-box",
+  },
   coauthorSearchRow: {
     marginTop: -28,
     marginBottom: 24,
@@ -659,6 +665,26 @@ const PostForm = ({
 
       {canEditMetadata && !isEvent && !isDialogue && (
         <PostPublicationCreditsBanner credits={publicationCreditsField} />
+      )}
+
+      {canEditMetadata && isLWStyleForum() && !isDialogue && (
+        <div className={classes.headerImageEditorSection}>
+          <form.Field name="eventImageId">
+            {(field) => (
+              <LWTooltip
+                title="Shown full width above the title on the post page. About 1.91:1 works well (e.g. 1920×1005)."
+                placement="left-start"
+                inlineBlock={false}
+              >
+                <ImageUpload
+                  field={field}
+                  label="header image"
+                  variant="postHeaderEditor"
+                />
+              </LWTooltip>
+            )}
+          </form.Field>
+        </div>
       )}
 
       <div className={classes.topRightControls}>
@@ -962,27 +988,6 @@ const PostForm = ({
             </div>
           )}
 
-        </LegacyFormGroupLayout>
-      )}
-
-      {canEditMetadata && (isAntimortality() || forumHeaderTitleSetting.get() === "Unresigned") && !isDialogue && (
-        <LegacyFormGroupLayout label="Post header" groupStyling={false} paddingStyling={false}>
-          <div className={classes.fieldWrapper}>
-            <form.Field name="eventImageId">
-              {(field) => (
-                <LWTooltip
-                  title="Shown full width above the title on the post page. About 1.91:1 works well (e.g. 1920×1005)."
-                  placement="left-start"
-                  inlineBlock={false}
-                >
-                  <ImageUpload
-                    field={field}
-                    label="Header image"
-                  />
-                </LWTooltip>
-              )}
-            </form.Field>
-          </div>
         </LegacyFormGroupLayout>
       )}
 

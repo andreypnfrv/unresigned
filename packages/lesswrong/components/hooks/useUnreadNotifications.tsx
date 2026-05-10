@@ -73,7 +73,10 @@ export const UnreadNotificationsContextProvider: FC<{
   const [latestUnreadCount, setLatestUnreadCount] = useState<number | null>(null);
   const [notificationEffectsMounted, setNotificationEffectsMounted] = useState(false);
   useEffect(() => {
-    setNotificationEffectsMounted(true);
+    const id = requestAnimationFrame(() => {
+      setNotificationEffectsMounted(true);
+    });
+    return () => cancelAnimationFrame(id);
   }, []);
 
   //function updateFavicon(unreadNotificationCounts: NotificationCountsResult) {
@@ -183,8 +186,10 @@ const NotificationsEffects = ({queryRef, refetchCounts, refetchBoth, latestUnrea
   useEffect(() => {
     const nextCount = unreadNotificationCounts.data.unreadNotificationCounts.unreadNotifications;
     if (latestUnreadCount !== nextCount) {
-      startTransition(() => {
-        onCountChanged(nextCount);
+      queueMicrotask(() => {
+        startTransition(() => {
+          onCountChanged(nextCount);
+        });
       });
     }
   }, [latestUnreadCount, unreadNotificationCounts.data.unreadNotificationCounts.unreadNotifications, onCountChanged]);

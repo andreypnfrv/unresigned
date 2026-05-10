@@ -622,13 +622,16 @@ const baseBodyStyles = (theme: ThemeType) => ({
     paddingRight: '0.07em'
   },
   '& a, & a:hover, & a:active': {
-    color: theme.palette.link.color ?? theme.palette.primary.main,
+    color: `${theme.palette.link.color ?? theme.palette.primary.main} !important`,
     '& u': {
       textDecoration: "none"
     }
   },
   '& a:visited, & a.visited': {
-    color: theme.palette.link.visited
+    color: `${theme.palette.link.visited ?? theme.palette.primary.dark} !important`,
+  },
+  '& a i, & a em, & a span': {
+    color: 'inherit !important',
   },
   '& a:visited:hover, & a.visited:hover, & a:visited:active, & a.visited:active': {},
   '& table': {

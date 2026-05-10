@@ -92,6 +92,40 @@ const styles = defineStyles('ImageUpload', (theme: ThemeType) => ({
       alignItems: "flex-start",
     },
   },
+  postHeaderEditorRoot: {
+    width: "100%",
+    marginLeft: 0,
+    paddingTop: 0,
+    display: "flex",
+    flexDirection: "column",
+    gap: 12,
+  },
+  postHeaderPreviewSlot: {
+    width: "100%",
+    borderRadius: theme.borderRadius.small,
+    overflow: "hidden",
+    border: theme.palette.greyBorder("1px", 0.14),
+    backgroundColor: theme.palette.greyAlpha(0.04),
+  },
+  postHeaderPicture: {
+    width: "100%",
+    display: "block",
+  },
+  postHeaderPlaceholder: {
+    width: "100%",
+    aspectRatio: "1.91 / 1",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    ...theme.typography.smallText,
+    color: theme.palette.text.dim3,
+  },
+  postHeaderActions: {
+    display: "flex",
+    flexWrap: "wrap",
+    gap: 10,
+    alignItems: "center",
+  },
 }));
 
 export const formPreviewSizeByImageType: Record<
@@ -182,6 +216,8 @@ interface ImageUploadProps {
   label?: string;
   croppingAspectRatio?: number;
   horizontal?: boolean;
+  /** Full-width stacked preview + actions (post edit header hero). */
+  variant?: "default" | "postHeaderEditor";
 }
 
 
@@ -191,6 +227,7 @@ export const ImageUpload = ({
   label,
   croppingAspectRatio,
   horizontal = false,
+  variant = "default",
 }: ImageUploadProps) => {
   const classes = useStyles(styles);
   const imageType = field.name as ImageType;
@@ -218,6 +255,59 @@ export const ImageUpload = ({
   if (!formPreviewSize) throw new Error("Unsupported image upload type")
 
   const showUserProfileImage = isFriendlyUI() && imageType === "profileImageId";
+
+  if (variant === "postHeaderEditor") {
+    return (
+      <div className={classes.postHeaderEditorRoot}>
+        <div className={classes.postHeaderPreviewSlot}>
+          {showUserProfileImage ? (
+            <FormProfileImage
+              document={document}
+              profileImageId={imageId}
+              size={formPreviewSize.height}
+            />
+          ) : imageId ? (
+            <CloudinaryImage2
+              publicId={imageId}
+              fullWidthHeader
+              height={280}
+              objectFit="cover"
+              imgProps={{ q: "auto:good", g: "auto" }}
+              wrapperClassName={classes.postHeaderPicture}
+              className={classes.postHeaderPicture}
+            />
+          ) : (
+            <div className={classes.postHeaderPlaceholder}>No header image yet</div>
+          )}
+        </div>
+        <div className={classes.postHeaderActions}>
+          <TriggerButton
+            imageType={imageType}
+            imageId={imageId}
+            uploadImage={uploadImage}
+            label={label}
+            horizontal={horizontal}
+          />
+          {imageType === "eventImageId" && (
+            <Button
+              variant="outlined"
+              onClick={() =>
+                openDialog({
+                  name: "ImageUploadDefaultsDialog",
+                  contents: ({ onClose }) => (
+                    <ImageUploadDefaultsDialog onClose={onClose} onSelect={(id: string) => field.handleChange(id)} />
+                  ),
+                })
+              }
+            >
+              Choose from ours
+            </Button>
+          )}
+          <RemoveButton imageType={imageType} imageId={imageId} removeImage={removeImg} />
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className={classes.root}>

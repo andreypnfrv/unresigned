@@ -42,6 +42,11 @@ export const forumTypeSetting: { get: () => ForumTypeString } = {
       return "Unresigned";
     }
 
+    const fromPublic = process.env.NEXT_PUBLIC_FORUM_TYPE?.trim() as ForumTypeString | undefined;
+    if (fromPublic && (fromPublic === "Unresigned" || fromPublic === "Antimortality" || fromPublic === "EAForum" || fromPublic === "AlignmentForum")) {
+      return fromPublic;
+    }
+
     const urlObj = new URL(window.location.href);
     if (urlObj.hostname.includes('alignmentforum.org')) {
       return 'AlignmentForum';
@@ -55,13 +60,18 @@ export const forumTypeSetting: { get: () => ForumTypeString } = {
   }
 };
 
-export const isLW = () =>
-  forumTypeSetting.get() === "Unresigned" || forumTypeSetting.get() === "Antimortality"
+/** Unresigned or Antimortality — shared LW-style UI (themes, header image editor, etc.). */
+export function isLWStyleForum(): boolean {
+  const t = forumTypeSetting.get();
+  return t === "Unresigned" || t === "Antimortality";
+}
+
+export const isLW = isLWStyleForum;
+export const isUnresignedForum = isLWStyleForum;
+
 export const isEAForum = () => forumTypeSetting.get() === "EAForum"
 export const isAntimortality = () => forumTypeSetting.get() === "Antimortality"
 export const isAF = () => forumTypeSetting.get() === "AlignmentForum"
-export const isUnresignedForum = () =>
-  forumTypeSetting.get() === "Unresigned" || forumTypeSetting.get() === "Antimortality"
 
 export const isUnresignedStyledForumType = (forumType: ForumTypeString): boolean =>
   forumType === "Unresigned" || forumType === "Antimortality"
