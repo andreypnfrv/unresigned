@@ -35,6 +35,11 @@ const styles = defineStyles('FooterTagList', (theme: ThemeType) => ({
     justifyContent: 'flex-start',
     alignItems: 'center',
   },
+  /** Same row as siblings (e.g. date); plain flex would break onto the next line. */
+  inlineRow: {
+    display: 'inline-flex',
+    flexWrap: 'nowrap',
+  },
   alignRight: {
     justifyContent: 'flex-end'
   },
@@ -142,6 +147,7 @@ const FooterTagList = ({
   noBackground = false,
   neverCoreStyling = false,
   tagRight = true,
+  inlineRow = false,
 }: {
   post: FooterTagListPost,
   hideScore?: boolean,
@@ -160,6 +166,7 @@ const FooterTagList = ({
   noBackground?: boolean,
   neverCoreStyling?: boolean,
   tagRight?: boolean,
+  inlineRow?: boolean,
 }) => {
   const classes = useStyles(styles);
   const [isAwaiting, setIsAwaiting] = useState(false);
@@ -380,7 +387,7 @@ const FooterTagList = ({
   return <>
     <span
       ref={rootRef}
-      className={classNames(classes.root, {[classes.allowTruncate]: !showAll}, {[classes.overrideMargins] : overrideMargins, [classes.alignRight]: align === "right"})}
+      className={classNames(classes.root, {[classes.inlineRow]: inlineRow}, {[classes.allowTruncate]: !showAll}, {[classes.overrideMargins] : overrideMargins, [classes.alignRight]: align === "right"})}
     >
       {innerContent}
       {appendElement}

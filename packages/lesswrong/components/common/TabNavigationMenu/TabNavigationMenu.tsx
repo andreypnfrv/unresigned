@@ -58,6 +58,8 @@ const SCIENCE_SIDEBAR_SUBTAGS = [
   { slug: "replacing", title: "Replacing" },
   { slug: "cyborgisation", title: "Cyborgisation" },
   { slug: "uploading", title: "Uploading" },
+  { slug: "datasets", title: "Datasets" },
+  { slug: "tools", title: "Tools" },
 ] as const;
 
 const wikiTagSubtopicsSidebarStyles = defineStyles("WikiTagSubtopicsSidebar", (theme: ThemeType) => ({
@@ -86,6 +88,54 @@ const wikiTagSubtopicsSidebarStyles = defineStyles("WikiTagSubtopicsSidebar", (t
     },
   },
 }));
+
+const HOME_SIDEBAR_LINKS = [
+  { id: "allPosts", title: "All posts", to: "/allPosts" },
+  { id: "quicktakes", title: "Quick takes", to: "/quicktakes" },
+  { id: "meta", title: "Meta", to: "/tag/meta" },
+  { id: "intro", title: "Intro", to: "/w/intros" },
+  { id: "people", title: "People", to: "/search?contentType=Users" },
+] as const;
+
+const homeSubnavSidebarStyles = defineStyles("HomeSubnavSidebar", (theme: ThemeType) => ({
+  root: {
+    ...theme.typography.body2,
+    paddingBottom: 12,
+    paddingLeft: 16 + iconWidth + 16,
+    paddingRight: 16,
+    width: TAB_NAVIGATION_MENU_WIDTH - (16 + (iconWidth + 16)) - 16,
+    boxSizing: "content-box",
+  },
+  link: {
+    display: "block",
+    paddingBottom: 6,
+    color: theme.palette.grey[700],
+    ...(theme.dark && {
+      color: theme.palette.text.bannerAdOverlay,
+    }),
+    fontSize: "0.95rem",
+    textDecoration: "none",
+    whiteSpace: "nowrap",
+    overflow: "hidden",
+    textOverflow: "ellipsis",
+    "&:hover": {
+      opacity: 0.65,
+    },
+  },
+}));
+
+function HomeSubnavSidebar({ onLinkClick }: { onLinkClick?: (e: React.MouseEvent) => void }) {
+  const classes = useStyles(homeSubnavSidebarStyles);
+  return (
+    <nav className={classes.root} aria-label="Home navigation">
+      {HOME_SIDEBAR_LINKS.map(({ id, title, to }) => (
+        <Link key={id} to={to} className={classes.link} onClick={onLinkClick}>
+          {title}
+        </Link>
+      ))}
+    </nav>
+  );
+}
 
 function WikiTagSubtopicsSidebar({
   alwaysShowSubtopics,
@@ -173,6 +223,8 @@ const TabNavigationMenu = ({
                       alwaysShowSubtopics={alwaysShowScienceSubtopics}
                     />
                   );
+                case 'HomeSubnavSidebar':
+                  return <HomeSubnavSidebar key={tab.id} onLinkClick={(e) => handleClick(e, tab.id)} />;
               }
             }
 

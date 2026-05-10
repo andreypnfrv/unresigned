@@ -37,7 +37,17 @@ const styles = defineStyles('PostsItemMeta', (theme: ThemeType) => ({
   },
   calendarIcon: {
     marginRight: 8
-  }
+  },
+  dateAndTags: {
+    display: 'inline-flex',
+    alignItems: 'center',
+    flexWrap: 'nowrap',
+    gap: 8,
+    color: theme.palette.text.dim3,
+    marginRight: 8,
+    fontSize: '1.1rem',
+    ...theme.typography.commentStyle,
+  },
 }))
 
 export const DateWithoutTime: FC<{date: Date}> = ({date}) => {
@@ -98,14 +108,11 @@ const PostsItemMeta = ({post, read, hideTags}: {
         </LWTooltip>
       </span>}
 
-      {!post.isEvent && !hideTags && <span className={classes.info}>
-        <AnalyticsContext pageElementContext="tagsList">
-          <FooterTagList post={post} hideScore hideAddTag smallText/>
-        </AnalyticsContext>
-      </span>}
-
-      {post.postedAt && !post.isEvent && <span className={classes.info}>
+      {post.postedAt && !post.isEvent && <span className={classes.dateAndTags}>
         <FormatDate date={post.postedAt}/>
+        {!hideTags && <AnalyticsContext pageElementContext="tagsList">
+          <FooterTagList post={post} hideScore hideAddTag smallText inlineRow />
+        </AnalyticsContext>}
       </span>}
     </span>
 };

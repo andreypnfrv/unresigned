@@ -31,10 +31,6 @@ import EventsIcon from "@heroicons/react/24/outline/CalendarIcon";
 import EventsSelectedIcon from "@heroicons/react/24/solid/CalendarIcon";
 import GroupsIcon from "@heroicons/react/24/outline/UserGroupIcon";
 import GroupsSelectedIcon from "@heroicons/react/24/solid/UserGroupIcon";
-import {
-  PeopleDirectoryIcon,
-  PeopleDirectorySelectedIcon,
-} from '../../icons/peopleDirectoryIcon';
 import Info from '@/lib/vendor/@material-ui/icons/src/Info';
 
 // The sidebar / bottom bar of the Forum contain 10 or so similar tabs, unique to each Forum. The
@@ -71,7 +67,7 @@ type MenuTabDivider = {
 
 type MenuTabCustomComponent = {
   id: string
-  customComponentName: 'EventsList' | 'SubscribeWidget' | 'WikiTagSubtopicsSidebar'
+  customComponentName: 'EventsList' | 'SubscribeWidget' | 'WikiTagSubtopicsSidebar' | 'HomeSubnavSidebar'
 }
 
 type MenuItemIcon = React.ComponentType | React.FC<{className?: string}>;
@@ -159,6 +155,10 @@ export const getMenuTabs = (): ForumOptions<Array<MenuTab>> => ({
       showOnCompressed: true,
     },
     {
+      id: 'homeSubnav',
+      customComponentName: 'HomeSubnavSidebar',
+    },
+    {
       id: 'science',
       title: 'Science',
       link: '/w/science',
@@ -217,47 +217,11 @@ export const getMenuTabs = (): ForumOptions<Array<MenuTab>> => ({
       showOnCompressed: true,
     },
     {
-      id: 'intro',
-      title: 'Intro',
-      link: '/w/intros',
-      icon: conceptsIcon,
-      tooltip: 'Wiki intro and orientation.',
-      showOnMobileStandalone: true,
-      showOnCompressed: true,
-    },
-    {
       id: 'the-pantheon',
       title: 'The Pantheon',
       link: '/tag/the-pantheon',
       icon: conceptsIcon,
       tooltip: 'The Pantheon wiki topic.',
-      showOnMobileStandalone: true,
-      showOnCompressed: true,
-    },
-    {
-      id: 'meta',
-      title: 'Meta',
-      link: '/tag/meta',
-      icon: conceptsIcon,
-      tooltip: 'About the forum, norms, roadmap.',
-      showOnMobileStandalone: true,
-      showOnCompressed: true,
-    },
-    {
-      id: 'allPosts',
-      title: 'All Posts',
-      link: '/allPosts',
-      icon: allPostsIcon,
-      tooltip: 'All posts, filtered and sorted.',
-      showOnMobileStandalone: true,
-      showOnCompressed: true,
-    },
-    {
-      id: 'shortform',
-      title: 'Quick takes',
-      link: '/quicktakes',
-      iconComponent: Sort,
-      tooltip: 'Short updates and links.',
       showOnMobileStandalone: true,
       showOnCompressed: true,
     },
@@ -276,15 +240,6 @@ export const getMenuTabs = (): ForumOptions<Array<MenuTab>> => ({
       link: '/library',
       iconComponent: BookIcon,
       tooltip: 'Sequences and collections.',
-      showOnMobileStandalone: true,
-      showOnCompressed: true,
-    },
-    {
-      id: 'people',
-      title: 'People',
-      link: '/search?contentType=Users',
-      iconComponent: PeopleDirectoryIcon,
-      tooltip: 'Search member profiles.',
       showOnMobileStandalone: true,
       showOnCompressed: true,
     },
