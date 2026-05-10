@@ -71,7 +71,7 @@ const welcomeBoxes: ForumOptions<{ contents: HashLinkProps[]} | null> = {
   Unresigned: {
     contents: [
       { to: "/about", children: "Getting Started" },
-      { to: "/faq", children: "FAQ" },
+      { to: "https://antimortality.org/posts/FywqpgTCGKrabZeHo/antimortality-forum-rules", children: "Forum Rules" },
       { to: "/library", children: "Library" }
     ]
   },
