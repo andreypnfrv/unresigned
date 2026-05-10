@@ -24,6 +24,7 @@ import DeferRender from '@/components/common/DeferRender';
 import { userHasLlmChat } from '@/lib/betas';
 import ErrorBoundary from "@/components/common/ErrorBoundary";
 import FlashMessages from "@/components/layout/FlashMessages";
+import FloatingDeathCounter from "@/components/layout/FloatingDeathCounter";
 import AnalyticsClient from "@/components/common/AnalyticsClient";
 import AnalyticsPageInitializer from "@/components/common/AnalyticsPageInitializer";
 import { CommentOnSelectionPageWrapper } from "@/components/comments/CommentOnSelection";
@@ -221,6 +222,10 @@ const Layout = ({children}: {
               <ErrorBoundary>
                 <FlashMessages />
               </ErrorBoundary>
+
+              <DeferRender ssr={false}>
+                <FloatingDeathCounter />
+              </DeferRender>
 
               {isLW() && <LWBackgroundImage />}
               <div ref={searchResultsAreaRef} className={classes.searchResultsArea} />

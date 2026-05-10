@@ -255,7 +255,7 @@ export const getMenuTabs = (): ForumOptions<Array<MenuTab>> => ({
     {
       id: 'about',
       title: 'About',
-      link: 'https://antimortality.org/posts/6MSeSubXkCQgEKRbd/welcome-to-antimortality',
+      link: '/posts/6MSeSubXkCQgEKRbd/welcome-to-antimortality',
       subItem: true,
       compressedIconComponent: AboutQuestionIcon,
       showOnCompressed: true,
