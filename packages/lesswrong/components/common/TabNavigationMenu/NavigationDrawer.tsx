@@ -72,7 +72,7 @@ const NavigationDrawer = ({open, handleClose, toc}: {
       classes.drawerNavigationMenuUncompressed,
       {[classes.hideOnMobile]: showToc}
     )}>
-      <TabNavigationMenu onClickSection={handleClose} alwaysShowScienceSubtopics />
+      <TabNavigationMenu onClickSection={handleClose} />
     </div>
     {showToc && <React.Fragment>
       <div className={classes.drawerNavigationMenuCompressed}>

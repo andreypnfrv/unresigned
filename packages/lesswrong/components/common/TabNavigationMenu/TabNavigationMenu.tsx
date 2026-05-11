@@ -12,7 +12,6 @@ import { SubscribeWidget } from '../SubscribeWidget';
 import { defineStyles } from '@/components/hooks/defineStyles';
 import { useStyles } from '@/components/hooks/useStyles';
 import { Link } from '../../../lib/reactRouterWrapper';
-import { useLocation } from '../../../lib/routeUtil';
 import { isLWStyleForum } from '@/lib/instanceSettings';
 import { tagGetUrl } from '@/lib/collections/tags/helpers';
 export const TAB_NAVIGATION_MENU_WIDTH = 250
@@ -26,7 +25,8 @@ const styles = defineStyles("TabNavigationMenu", (theme: ThemeType) => ({
       minHeight: 0,
       maxWidth: TAB_NAVIGATION_MENU_WIDTH,
       paddingTop: 15,
-      justifyContent: "space-around",
+      justifyContent: "flex-start",
+      gap: 8,
     },
     iconOnlyRoot: {
       maxWidth: TAB_NAVIGATION_MENU_ICON_ONLY_WIDTH,
@@ -35,6 +35,7 @@ const styles = defineStyles("TabNavigationMenu", (theme: ThemeType) => ({
       paddingRight: 0,
       justifyContent: "flex-start",
       alignItems: "center",
+      gap: 8,
     },
     navSidebarTransparent: {
       zIndex: 10,
@@ -48,9 +49,9 @@ const styles = defineStyles("TabNavigationMenu", (theme: ThemeType) => ({
         color: theme.palette.text.bannerAdOverlay,
         background: theme.palette.text.bannerAdOverlay,
       }),
-      marginBottom: 20,
+      marginBottom: 0,
       marginLeft: 16 + (iconWidth + 16) - 2,
-      marginTop: 12,
+      marginTop: 0,
     },
 }));
 
@@ -139,18 +140,9 @@ function HomeSubnavSidebar({ onLinkClick }: { onLinkClick?: (e: React.MouseEvent
   );
 }
 
-function WikiTagSubtopicsSidebar({
-  alwaysShowSubtopics,
-}: {
-  alwaysShowSubtopics?: boolean;
-}) {
-  const { pathname } = useLocation();
+function WikiTagSubtopicsSidebar() {
   const classes = useStyles(wikiTagSubtopicsSidebarStyles);
-  const showScienceSections =
-    isLWStyleForum() &&
-    (alwaysShowSubtopics || pathname === "/");
-
-  if (!showScienceSections) {
+  if (!isLWStyleForum()) {
     return null;
   }
 
@@ -169,12 +161,10 @@ const TabNavigationMenu = ({
   onClickSection,
   transparentBackground,
   iconOnlyNavigationEnabled,
-  alwaysShowScienceSubtopics,
 }: {
   onClickSection?: (e?: React.BaseSyntheticEvent) => void,
   transparentBackground?: boolean,
   iconOnlyNavigationEnabled?: boolean,
-  alwaysShowScienceSubtopics?: boolean,
 }) => {
   const classes = useStyles(styles);
   const currentUserId = useCurrentUserId();
@@ -222,7 +212,6 @@ const TabNavigationMenu = ({
                   return (
                     <WikiTagSubtopicsSidebar
                       key={tab.id}
-                      alwaysShowSubtopics={alwaysShowScienceSubtopics}
                     />
                   );
                 case 'HomeSubnavSidebar':
