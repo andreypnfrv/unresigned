@@ -91,6 +91,8 @@ export const RouteRootClient = ({fullscreen, children}: {
 
   const isFullscreen = isFullscreenRoute(pathname);
   const unresignedHomeTightTop = isUnresignedForum() && isHomeRoute(pathname);
+  const unresignedListPagesShiftMainLeft =
+    isUnresignedForum() && (pathname === "/allPosts" || pathname === "/quicktakes");
 
   return <PopperPortalProvider>
     <div className={classNames(classes.main, {
@@ -100,6 +102,7 @@ export const RouteRootClient = ({fullscreen, children}: {
     <LeftAndRightSidebarsWrapper
       sidebarsEnabled={shouldUseGridLayout}
       fullscreen={isFullscreen}
+      shiftMainColumnLeft={unresignedListPagesShiftMainLeft}
       leftSidebar={
         standaloneNavigation && <SuspenseWrapper fallback={<span/>} name="NavigationStandalone" >
           <DeferRender ssr={true} clientTiming='mobile-aware'>
@@ -156,7 +159,18 @@ const sidebarsWrapperStyles = defineStyles("LeftAndRightSidebarsWrapper", theme 
         minmax(0, min-content)
         minmax(0, 1fr)
         minmax(0, min-content)
-        minmax(0, ${isLWorAF() ? 7 : 1}fr)
+        minmax(0, ${isUnresignedForum() ? 1 : isLWorAF() ? 7 : 1}fr)
+        minmax(0, min-content)
+      `,
+    },
+  },
+  spacedGridShiftMainLeft: {
+    '@supports (grid-template-areas: "title")': {
+      gridTemplateColumns: `
+        minmax(0, min-content)
+        minmax(0, 0.72fr)
+        minmax(0, min-content)
+        minmax(0, 1.28fr)
         minmax(0, min-content)
       `,
     },
@@ -185,9 +199,10 @@ const sidebarsWrapperStyles = defineStyles("LeftAndRightSidebarsWrapper", theme 
   },
 }));
 
-function LeftAndRightSidebarsWrapper({sidebarsEnabled, fullscreen, leftSidebar, rightSidebar, children}: {
+function LeftAndRightSidebarsWrapper({sidebarsEnabled, fullscreen, shiftMainColumnLeft, leftSidebar, rightSidebar, children}: {
   sidebarsEnabled: boolean
   fullscreen: boolean
+  shiftMainColumnLeft?: boolean
   leftSidebar: React.ReactNode
   rightSidebar: React.ReactNode
   children: React.ReactNode
@@ -198,6 +213,7 @@ function LeftAndRightSidebarsWrapper({sidebarsEnabled, fullscreen, leftSidebar, 
 
   return <div className={classNames({
     [classes.spacedGridActivated]: sidebarsEnabled,
+    [classes.spacedGridShiftMainLeft]: sidebarsEnabled && shiftMainColumnLeft,
     [classes.gridBreakpointMd]: !navigationHasIconOnlyVersion && sidebarsEnabled,
     [classes.gridBreakpointSm]: navigationHasIconOnlyVersion && sidebarsEnabled,
     [classes.fullscreenBodyWrapper]: fullscreen,

@@ -134,7 +134,7 @@ export const styles = defineStyles("PostsPage", (theme: ThemeType) => ({
   },
   headerHeroPlaceholder: {
     marginBottom: 0,
-    paddingBottom: 20,
+    paddingBottom: 40,
     boxSizing: 'border-box',
     minHeight: 'min(calc((100vw - 100px) * 2 / 5), 80vh)',
     [theme.breakpoints.up('md')]: {

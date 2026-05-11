@@ -243,19 +243,19 @@ const styles = defineStyles('LWPostsPageHeader', (theme: ThemeType) => ({
     },
   },
   rootBelowPostHeaderImage: {
-    paddingTop: 42,
-    marginBottom: 56,
+    paddingTop: 84,
+    marginBottom: 112,
     [theme.breakpoints.down('sm')]: {
-      paddingTop: 34,
+      paddingTop: 68,
     },
     [theme.breakpoints.down('xs')]: {
-      paddingTop: 34,
-      marginBottom: 38,
+      paddingTop: 68,
+      marginBottom: 76,
     },
   },
   rootBelowPostHeaderImageWithAudio: {
     [theme.breakpoints.down('sm')]: {
-      paddingTop: 30,
+      paddingTop: 60,
     },
   },
 }));
