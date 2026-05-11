@@ -20,10 +20,10 @@ const styles = defineStyles("MultiToCLayout", (theme: ThemeType) => ({
     [`&:has($gap1:hover) $stickyBlockScrollerHeroGlass, &:has($toc:hover) $stickyBlockScrollerHeroGlass, &:has($tocFooter:hover) $stickyBlockScrollerHeroGlass`]: {
       background: `linear-gradient(90deg, ${theme.palette.background.pageActiveAreaBackground} 0%, ${theme.palette.background.pageActiveAreaBackground} 58%, ${theme.palette.inverseGreyAlpha(0.18)} 76%, ${theme.palette.inverseGreyAlpha(0.07)} 91%, transparent 100%)`,
       '& a': {
-        color: theme.palette.text.alwaysBlack,
+        color: theme.dark ? theme.palette.text.normal : theme.palette.text.alwaysBlack,
       },
       '& a:hover': {
-        color: theme.palette.link.tocLinkHighlighted,
+        color: theme.dark ? theme.palette.text.maxIntensity : theme.palette.link.tocLinkHighlighted,
       },
     },
   },
@@ -151,6 +151,10 @@ const styles = defineStyles("MultiToCLayout", (theme: ThemeType) => ({
     transition: 'background 0.22s ease',
     '& a': {
       transition: 'color 0.2s ease',
+      color: theme.dark ? theme.palette.text.normal : theme.palette.text.invertedBackgroundText,
+    },
+    '& a:hover': {
+      color: theme.dark ? theme.palette.text.maxIntensity : theme.palette.text.alwaysWhite,
     },
   },
   stickyBlock: {

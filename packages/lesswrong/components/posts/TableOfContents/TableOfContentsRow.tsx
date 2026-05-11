@@ -20,7 +20,7 @@ const styles = defineStyles("TableOfContentsRow", (theme: ThemeType) => ({
   // that's otherwise globally applied to <a> tags.
   highlighted: {
     '& $link': {
-      color: theme.palette.link.tocLinkHighlighted,
+      color: theme.dark ? theme.palette.text.maxIntensity : theme.palette.link.tocLinkHighlighted,
     },
     '& $highlightDot:after': {
       marginLeft: 3,
@@ -40,10 +40,10 @@ const styles = defineStyles("TableOfContentsRow", (theme: ThemeType) => ({
     display: "block",
     paddingTop: 6,
     paddingBottom: 6,
-    color: theme.palette.link.tocLink,
+    color: theme.dark ? theme.palette.text.normal : theme.palette.link.tocLink,
     lineHeight: "1em",
     '&:hover':{
-      color: theme.palette.link.tocLinkHighlighted
+      color: theme.dark ? theme.palette.text.maxIntensity : theme.palette.link.tocLinkHighlighted,
     }
   },
   highlightDot: {},
@@ -80,13 +80,13 @@ const styles = defineStyles("TableOfContentsRow", (theme: ThemeType) => ({
   },
   level3: {
     fontSize:"1.1rem",
-    color: theme.palette.text.dim700,
+    color: theme.dark ? theme.palette.text.dim : theme.palette.text.dim700,
     paddingLeft: 24,
     ...getSectionOffsetStyling(),
   },
   level4: {
     fontSize:"1.1rem",
-    color: theme.palette.text.dim700,
+    color: theme.dark ? theme.palette.text.dim : theme.palette.text.dim700,
     paddingLeft: 36,
     ...getSectionOffsetStyling(),
   },
