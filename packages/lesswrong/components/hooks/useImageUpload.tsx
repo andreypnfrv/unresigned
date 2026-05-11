@@ -3,6 +3,12 @@ import { cloudinaryCloudNameSetting, cloudinaryUploadPresetBannerSetting, cloudi
 import { useTheme, useThemeColor } from "../themes/useTheme";
 import { useExternalScript } from "./useExternalScript";
 
+/**
+ * Post header (event image) crop: Cloudinary width÷height. Wide horizontal banner (5:2).
+ * (Legacy Twitter/X profile headers were often 3:1, e.g. 1500×500.)
+ */
+export const POST_HEADER_EVENT_BANNER_RATIO = 5 / 2;
+
 type CloudinaryImageUploadError = {
   statusText: string,
 }
@@ -142,8 +148,8 @@ const getCloudinaryArgsByImageType = () => ({
   eventImageId: {
     minImageHeight: 270,
     minImageWidth: 500,
-    croppingAspectRatio: 1.91,
-    croppingDefaultSelectionRatio: 1.91,
+    croppingAspectRatio: POST_HEADER_EVENT_BANNER_RATIO,
+    croppingDefaultSelectionRatio: POST_HEADER_EVENT_BANNER_RATIO,
     uploadPreset: resolveEventImageUploadPreset(),
   },
   spotlightImageId: {

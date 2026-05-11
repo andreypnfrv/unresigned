@@ -1,9 +1,7 @@
 import React from 'react';
-import { getVotingSystemByName } from '@/lib/voting/getVotingSystem';
 import classNames from 'classnames';
 import type { AnnualReviewMarketInfo } from '@/lib/collections/posts/annualReviewMarkets';
 import { postHasAudioPlayer } from './PostsAudioPlayerWrapper';
-import LWPostsPageTopHeaderVote from "../../votes/LWPostsPageTopHeaderVote";
 import AudioToggle from "./AudioToggle";
 import PostActionsButton from "../../dropdowns/posts/PostActionsButton";
 import { defineStyles } from '@/components/hooks/defineStyles';
@@ -23,13 +21,6 @@ const styles = defineStyles('LWPostsPageHeaderTopRight', (theme: ThemeType) => (
     // Ensure this is above the side-items column, which extends to the top of
     // the page.
     zIndex: 100,
-  },
-  vote: {
-    display: 'flex',
-    flexDirection: 'row-reverse',
-    [theme.breakpoints.down('xs')]: {
-      display: 'none'
-    }
   },
   postActionsButton: {
     display: 'flex',
@@ -68,14 +59,10 @@ export const LWPostsPageHeaderTopRight = ({post, toggleEmbeddedPlayer, showEmbed
   annualReviewMarketInfo?: AnnualReviewMarketInfo
 }) => {
   const classes = useStyles(styles);
-  const votingSystem = getVotingSystemByName(post.votingSystem ?? 'default');
 
   return <div className={classes.root}>
       {!post.shortform && postHasAudioPlayer(post) && <div className={classNames(classes.audioToggle, higherContrast && classes.darkerOpacity)}>
         <AudioToggle post={post} toggleEmbeddedPlayer={toggleEmbeddedPlayer} showEmbeddedPlayer={showEmbeddedPlayer} />
-      </div>}
-      {!post.shortform && <div className={classes.vote}>
-        <LWPostsPageTopHeaderVote post={post} votingSystem={votingSystem} /> 
       </div>}
       <PostActionsButton post={post} className={classNames(classes.postActionsButton, post.shortform && classes.postActionsButtonShortform)} flip />
   </div>;

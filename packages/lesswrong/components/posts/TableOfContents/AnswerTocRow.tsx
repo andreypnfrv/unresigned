@@ -16,7 +16,7 @@ const styles = defineStyles('AnswerTocRow', (theme: ThemeType) => ({
     textAlign: "center",
     marginRight: 8,
     marginTop: 1,
-    fontFamily: theme.typography.commentStyle.fontFamily,
+    fontFamily: theme.palette.fonts.serifStack,
   },
   tooltip: {
     wordBreak: "break-word"
@@ -29,12 +29,12 @@ const styles = defineStyles('AnswerTocRow', (theme: ThemeType) => ({
   },
   firstLine: {
     width: "calc(100% - 20px)",
-    fontFamily: theme.typography.commentStyle.fontFamily,
+    fontFamily: theme.palette.fonts.serifStack,
     marginTop: 0,
     marginBottom: 0,
   },
   author: {
-    fontFamily: theme.typography.commentStyle.fontFamily,
+    fontFamily: theme.palette.fonts.serifStack,
     marginBottom: 4
   }
 }))

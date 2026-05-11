@@ -17,10 +17,20 @@ const styles = defineStyles("MultiToCLayout", (theme: ThemeType) => ({
     [`&:has($gap1:hover) .${HOVER_CLASSNAME}, &:has($toc:hover) .${HOVER_CLASSNAME}, &:has($tocFooter:hover) .${HOVER_CLASSNAME}`]: {
       opacity: 1
     },
+    [`&:has($gap1:hover) $stickyBlockScrollerHeroGlass, &:has($toc:hover) $stickyBlockScrollerHeroGlass, &:has($tocFooter:hover) $stickyBlockScrollerHeroGlass`]: {
+      background: `linear-gradient(90deg, ${theme.palette.background.pageActiveAreaBackground} 0%, ${theme.palette.background.pageActiveAreaBackground} 58%, ${theme.palette.inverseGreyAlpha(0.18)} 76%, ${theme.palette.inverseGreyAlpha(0.07)} 91%, transparent 100%)`,
+      '& a': {
+        color: theme.palette.text.alwaysBlack,
+      },
+      '& a:hover': {
+        color: theme.palette.link.tocLinkHighlighted,
+      },
+    },
   },
   tableOfContents: {
     position: "relative",
     display: "grid",
+    alignItems: "start",
     [theme.breakpoints.down('sm')]: {
       paddingTop: 12,
     },
@@ -70,9 +80,14 @@ const styles = defineStyles("MultiToCLayout", (theme: ThemeType) => ({
   },
   gap1: {gridArea: "gap1"},
   toc: {
-    position: 'unset',
+    position: 'relative',
     width: 'unset',
     marginTop: -50,
+    minHeight: 0,
+    alignSelf: 'stretch',
+    display: 'flex',
+    flexDirection: 'column',
+    zIndex: theme.zIndexes.hideTableOfContentsButton,
     [theme.breakpoints.down('sm')]:{
       display: "none",
       marginTop: 0,
@@ -97,7 +112,8 @@ const styles = defineStyles("MultiToCLayout", (theme: ThemeType) => ({
     // Hard-coding this class name as a workaround for one of the JSS plugins being incapable of parsing a self-reference ($titleContainer) while inside @global
     [`body:has(.headroom--pinned) .${STICKY_BLOCK_SCROLLER_CLASS_NAME}, body:has(.headroom--unfixed) .${STICKY_BLOCK_SCROLLER_CLASS_NAME}`]: {
       top: "var(--header-height)",
-      height: `calc(100vh - var(--header-height) - var(--fixed-toc-footer-height, ${DEFAULT_FIXED_TOC_COMMENT_COUNT_HEIGHT}px))`
+      maxHeight: `calc(100dvh - var(--header-height) - var(--fixed-toc-footer-height, ${DEFAULT_FIXED_TOC_COMMENT_COUNT_HEIGHT}px))`,
+      minHeight: `calc(100dvh - var(--header-height) - var(--fixed-toc-footer-height, ${DEFAULT_FIXED_TOC_COMMENT_COUNT_HEIGHT}px))`,
     }
   },
   stickyBlockScroller: {
@@ -108,11 +124,18 @@ const styles = defineStyles("MultiToCLayout", (theme: ThemeType) => ({
     lineHeight: 1.0,
     marginLeft: 1,
     paddingLeft: 16,
+    paddingRight: 16,
     textAlign: "left",
-    maxHeight: `calc(100vh - var(--fixed-toc-footer-height, ${DEFAULT_FIXED_TOC_COMMENT_COUNT_HEIGHT}px))`,
-    height: `calc(100vh - var(--fixed-toc-footer-height, ${DEFAULT_FIXED_TOC_COMMENT_COUNT_HEIGHT}px))`,
+    alignSelf: 'stretch',
+    flex: '1 1 auto',
+    boxSizing: 'border-box',
+    display: "flex",
+    flexDirection: "column",
+    maxHeight: `calc(100dvh - var(--header-height, 64px) - var(--fixed-toc-footer-height, ${DEFAULT_FIXED_TOC_COMMENT_COUNT_HEIGHT}px))`,
+    minHeight: `min(100%, calc(100dvh - var(--header-height, 64px) - var(--fixed-toc-footer-height, ${DEFAULT_FIXED_TOC_COMMENT_COUNT_HEIGHT}px)))`,
+    height: "auto",
     overflowY: "auto",
-    
+
     scrollbarWidth: "none", //Firefox-specific
     "&::-webkit-scrollbar": { //Everything-else
       width: 0,
@@ -122,10 +145,22 @@ const styles = defineStyles("MultiToCLayout", (theme: ThemeType) => ({
       display:'none'
     },
   },
+  stickyBlockScrollerHeroGlass: {
+    paddingRight: 40,
+    background: 'transparent',
+    transition: 'background 0.22s ease',
+    '& a': {
+      transition: 'color 0.2s ease',
+    },
+  },
   stickyBlock: {
     // Cancels the direction:rtl in stickyBlockScroller
     direction: "ltr",
-    height: "100%",
+    minHeight: 0,
+    flex: 1,
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "flex-start",
   },
   content: {},
   rhs: {},
@@ -174,13 +209,15 @@ export type ToCLayoutSegment = {
   isCommentToC?: boolean,
 };
 
-const MultiToCLayout = ({segments, tocRowMap = [], showSplashPageHeader = false, tocContext, sharedToCFooter, embedded}: {
+const MultiToCLayout = ({segments, tocRowMap = [], showSplashPageHeader = false, tocContext, sharedToCFooter, embedded, tocHeroGlass}: {
   segments: ToCLayoutSegment[],
   tocRowMap?: number[], // This allows you to specify which row each ToC should be in, where maybe you want a ToC to span more than one row
   showSplashPageHeader?: boolean,
   tocContext?: 'tag' | 'post',
   sharedToCFooter?: React.ReactNode,
-  embedded?: boolean
+  embedded?: boolean,
+  /** Wide hero under ToC — gradient + black links only while hover reveals TOC (gap / toc / footer) */
+  tocHeroGlass?: boolean,
 }) => {
   const classes = useStyles(styles);
   const tocVisible = true;
@@ -188,9 +225,7 @@ const MultiToCLayout = ({segments, tocRowMap = [], showSplashPageHeader = false,
     .map((_segment,i) => `"... toc${tocRowMap[i] ?? i} gap1 content${i} gap2 rhs${i} ..."`)
     .join('\n');
 
-  const gridTemplateRows = segments
-    .map((_segment,i) => (i + 1) >= segments.length ? '1fr' : 'min-content')
-    .join(' ');
+  const gridTemplateRows = segments.map(() => 'min-content').join(' ');
 
   // Create a ref for the root element to set CSS variable
   const rootRef = useRef<HTMLDivElement>(null);
@@ -219,6 +254,7 @@ const MultiToCLayout = ({segments, tocRowMap = [], showSplashPageHeader = false,
           >
             {!embedded && <div className={classNames(
               classes.stickyBlockScroller,
+              tocHeroGlass && !segment.isCommentToC && classes.stickyBlockScrollerHeroGlass,
               STICKY_BLOCK_SCROLLER_CLASS_NAME,
               segment.isCommentToC && classes.commentToCIntersection
             )}>

@@ -22,6 +22,8 @@ const styles = defineStyles("TabNavigationMenu", (theme: ThemeType) => ({
     root: {
       display: "flex",
       flexDirection: "column",
+      flex: 1,
+      minHeight: 0,
       maxWidth: TAB_NAVIGATION_MENU_WIDTH,
       paddingTop: 15,
       justifyContent: "space-around",

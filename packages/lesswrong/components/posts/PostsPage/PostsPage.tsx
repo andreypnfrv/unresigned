@@ -115,7 +115,6 @@ export const styles = defineStyles("PostsPage", (theme: ThemeType) => ({
     margin: "0 auto 40px",
   },
   commentsSection: {
-    minHeight: 'calc(70vh - 100px)',
     [theme.breakpoints.down('sm')]: {
       paddingRight: 0,
       marginLeft: 0
@@ -133,49 +132,50 @@ export const styles = defineStyles("PostsPage", (theme: ThemeType) => ({
     fontSize: 14,
     lineHeight: "1.6em",
   },
-  headerHeroBleed: {
-    position: 'relative',
+  headerHeroPlaceholder: {
     marginBottom: 0,
-    paddingBottom: 16,
-    width: '100%',
-    marginLeft: 0,
-    marginRight: 0,
-    filter: `drop-shadow(0 3px 10px ${theme.palette.boxShadowColor(0.14)})`,
+    paddingBottom: 20,
+    boxSizing: 'border-box',
+    minHeight: 'min(calc((100vw - 100px) * 2 / 5), 80vh)',
     [theme.breakpoints.up('md')]: {
-      marginTop: 36 - theme.spacing.mainLayoutPaddingTop,
-      width: '120%',
-      marginLeft: '-10%',
-      marginRight: '-10%',
+      marginTop: 30 - theme.spacing.mainLayoutPaddingTop,
     },
     [theme.breakpoints.down('sm')]: {
-      marginTop: 8,
-      width: '112%',
-      marginLeft: '-6%',
-      marginRight: '-6%',
+      marginTop: 5,
     },
     [theme.breakpoints.down('xs')]: {
-      marginTop: 10,
-      width: '100%',
-      marginLeft: 0,
-      marginRight: 0,
+      marginTop: 6,
     },
-    '&$headerHeroBleedWithComment': {
+    '&$headerHeroPlaceholderWithComment': {
       [theme.breakpoints.up('md')]: {
-        marginTop: 28,
+        marginTop: 24,
       },
       [theme.breakpoints.down('sm')]: {
-        marginTop: 22,
+        marginTop: 18,
       },
       [theme.breakpoints.down('xs')]: {
-        marginTop: 22,
+        marginTop: 18,
       },
     },
   },
-  headerHeroBleedWithComment: {},
+  headerHeroPlaceholderWithComment: {},
+  headerHeroBleed: {
+    position: 'absolute',
+    left: '50%',
+    transform: 'translateX(-50%)',
+    top: 0,
+    width: 'calc(100vw - 100px)',
+    filter: `drop-shadow(0 3px 10px ${theme.palette.boxShadowColor(0.14)})`,
+    zIndex: 1,
+  },
   headerHeroInner: {
     position: 'relative',
-    width: '100%',
-    height: 'clamp(160px, 28vh, 360px)',
+    width: 'min(100%, calc(80vh * 5 / 2))',
+    marginLeft: 'auto',
+    marginRight: 'auto',
+    aspectRatio: '5 / 2',
+    maxHeight: '80vh',
+    containerType: 'inline-size',
     borderRadius: 10,
     overflow: 'hidden',
     [theme.breakpoints.down('xs')]: {
@@ -183,8 +183,9 @@ export const styles = defineStyles("PostsPage", (theme: ThemeType) => ({
     },
   },
   headerHeroMedia: {
-    position: 'absolute',
-    inset: 0,
+    position: 'relative',
+    width: '100%',
+    height: '100%',
   },
   headerHeroPicture: {
     display: 'block',
@@ -193,12 +194,16 @@ export const styles = defineStyles("PostsPage", (theme: ThemeType) => ({
     '& img': {
       width: '100%',
       height: '100%',
+      maxHeight: 'none',
+      verticalAlign: 'middle',
+      objectFit: 'contain',
     },
   },
   headerHeroImg: {
     width: '100% !important',
     height: '100% !important',
-    objectFit: 'cover',
+    maxHeight: 'none',
+    objectFit: 'contain',
     display: 'block',
   },
   embeddedPlayer: {
@@ -569,18 +574,19 @@ const PostsPage = ({fullPost, postPreload, sequenceIdFromUrl, refetch, embedded}
     </ImageProvider>
   </div>
 
-  const postHeaderHero = post.eventImageId ? <div className={classNames(classes.headerHeroBleed, {[classes.headerHeroBleedWithComment]: permalinkedCommentId})}>
-    <div className={classes.headerHeroInner}>
-      <div className={classes.headerHeroMedia}>
-        <CloudinaryImage2
-          publicId={post.eventImageId}
-          fullWidthHeader
-          height={360}
-          objectFit="cover"
-          imgProps={{ q: 'auto:good', g: 'auto' }}
-          wrapperClassName={classes.headerHeroPicture}
-          className={classes.headerHeroImg}
-        />
+  const postHeaderHero = post.eventImageId ? <div className={classNames(classes.headerHeroPlaceholder, {[classes.headerHeroPlaceholderWithComment]: permalinkedCommentId})}>
+    <div className={classes.headerHeroBleed}>
+      <div className={classes.headerHeroInner}>
+        <div className={classes.headerHeroMedia}>
+          <CloudinaryImage2
+            publicId={post.eventImageId}
+            fullWidthHeader
+            preserveUploadedAspectRatio
+            imgProps={{ q: 'auto:good', g: 'center' }}
+            wrapperClassName={classes.headerHeroPicture}
+            className={classes.headerHeroImg}
+          />
+        </div>
       </div>
     </div>
   </div> : null;
@@ -770,6 +776,7 @@ const PostsPage = ({fullPost, postPreload, sequenceIdFromUrl, refetch, embedded}
     <SideItemVisibilityContextProvider post={fullPost}>
     {splashHeaderImage}
     <MultiToCLayout
+      tocHeroGlass={!!post.eventImageId}
       segments={[
         {
           toc: (post.contents?.wordCount || 0) > HIDE_TOC_WORDCOUNT_LIMIT && tableOfContents,

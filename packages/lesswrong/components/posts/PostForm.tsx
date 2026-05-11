@@ -672,7 +672,7 @@ const PostForm = ({
           <form.Field name="eventImageId">
             {(field) => (
               <LWTooltip
-                title="Shown full width above the title on the post page. About 1.91:1 works well (e.g. 1920×1005)."
+                title="Wide horizontal banner: crop is fixed at 5:2 (width:height). On the post page it displays up to nearly full window width (viewport minus 100px), centered; max height 80vh."
                 placement="left-start"
                 inlineBlock={false}
               >
@@ -1202,7 +1202,7 @@ const PostForm = ({
         {isEAForum() && <div className={classes.fieldWrapper}>
           <form.Field name="eventImageId">
             {(field) => (
-              <LWTooltip title="Recommend 1920x1005 px, 1.91:1 aspect ratio (same as Facebook)" placement="left-start" inlineBlock={false}>
+              <LWTooltip title="5:2 wide header (legacy X often used 3:1). Max height on the post page 80vh." placement="left-start" inlineBlock={false}>
                 <ImageUpload
                   field={field}
                   label="Event Image"

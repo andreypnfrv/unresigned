@@ -283,6 +283,8 @@ export const styles = defineStyles("Header", (theme: ThemeType) => ({
     }
   },
   headerHeight: {
+    display: "block",
+    width: "100%",
     "--header-height": `${getHeaderHeight()}px`,
     [theme.breakpoints.down('xs')]: {
       "--header-height": `${getMobileHeaderHeight()}px`,

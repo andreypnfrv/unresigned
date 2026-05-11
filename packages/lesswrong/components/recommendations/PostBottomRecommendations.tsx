@@ -4,7 +4,7 @@ import { Link } from "../../lib/reactRouterWrapper";
 import { userGetProfileUrl } from "../../lib/collections/users/helpers";
 import { AnalyticsContext } from "../../lib/analyticsEvents";
 import { useRecommendations } from "./withRecommendations";
-import ToCColumn, { MAX_CONTENT_WIDTH } from "../posts/TableOfContents/ToCColumn";
+import { MAX_CONTENT_WIDTH } from "../posts/TableOfContents/ToCColumn";
 import PostsLoading from "../posts/PostsLoading";
 import UserTooltip from "../users/UserTooltip";
 import PostsItem from "../posts/PostsItem";
@@ -17,8 +17,8 @@ import { isAF } from "@/lib/instanceSettings";
 const styles = defineStyles("PostBottomRecommendations", (theme: ThemeType) => ({
   root: {
     background: 'transparent',
-    padding: "60px 0 80px 0",
-    marginTop: 60,
+    padding: "12px 0 16px 0",
+    marginTop: 12,
     [theme.breakpoints.down('sm')]: {
       // make the background flush with the sides of the screen on mobile
       paddingLeft: 8,
@@ -29,7 +29,7 @@ const styles = defineStyles("PostBottomRecommendations", (theme: ThemeType) => (
   },
   section: {
     maxWidth: MAX_CONTENT_WIDTH,
-    margin: "0 auto 60px",
+    margin: "0 auto 16px",
   },
   sectionHeading: {
     fontFamily: theme.palette.fonts.sansSerifStack,
@@ -82,13 +82,19 @@ const PostBottomRecommendations = ({post, hasTableOfContents, ssr = false}: {
       }
     }
   `), {
-    variables: { limit: 3, af: isAF() },
+    variables: { limit: 5, af: isAF() },
     fetchPolicy: "cache-and-network",
     nextFetchPolicy: "cache-first",
     ssr
   });
 
   const curatedAndPopularPosts = curatedAndPopularData?.CuratedAndPopularThisWeek?.results;
+  const curatedAndPopularFiltered = useMemo(
+    () => curatedAndPopularPosts?.filter((p) => p._id !== post._id).slice(0, 3) ?? [],
+    [curatedAndPopularPosts, post._id],
+  );
+  const showCuratedBlock =
+    curatedAndPopularLoading || curatedAndPopularFiltered.length > 0;
 
   const profileUrl = userGetProfileUrl(post.user);
 
@@ -121,17 +127,17 @@ const PostBottomRecommendations = ({post, hasTableOfContents, ssr = false}: {
                 </AnalyticsContext>
               </div>
             }
-            <div className={classes.section}>
+            {showCuratedBlock && <div className={classes.section}>
               <div className={classes.sectionHeading}>
                 Curated and popular this week
               </div>
-              {curatedAndPopularLoading && !curatedAndPopularPosts?.length &&
+              {curatedAndPopularLoading && !curatedAndPopularFiltered.length &&
                 <PostsLoading />
               }
               <AnalyticsContext pageSubSectionContext="curatedAndPopular">
-                {curatedAndPopularPosts?.map((post) => <PostsItem key={post._id} post={post} />)}
+                {curatedAndPopularFiltered.map((p) => <PostsItem key={p._id} post={p} />)}
               </AnalyticsContext>
-            </div>
+            </div>}
           </div>
       </div>
     </AnalyticsContext>

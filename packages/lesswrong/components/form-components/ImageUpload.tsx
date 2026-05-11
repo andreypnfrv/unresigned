@@ -5,7 +5,7 @@ import classNames from 'classnames';
 import { useDialog } from '../common/withDialog';
 import { useCurrentUser } from '../common/withUser';
 import { userHasDefaultProfilePhotos } from '../../lib/betas';
-import { ImageType, useImageUpload } from '../hooks/useImageUpload';
+import { ImageType, POST_HEADER_EVENT_BANNER_RATIO, useImageUpload } from '../hooks/useImageUpload';
 import { isFriendlyUI } from '../../themes/forumTheme';
 import { useQuery } from "@/lib/crud/useQuery";
 import { gql } from "@/lib/generated/gql-codegen";
@@ -113,7 +113,7 @@ const styles = defineStyles('ImageUpload', (theme: ThemeType) => ({
   },
   postHeaderPlaceholder: {
     width: "100%",
-    aspectRatio: "1.91 / 1",
+    aspectRatio: "5 / 2",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
@@ -232,6 +232,10 @@ export const ImageUpload = ({
   const classes = useStyles(styles);
   const imageType = field.name as ImageType;
   const currentUser = useCurrentUser();
+  const resolvedPostHeaderCropRatio =
+    variant === "postHeaderEditor" && imageType === "eventImageId"
+      ? POST_HEADER_EVENT_BANNER_RATIO
+      : undefined;
   const {uploadImage} = useImageUpload({
     imageType,
     onUploadSuccess: (publicImageId: string) => {
@@ -241,7 +245,7 @@ export const ImageUpload = ({
       // eslint-disable-next-line no-console
       console.error("Image Upload failed:", error);
     },
-    croppingAspectRatio,
+    croppingAspectRatio: croppingAspectRatio ?? resolvedPostHeaderCropRatio,
   });
 
   const { openDialog } = useDialog();
@@ -270,9 +274,8 @@ export const ImageUpload = ({
             <CloudinaryImage2
               publicId={imageId}
               fullWidthHeader
-              height={280}
-              objectFit="cover"
-              imgProps={{ q: "auto:good", g: "auto" }}
+              preserveUploadedAspectRatio
+              imgProps={{ q: "auto:good", g: "center" }}
               wrapperClassName={classes.postHeaderPicture}
               className={classes.postHeaderPicture}
             />

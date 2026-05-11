@@ -9,8 +9,8 @@ import { isUnresignedForum } from '@/lib/forumTypeUtils';
 const styles = defineStyles("Footer", (theme: ThemeType) => ({
   root: {
     minHeight: 165,
-    paddingTop: 24,
-    paddingBottom: 32,
+    paddingTop: 12,
+    paddingBottom: 24,
     paddingLeft: 24,
     paddingRight: 24,
     boxSizing: "border-box",

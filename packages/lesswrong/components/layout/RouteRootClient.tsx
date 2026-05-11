@@ -24,6 +24,12 @@ const styles = defineStyles("RouteRootClient", (theme: ThemeType) => ({
     overflowX: 'clip',
     maxWidth: "100%",
   },
+  mainWithStandaloneNav: {
+    flex: 1,
+    display: 'flex',
+    flexDirection: 'column',
+    minHeight: 0,
+  },
   mainFullscreen: {
     flex: 1,
     display: 'flex',
@@ -34,9 +40,6 @@ const styles = defineStyles("RouteRootClient", (theme: ThemeType) => ({
     paddingTop: theme.spacing.mainLayoutPaddingTop,
     marginLeft: "auto",
     marginRight: "auto",
-    // Make sure the background extends to the bottom of the page, I'm sure there is a better way to do this
-    // but almost all pages are bigger than this anyway so it's not that important
-    minHeight: `calc(100vh - var(--header-height))`,
     gridArea: 'main',
     [theme.breakpoints.down('md')]: {
       paddingTop: theme.spacing.mainLayoutPaddingTop,
@@ -51,7 +54,6 @@ const styles = defineStyles("RouteRootClient", (theme: ThemeType) => ({
     paddingTop: 15,
     marginLeft: "auto",
     marginRight: "auto",
-    minHeight: `calc(100vh - var(--header-height))`,
     gridArea: 'main',
     [theme.breakpoints.down('sm')]: {
       paddingTop: 10,
@@ -91,7 +93,10 @@ export const RouteRootClient = ({fullscreen, children}: {
   const unresignedHomeTightTop = isUnresignedForum() && isHomeRoute(pathname);
 
   return <PopperPortalProvider>
-    <div className={classNames(classes.main, {[classes.mainFullscreen]: isFullscreen})}>
+    <div className={classNames(classes.main, {
+      [classes.mainFullscreen]: isFullscreen,
+      [classes.mainWithStandaloneNav]: standaloneNavigation && !isFullscreen,
+    })}>
     <LeftAndRightSidebarsWrapper
       sidebarsEnabled={shouldUseGridLayout}
       fullscreen={isFullscreen}
@@ -132,9 +137,18 @@ export const RouteRootClient = ({fullscreen, children}: {
 }
 
 const sidebarsWrapperStyles = defineStyles("LeftAndRightSidebarsWrapper", theme => ({
+  leftSidebarGridCell: {
+    gridArea: 'navSidebar',
+    position: 'relative',
+    zIndex: theme.zIndexes.tabNavigation,
+    minHeight: `calc(100vh - var(--header-height))`,
+    display: 'flex',
+    flexDirection: 'column',
+  },
   spacedGridActivated: {
     '@supports (grid-template-areas: "title")': {
       display: 'grid',
+      alignItems: 'start',
       gridTemplateAreas: `
         "navSidebar ... main imageGap rightSidebar"
       `,
@@ -165,6 +179,10 @@ const sidebarsWrapperStyles = defineStyles("LeftAndRightSidebarsWrapper", theme 
       overflow: "visible",
     },
   },
+  gridBodyGrow: {
+    flex: 1,
+    minHeight: 0,
+  },
 }));
 
 function LeftAndRightSidebarsWrapper({sidebarsEnabled, fullscreen, leftSidebar, rightSidebar, children}: {
@@ -183,9 +201,10 @@ function LeftAndRightSidebarsWrapper({sidebarsEnabled, fullscreen, leftSidebar, 
     [classes.gridBreakpointMd]: !navigationHasIconOnlyVersion && sidebarsEnabled,
     [classes.gridBreakpointSm]: navigationHasIconOnlyVersion && sidebarsEnabled,
     [classes.fullscreenBodyWrapper]: fullscreen,
+    [classes.gridBodyGrow]: sidebarsEnabled && !fullscreen,
   }
   )}>
-    {leftSidebar}
+    {leftSidebar ? <div className={classes.leftSidebarGridCell}>{leftSidebar}</div> : null}
     {children}
     {rightSidebar}
   </div>

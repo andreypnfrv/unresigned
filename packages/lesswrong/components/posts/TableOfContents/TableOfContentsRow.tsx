@@ -13,6 +13,7 @@ const styles = defineStyles("TableOfContentsRow", (theme: ThemeType) => ({
     position: "relative",
     ...theme.typography.body2,
     ...theme.typography.commentStyle,
+    fontFamily: theme.palette.fonts.serifStack,
   },
 
   // For the highlighted section only, disable the half-opacity-on-hover effect
